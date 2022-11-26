@@ -1,0 +1,116 @@
+﻿Institution;Adresse;Lat;Lon;Haltestelle;HaltestelleLat;HaltestelleLon;Entfernung;SUBahn;SUEntfernung;Betreiber;GruppeA;GruppeB
+Deutsches Theater / Kammerspiele;Schumannstraße 13,10117 Berlin;52.5239167;13.3820833;Deutsches Theater;52.523.126;13.383.266;118;U Oranienburger Tor;385;;Bühnen und Theater;Große Sprechbühnen
+Volksbühne;Rosa-Luxemburg-Platz,10178 Berlin;52.52725;13.4123889;U Rosa-Luxemburg-Platz;52.528.187;13.410.404;170;U Rosa-Luxemburg-Platz;170;;Bühnen und Theater;Große Sprechbühnen
+Maxim Gorki Theater;Am Festungsgraben 2,10117 Berlin;52.5190000;13.3956111;Am Kupfergraben;52.519.413;13.395.392;49;;-;;Bühnen und Theater;Große Sprechbühnen
+Berliner Ensemble;Bertolt-Brecht-Platz 1,10117 Berlin;52.5220556;13.3864167;Am Weidendamm;52.521.912;13.388.452;138;S+U Friedrichstr.;204;;Bühnen und Theater;Große Sprechbühnen
+Hebbel am Ufer (HAU 1, 2, 3);Hallesches Ufer 32,10963 Berlin;52.4990556;13.3861944;Willy-Brandt-Haus;5.250.041;13.387.437;173;U Möckernbrücke;198;;Bühnen und Theater;Große Sprechbühnen
+Schaubühne am Lehniner Platz;Kurfürstendamm 153,10709 Berlin;52.4986944;13.3028333;Lehniner Platz/Schaubühne;52.498.927;13.301.805;74;U Adenauerplatz;343;;Bühnen und Theater;Große Sprechbühnen
+Renaissance Theater;Knesebeckstraße 100,10623 Berlin;52.5103056;13.3240833;U Ernst-Reuter-Platz;52.511.584;13.322.579;175;U Ernst-Reuter-Platz;175;Neue Theater Betriebs-GmbH;Bühnen und Theater;Große Sprechbühnen
+Theater an der Parkaue;Parkaue 29,10367 Berlin;52.5168056;13.4779722;Rathaus Lichtenberg;52.515.907;13.479.073;124;S+U Frankfurter Allee;397;;Bühnen und Theater;Kinder- und Jugendtheater
+Grips Theater;Altonaer Str. 22,10557 Berlin;52.5184444;13.3424167;U Hansaplatz;5.251.811;13.342.167;40;U Hansaplatz;40;;Bühnen und Theater;Kinder- und Jugendtheater
+Theater Strahl;Martin-Luther-Straße 77,10825 Berlin;52.4883333;13.3451944;Grunewaldstr.;52.489.084;13.345.007;84;U Bayerischer Platz;337;;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Canstanza Macras;Klosterstraße 44,10179 Berlin;52.5178611;13.4118056;U Klosterstr.;52.517.229;13.412.454;82;U Klosterstr.;82;Dorkypark GmbH;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Nico and the Navigators;Husemannstr. 31, 10435 Belrin;52.5397222;13.4175833;Husemannstr.;52.540.034;1.341.871;84;U Eberswalder Str.;380;;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Rimini Protokoll;Tempelhofer Ufer 10,10963 Berlin;52.4974722;13.3858611;Mehringbrücke;52.497.974;13.389.261;237;U Möckernbrücke;240;Rinini Apparat GbR;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Theater im Palais;Am Festungsgraben 1,10117 Berlin;52.5185278;13.3956667;Am Kupfergraben;52.519.413;13.395.392;100;U Französische Str.;562;Theaterverein am Festungsgraben;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Sophiensæle;Sophienstraße 18,10178 Berlin;52.5258611;13.4016111;U Weinmeisterstr./Gipsstr.;5.252.549;13.403.527;136;U Weinmeisterstr.;136;;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Theaterdiscounter;Klosterstraße 44,10179 Berlin;52.5177778;13.4121667;U Klosterstr.;52.517.229;13.412.454;63;U Klosterstr.;63;;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Theater '89;Torstraße 216, 10115 Berlin;52.5276389;13.3902222;Torstr./U Oranienburger Tor;52.527.297;13.387.392;194;U Oranienburger Tor;194;;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Vaganten Bühne Gemeinnützige;Kantstraße 12A,10623 Berlin;52.50575;13.3288333;Joachimsthaler Str./Kantstr.;52.505.354;13.330.805;140;U Kurfürstendamm;281;;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Neuköllner Oper;Karl-Marx-Straße 131-133,12043 Berlin;52.4775556;13.4394722;U Karl-Marx-Str.;52.476.427;13.439.808;127;U Karl-Marx-Str.;127;;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Kleines Theater am Südwestkorso GmbH;Südwestkorso 65,12161 Berlin;52.4733056;13.3223611;Südwestkorso/Taunusstr.;52.473.937;1.332.257;72;U Friedrich-Wilhelm-Platz;475;;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Ballhaus Naunynstraße;Naunynstraße 27,10997 Berlin;52.502000;13.4213333;Waldemarstr./Adalbertstr.;52.502.891;1.342.182;105;U Kottbusser Tor;306;KulturSPRÜNGE e.V.;Bühnen und Theater;Konzeptgeförderte Theater und Theater-/Tanzgruppen 
+Friedrichstadt-Palast;Friedrichstraße 107,10117 Berlin;52.5239167;13.3888611;U Oranienburger Tor;52.524.645;13.387.643;116;U Oranienburger Tor;116;;Bühnen und Theater;Friedrichstadt-Palast
+Sasha Waltz & Guests;Sophienstraße 3,10178 Berlin;52.5253611;13.4013333;U Weinmeisterstr./Gipsstr.;5.252.549;13.403.527;149;U Weinmeisterstr.;149;;Bühnen und Theater;Sasha Waltz & Guests
+Jüdisches Theater;Meinekestraße 24,10719 Berlin;52.5021111;13.3293056;Friedrich-Hollaender-Platz;52.500.446;13.330.733;208;U Uhlandstr.;219;;Bühnen und Theater;Jüdisches Theater
+Bühnen am Kürfürstendamm;Kurfürstendamm 206,10719 Berlin;52.5019444;13.3236389;U Uhlandstr.;52.502.738;13.326.229;197;U Uhlandstr.;197;;Bühnen und Theater;Boulevardtheater
+Schlosspark Theater;Schloßstraße 48,12165 Berlin;52.4546944;13.3179722;Schlossparktheater;5.245.408;13.318.885;92;S+U Rathaus Steglitz;236;;Bühnen und Theater;Boulevardtheater
+Deutsche Oper Berlin;Bismarckstraße 35,10627 Berlin;52.5122222;13.3083333;U Deutsche Oper;52.511.826;13.309.419;85;U Deutsche Oper;85;;Opern und Chöre;Stiftung Oper in Berlin
+Staatsoper Unter den Linden;Unter den Linden 7,10117 Berlin;52.5169444;13.3946389;Staatsoper;52.517.364;13.394.763;47;U Französische Str.;391;;Opern und Chöre;Stiftung Oper in Berlin
+Komische Oper Berlin;Behrenstraße 55-57,10117 Berlin;52.5159722;13.3868889;Unter den Linden/Friedrichstr.;52.516.995;13.388.875;176;S+U Brandenburger Tor;205;;Opern und Chöre;Stiftung Oper in Berlin
+Staatsballett;Bismarckstraße 110,10625 Berlin;52.5120556;13.3173611;Bismarckstr./Leibnizstr.;52.512.123;13.314.777;174;U Ernst-Reuter-Platz;357;;Opern und Chöre;Stiftung Oper in Berlin
+Stiftung Berliner Philharmoniker;Herbert-von-Karajan-Straße 1,10785 Berlin;52.5098056;13.3697222;Philharmonie;52.510.082;13.368.433;92;S+U Potsdamer Platz;458;;Opern und Chöre;Orchester & Chöre
+Konzerthaus Berlin / Schauspielhaus am Gendarmenmarkt;Gendarmenmarkt,10117 Berlin;52.5136389;13.3917778;U Französische Str.;52.514.775;13.390.088;170;U Französische Str.;170;;Opern und Chöre;Orchester & Chöre
+Rundfunk-Orchester und -Chöre GmbH;Charlottenstraße 56,10117 Berlin;52.5133611;13.3910833;U Stadtmitte;52.512.168;13.389.711;161;U Stadtmitte;161;;Opern und Chöre;Orchester & Chöre
+Literarisches Colloquium Berlin (LCB);Am Sandwerder 5,14109 Berlin;52.4227778;13.1785;S Wannsee;52.421.458;13.179.103;151;S Wannsee;151;;Literatur und Kino;Literatur
+Literaturhaus Berlin;Fasanenstraße 23,10719 Berlin;52.5021944;13.3268056;U Uhlandstr.;52.502.738;13.326.229;72;U Uhlandstr.;72;;Literatur und Kino;Literatur
+Literaturforum im Brecht-Haus;Chausseestraße 125,10115 Berlin;52.5289722;13.3848889;U Naturkundemuseum;52.530.272;13.383.742;164;U Naturkundemuseum;164;Gesellschaft für Sinn und Form e.V.;Literatur und Kino;Literatur
+literaturWERKstatt berlin;Knaackstraße 97,10435 Berlin;52.5394444;13.4144167;Sredzkistr.;52.537.949;13.412.238;221;U Eberswalder Str.;238;Literaturbrücke Berlin e.V.;Literatur und Kino;Literatur
+LesArt - Berliner Zentrum für Kinder- und Jugendliteratur;Weinmeisterstraße 5,10178 Berlin;52.52525;13.4050833;U Weinmeisterstr.;52.525.373;13.405.307;20;U Weinmeisterstr.;20;;Literatur und Kino;Literatur
+ConSense - Ges. zur Förderung von Kultur mbH (Kulturbrauerei);Schönhauser Allee 36,10435 Berlin;52.5383056;13.413000;Sredzkistr.;52.537.949;13.412.238;64;U Eberswalder Str.;315;;Literatur und Kino;Kulturzentren / Kino
+RambaZamba e.V.;Schönhauser Allee 36-39,10435 Berlin;52.5399444;13.4135833;U Eberswalder Str.;52.541.086;13.412.157;160;U Eberswalder Str.;160;;Literatur und Kino;Kulturzentren / Kino
+ufa-fabrik e.V.;Viktoriastraße 10-18,12105 Berlin;52.4545833;13.3818333;Tempelhofer Damm/Ordensmeisterstr.;52.456.201;13.383.787;224;U Ullsteinstr.;235;;Literatur und Kino;Kulturzentren / Kino
+Neue Babylon Berlin GmbH;Rosa-Luxemburg-Straße 30,10178 Berlin;52.5258611;13.4115;Memhardstr.;52.524.213;13.412.193;189;U Rosa-Luxemburg-Platz;269;;Literatur und Kino;Kulturzentren / Kino
+Stiftung Berlinische Galerie;Alte Jakobstraße 124-128, 10969 Berlin;52.50408;13.39881;Jüdisches Museum;52.503.538;13.395.635;223;U Kochstr./Checkpoint Charlie;610;;Berliner Landesmuseen;Berliner Landesmuseen
+Stiftung Bröhan-Museum;Schloßstraße 1a, 14059 Berlin;52.51890;13.29517;Schloss Charlottenburg;52.519.251;13.295.953;66;;;;Berliner Landesmuseen;Berliner Landesmuseen
+Brücke Museum;Bussardsteig 9, 14195 Berlin;52.46682;13.27455;Finkenstr.;52.464.732;13.277.301;298;;;;Berliner Landesmuseen;Berliner Landesmuseen
+Stiftung Deutsches Technikmuseum Berlin;Trebbiner Str. 9, 10963 Berlin;52.49863;13.37684;U Gleisdreieck;52.499.583;13.374.294;202;U Gleisdreieck;202;;Berliner Landesmuseen;Berliner Landesmuseen
+Bauhaus-Archiv;Klingelhöferstraße 14, 10785 Berlin;52.50607;13.35277;Lützowplatz;52.504.896;13.351.561;153;;;;Berliner Landesmuseen;Berliner Landesmuseen
+Stiftung Stadtmuseum Berlin;Poststraße 13, 10178 Berlin;52.51608;13.40679;Nikolaiviertel;52.516.204;13.408.283;102;U Klosterstr.;404;;Berliner Landesmuseen;Berliner Landesmuseen
+Stiftung Domäne Dahlem;Königin-Luise-Straße 49, 14195 Berlin;52.45842;13.28866;Domäne Dahlem;52.458.781;13.287.099;113;U Dahlem-Dorf;121;;Berliner Landesmuseen;Berliner Landesmuseen
+Jugend im Museum e.V.;Genthiner Str. 38, 10785 Berlin;52.50257;13.35892;Frobenstr.;52.499.457;13.359.885;352;U Kurfürstenstr.;405;;Berliner Landesmuseen;Berliner Landesmuseen
+Schwules Museum;Lützowstraße 73, 10785 Berlin;52.50445;13.35780;Hiroshimasteg;52.506.729;13.357.458;255;U Nollendorfplatz;597;;Berliner Landesmuseen;Berliner Landesmuseen
+Werkbundarchiv - Museum der Dinge;Oranienstraße 25, 10999 Berlin;52.50107;13.42066;Adalbertstr./Oranienstr.;52.501.282;13.419.294;95;U Kottbusser Tor;201;;Berliner Landesmuseen;Berliner Landesmuseen
+Stiftung Georg-Kolbe-Museum;Sensburger Allee 25, 14055 Berlin;52.51002;13.25489;S Heerstr.;52.508.276;13.258.513;313;S Heerstr.;313;;Berliner Landesmuseen;Berliner Landesmuseen
+Altes Museum mit Antikensammlung - Museumsinsel;Am Lustgarten, 10178 Berlin;52.51900;13.40030;Lustgarten;52.518.011;13.400.309;109;S Hackescher Markt;425;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Alte Nationalgalerie - Museumsinsel;Bodestraße 1-3, 10178 Berlin;52.51949;13.39883;Lustgarten;52.518.011;13.400.309;192;S Hackescher Markt;421;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Bodemuseum mit Skulpturensammlung, Museum für Byzantinische Kunst und Münzkabinett - Museumsinsel;Am Kupfergruben, 10117 Berlin;52.51551;13.38475;;;;;;;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Neues Museum mit Ägyptisches Museum, Museum für Vor- und Frühgeschichte - Museumsinsel;Bodestraße 1-3, 10178 Berlin;52.5194;13.39883;Lustgarten;52.518.011;13.400.309;183;S Hackescher Markt;429;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Pergamonmuseum mit Antikensammlung, Museum für Islamische Kunst, Vorderasiatischem Museum, Münzkabinett - Musuemsinsel;Bodestraße 1-3, 10178 Berlin;52.5194;13.39883;Lustgarten;52.518.011;13.400.309;183;S Hackescher Markt;429;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Friedrichswerdersche Kirche - Museumsinsel;Werderscher Markt, 10117 Berlin;52.51544;13.39804;Werderscher Markt;52.515.305;13.397.334;49;U Hausvogteiplatz;293;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Hamburger Bahnhof - Tiergarten;Invalidenstraße 50-51, 10557 Berlin;52.52818;13.37149;Döberitzer Str.;52.530.029;13.368.757;276;S+U Berlin Hauptbahnhof;311;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Neue Nationalgalerie - Kulturforum;Potsdamer Straße 50, 10785 Berlin;52.50658;13.36733;Potsdamer Brücke;52.505.947;13.368.308;96;;;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Gemäldegalerie - Kulturforum (Zentralkasse) mit Kunstbibliothek und Kupferstichkabinett;Matthäikirchplatz, 10785 Berlin;52.50822;13.36734;Kulturforum;52.507.565;13.369.179;144;;;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Kunstgewerbemuseum - Kulturforum;Matthäikirchplatz, 10785 Berlin;52.50822;13.36734;Kulturforum;52.507.565;13.369.179;144;;;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Kunstgewerbemuseum - Schloss Köpenick;Alt-Köpenick 1, 12557 Berlin;52.44405;13.57291;Schloßplatz Köpenick;52.444.281;13.574.925;139;S Spindlersfeld;722;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Ethnologisches Museum - Museen Dahlem (Zentralkasse) mit Museum Europäischer Kulturen und Museum für Asiatische Kunst;Lansstraße 8, 14195 Berlin;52.45732;13.29288;Museen Dahlem;52.457.963;13.295.063;164;;;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Museum für Fotografie - Charlottenburg;Jebensstraße 2, 10623 Berlin;52.50820;13.33186;Hertzallee;52.509.228;13.332.611;125;S+U Zoologischer Garten;153;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Museum Berggruen - Charlottenburg;Schloßstraße 1, 14059 Berlin;52.51895;13.29580;Schloss Charlottenburg;52.519.251;13.295.953;35;;;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Sammlung Scharf-Gerstenberg - Charlottenburg;Schloßstraße 70, 14059 Berlin;52.51915;13.29684;Schloss Charlottenburg;52.519.251;13.295.953;60;;;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Musikinstrumenten-Museum;Tiergartenstraße 1, 10785 Berlin;52.51001;13.37110;Philharmonie Süd;52.508.617;13.370.744;155;S+U Potsdamer Platz;370;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Staatsbibliothek;Unter den Linden 8, 10117 Berlin;52.51752;13.39099;Unter den Linden/Friedrichstr.;52.516.995;13.388.875;154;U Französische Str.;311;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+Humboldt-Box;Schloßplatz 5, 10178 Berlin;52.51599;13.40015;Werderscher Markt;52.515.305;13.397.334;205;U Hausvogteiplatz;436;;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz;Staatliche Museen zu Berlin / Stiftung Preußischer Kulturbesitz
+"Schloss Charlottenburg (Neuer Pavillon; Belvedere; Mausoleum)";Spandauer Damm 20-24, 14059 Berlin;52.52064;13.29533;Schloss Charlottenburg;52.519.251;13.295.953;159;;;;Preußische Schlösser & Gärten;Preußische Schlösser & Gärten
+Pfaueninsel;Pfauensinel;52.43449;13.13125;Pfaueninsel;52.428.361;13.123.459;861;;;;Preußische Schlösser & Gärten;Preußische Schlösser & Gärten
+"Park Glienicke (Schloss; Casino)";Königstraße 36, 14109 Berlin;52.41123;13.09786;Schloss Glienicke;52.413.224;13.096.474;241;;;;Preußische Schlösser & Gärten;Preußische Schlösser & Gärten
+"Jagdschloss Grunewald (Schloss; Jagdzeugmagazin)";Hüttenweg 100, 14193 Berlin;52.46703;13.26148;Finkenstr.;52.464.732;13.277.301;1102;;;;Preußische Schlösser & Gärten;Preußische Schlösser & Gärten
+Schloss Schönhausen;Tschaikowskistraße 1, 13156 Berlin;52.57838;13.40568;Ossietzkyplatz;52.581.664;13.405.954;366;;;;Preußische Schlösser & Gärten;Preußische Schlösser & Gärten
+Stiftung Berliner Mauer;Bernauer Str. 111,13355 Berlin;52.5353611;13.3898333;Gedenkstätte Berliner Mauer;52.535.702;13.390.484;58;;;;Gedenkstätten;Gedenkstätten
+Trägerverein Haus der Wannseekonferenz;Am Großen Wannsee 56-58,14109 Berlin;52.4320556;13.1650278;S Nordbahnhof/Gartenstr.;52.533.355;13.387.491;273;S Nordbahnhof;273;;Gedenkstätten;Gedenkstätten
+Stiftung Gedenkstätte Berlin-Hohenschönhausen;Genslerstraße 66,13055 Berlin;52.5418056;13.5014167;Große-Leege-Str./Freienwalder Str.;52.542.695;13.496.422;352;;;;Gedenkstätten;Gedenkstätten
+Gedenkstätte Deutscher Widerstand;Stauffenbergstraße 13-14,10785 Berlin;52.5077222;13.3635000;Gedenkstätte Dt. Widerstand;52.505.732;13.363.292;221;;;;Gedenkstätten;Gedenkstätten
+Stiftung Topographie des Terrors;Niederkirchnerstraße 8,10963 Berlin;52.5066944;13.3836667;Wilhelmstr./Kochstr.;52.505.893;13.386.358;203;S Anhalter Bahnhof;262;;Gedenkstätten;Gedenkstätten
+Dokumentationszentrum NS-Zwangsarbeit Berlin-Schöneweide;Britzer Str. 5,12439 Berlin;52.4531944;13.5180556;Doku.-zentrum NS-Zwangsarbeit;52.453.253;1.351.805;7;S Schöneweide;489;;Gedenkstätten;Gedenkstätten
+Kunst-Werke Berlin - Institute for Contemporary Art;Auguststraße 69,10117 Berlin;52.5268056;13.3949722;Tucholskystr.;52.528.474;13.394.205;193;S Oranienburger Str.;223;;Bildende Kunst;Bildende Kunst
+Künstlerhaus Bethanien (KHB);Kottbusser Str. 10,10999 Berlin;52.4969722;13.4186389;U Kottbusser Tor;52.498.307;13.419.007;151;U Kottbusser Tor;151;;Bildende Kunst;Bildende Kunst
+Haus am Waldsee e.V.;Argentinische Allee 30,14163 Berlin;52.4420278;13.2386389;U Krumme Lanke;52.442.618;13.240.355;134;U Krumme Lanke;134;;Bildende Kunst;Bildende Kunst
+Stiftung Zentral- und Landesbibliothek Berlin;Breite Straße 30-36,10178 Berlin;52.5152500;13.4045000;Neumannsgasse;52.515.188;13.403.995;34;U Spittelmarkt;461;;Archive/Bibliotheken ;Archive/Bibliotheken 
+Landesarchiv Berlin;Eichborndamm 115,13403 Berlin;52.5799444;13.3167500;Landesarchiv;52.580.585;1.331.795;108;S Eichborndamm;277;;Archive/Bibliotheken ;Archive/Bibliotheken 
+Theater Thikwà;Fidicinstraße 40,10965 Berlin;52.4872222;13.3885278;U Platz der Luftbrücke;52.484.976;13.386.349;289;U Platz der Luftbrücke;289;;Förderung;Basisförderung
+SheShePop;Mariannenpl. 2,10997 Berlin;52.5036667;13.4234444;Waldemarstr./Adalbertstr.;52.502.891;1.342.182;139;;;;Förderung;Basisförderung
+Zeitgenössische Oper Berlin;Schwedter Str. 269;52.5326389;13.4120278;U Senefelderplatz;52.532.618;13.412.624;40;U Senefelderplatz;40;;Förderung;Basisförderung
+Theater auf der Zitadelle;Am Juliusturm 64,13599 Berlin;52.5409444;13.2120556;Zitadelle Spandau;52.538.542;13.214.259;306;U Altstadt Spandau;408;;Förderung;Basisförderung
+Schlossplatztheater;Alt-Köpenick 31,12555 Berlin;52.4450556;13.5743611;Rathaus Köpenick;52.445.324;13.574.367;30;;;;Förderung;Basisförderung
+Theater o.N.;Kollwitzstraße 53,10405 Berlin;52.5350000;13.4162222;U Senefelderplatz;52.532.618;13.412.624;359;U Senefelderplatz;359;;Förderung;Basisförderung
+andcompany & Co;Mariannenplatz 2, 10997 Berlin;52.5039722;13.4240278;Waldemarstr./Adalbertstr.;52.502.891;1.342.182;191;;;;Förderung;Basisförderung
+Fliegendes Theater;Urbanstraße 100,10967 Berlin;52.4898611;13.4220556;Jahnstr.;52.489.695;13.420.661;96;U Hermannplatz;265;;Förderung;Basisförderung
+ATZE Musiktheater;Luxemburger Str. 20,13353 Berlin;52.5432778;13.3515556;U Amrumer Str.;52.542.201;13.349.529;181;U Amrumer Str.;181;;Förderung;Basisförderung
+Das Weite Theater;Parkaue 23,10367 Berlin;52.5169444;13.4774444;Rathaus Lichtenberg;52.515.907;13.479.073;159;S+U Frankfurter Allee;397;;Förderung;Basisförderung
+Das Helmi;Pappelallee 15,10437 Berlin;52.5430833;13.4149722;Raumerstr.;52.544.044;13.415.573;114;U Eberswalder Str./Pappelallee;166;;Förderung;Basisförderung
+Platypus Theater;Markgrafenstraße 87, 10969 Berlin;52.5033889;13.3947222;Jüdisches Museum;52.503.538;13.395.635;64;U Kochstr./Checkpoint Charlie;449;;Förderung;Basisförderung
+Lubricat;Adalbertstr.4, 10999 Berlin;52.5000000;13.4189444;U Kottbusser Tor;52.499.898;13.418.377;39;U Kottbusser Tor;39;;Förderung;Basisförderung
+Gob Squad;Skalitzer Straße 59, 10997 Berlin;52.4997222;13.4362500;Lausitzer Platz;52.499.466;13.431.915;294;U Schlesisches Tor;407;;Förderung;Basisförderung
+English Theatre Berlin;Fidicinstraße 40,10965 Berlin;52.4872500;13.3885000;U Platz der Luftbrücke;52.484.976;13.386.349;291;U Platz der Luftbrücke;291;;Förderung;Basisförderung
+aufBruch;Pappelallee 7, 10437 Berlin;52.5422222;13.4138889;U Eberswalder Str./Pappelallee;52.541.958;13.413.334;47;U Eberswalder Str./Pappelallee;47;;Förderung;Basisförderung
+Hans Wurst Nachfahren;Gleditschstraße 5,10781 Berlin;52.4965000;13.3554167;Winterfeldtplatz;52.494.603;13.355.705;210;U Nollendorfplatz;366;;Förderung;Basisförderung
+Novoflot;Wallstraße 32c, 10179 Berlin;52.5110556;13.4113889;U Märkisches Museum;52.512.357;13.412.094;152;U Märkisches Museum;152;;Förderung;Basisförderung
+Tanzcompanie Rubato;Karl-Kunger Str. 13, 12435 Berlin;52.4911667;13.4470833;Bouchéstr.;52.490.486;13.448.491;121;;;;Förderung;Basisförderung
+cie toula limnaios;Am Friedrichshain 33, 10407 Berlin;52.5283889;13.4256667;Am Friedrichshain;52.528.016;13.425.137;54;;;;Förderung;Basisförderung
+Tanztage Berlin;Sophienstraße 18,10178 Berlin;52.5258889;13.4016111;U Weinmeisterstr./Gipsstr.;5.252.549;13.403.527;137;U Weinmeisterstr.;137;;Förderung;Basisförderung
+Ballhaus Ost;Pappelallee 15,10437 Berlin;52.5430833;13.4149444;Raumerstr.;52.544.044;13.415.573;115;U Eberswalder Str./Pappelallee;165;;Förderung;Spielstättenförderung
+Theaterkapelle;Boxhagener Str. 99,10245 Berlin;52.5123333;13.4607778;Boxhagener Platz;52.511.044;13.460.968;143;U Samariterstr.;403;;Förderung;Spielstättenförderung
+Heimathafen Neukölln;Karl-Marx-Straße 141,12043 Berlin;52.4769722;13.4391944;U Karl-Marx-Str.;52.476.427;13.439.808;73;U Karl-Marx-Str.;73;;Förderung;Spielstättenförderung
+Tanzfabrik Berlin e.V.;Uferstraße 23,13357 Berlin;52.5517778;13.3749444;Uferstr.;52.553.258;13.378.169;273;U Pankstr.;469;;Förderung;Spielstättenförderung
+Dock 11;Kastanienallee 79,10435 Berlin;52.5366667;13.4080278;Schwedter Str.;52.536.834;13.407.959;19;U Senefelderplatz;547;;Förderung;Spielstättenförderung
+Laborgras;Großbeerenstraße 56E, 10965 Berlin;52.4968056;13.4213889;Kottbusser Brücke;52.495.538;13.420.697;147;U Kottbusser Tor;232;;Förderung;Spielstättenförderung
+ada Studio & Bühne;Uferstraße 8/23, 13357 Berlin;52.5518333;13.3744167;Uferstr.;52.553.258;13.378.169;299;U Nauener Platz;477;;Förderung;Spielstättenförderung
