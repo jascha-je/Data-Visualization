@@ -29,14 +29,18 @@ const projection = d3.geoMercator()
   .translate([width / 2, height / 2]);
 
 // Data and color scale
-let data = new Map()
+// let data = new Map()
+
+var data = await d3.json("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_1/data/data.json")
+var total_by_district = d3.rollup(Object.values(data), v => d3.sum(v, d => d[2014] || 0), d => d.Bezirk)
+
 const colorScale = d3.scaleThreshold()
-  .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
-  .range(d3.schemeBlues[7]);
+  .domain([10000, 100000, 1000000, 10000000 ])
+  .range(d3.schemeBlues[4]);
 
 // Load external data and boot
 const topo = await d3.json("https://raw.githubusercontent.com/funkeinteraktiv/Berlin-Geodaten/master/berlin_bezirke.geojson")
-  
+console.log(topo)
 // const d = await d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv")
 // data.set(d.code, +d.pop)
 
@@ -50,3 +54,8 @@ svg.append("g")
     .attr("d", d3.geoPath()
       .projection(projection)
     )
+    // set the color of each district
+    .attr("fill", function (d) {
+      d.total = total_by_district.get(d.properties.name) || 0;
+      return colorScale(d.total);
+    });
