@@ -1,6 +1,11 @@
 https://www.berlinstadtservice.de/xinh/Postleitzahlen_Berlin.html
 
-(Manually added 10245 to Friedrichshain)
+Manual changes:
+
+- added 10245 to Friedrichshain
+- changed Pankow-Prenzlauer Berg-Weißensee to Pankow
+- changed Lichtenberg-Hohenschönhausen to Lichtenberg
+- changed Mitte-Wedding-Tiergarten to Mitte
 
 Postleitzahlen in Charlottenburg-Wilmersdorf
 
@@ -24,7 +29,7 @@ Friedrichshain
 Kreuzberg
 10785, 10961, 10963, 10965, 10967, 10969, 10997, 10999
 
-Postleitzahlen in Lichtenberg-Hohenschönhausen
+Postleitzahlen in Lichtenberg
 
 Falkenberg
 13057
@@ -70,7 +75,7 @@ Mahlsdorf
 Marzahn
 12679, 12681, 12685, 12687, 12689
 
-Postleitzahlen in Mitte-Wedding-Tiergarten
+Postleitzahlen in Mitte
 
 Gesundbrunnen
 13347, 13353, 13355, 13357, 13359, 13409
@@ -107,7 +112,7 @@ Neukölln
 Rudow
 12351, 12353, 12355, 12357, 12359
 
-Postleitzahlen in Pankow-Prenzlauer Berg-Weißensee
+Postleitzahlen in Pankow
 
 Blankenburg
 13129
