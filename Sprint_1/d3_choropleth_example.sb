@@ -9,53 +9,154 @@ Try editing this cell by clicking the pencil on the left!
 <meta charset="utf-8">
 
 <!-- Create an element where the map will take place -->
-<svg id="my_dataviz" width="1000" height="1000" style="border:solid .5px black"></svg>
+<div id="div_template">
+  <svg id="choropleth" width=1000 height = 1000></svg>
+</div>
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
 # ---%%
+// load d3.js
 await import("https://d3js.org/d3.v6.js")
 
+// load institution data
+var data = await d3.json("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_1/data/data.json")
+var total_by_district = d3.rollup(Object.values(data), v => d3.sum(v, d => d[2014] || 0), d => d.Bezirk)
+console.log(data)
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
 // The svg
-const svg = d3.select("#my_dataviz"),
-  width = +svg.attr("width"),
-  height = +svg.attr("height");
+var svg = d3.select("#choropleth")
+const width = +svg.attr("width")
+const height = +svg.attr("height")
 
 // Map and projection
 const path = d3.geoPath();
 const projection = d3.geoMercator()
-  .scale(80000)
-  .center([13.42, 52.51])
-  .translate([width / 2, height / 2]);
+    .scale(80000)
+    .center([13.42, 52.51])
+    .translate([width / 2, height / 2]);
 
-// Data and color scale
-// let data = new Map()
-
-var data = await d3.json("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_1/data/data.json")
-var total_by_district = d3.rollup(Object.values(data), v => d3.sum(v, d => d[2014] || 0), d => d.Bezirk)
-
-const colorScale = d3.scaleThreshold()
-  .domain([10000, 100000, 1000000, 10000000 ])
-  .range(d3.schemeBlues[4]);
+var colorScale = d3.scaleThreshold()
+    .domain([10000, 100000, 1000000, 10000000])
+    .range(d3.schemeBlues[5]);
 
 // Load external data and boot
-const topo = await d3.json("https://raw.githubusercontent.com/funkeinteraktiv/Berlin-Geodaten/master/berlin_bezirke.geojson")
+var topo = await d3.json("https://raw.githubusercontent.com/funkeinteraktiv/Berlin-Geodaten/master/berlin_bezirke.geojson")
 console.log(topo)
-// const d = await d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv")
-// data.set(d.code, +d.pop)
+
+// RESET PREVIOUSE CHILDREN OF SVG ELEMENT 
+// TODO REMOVE FOR PRODUCTION?
+svg.node().innerHTML = ''
+
+
+// Create Tooltip
+var Tooltip = d3.select("#div_template")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+// Three function that change the tooltip when user hover / move / leave a cell
+const mouseover = function (event, d) {
+    d3.selectAll(".district")
+        .transition()
+        .duration(200)
+        .style("opacity", .7)
+  		.style("stroke", "grey")
+  		.style("stroke-width", "1")
+    d3.select(this)
+        .transition()
+        .duration(200)
+        .style("opacity", 1)
+        .style("stroke", "pink")
+  		.style("stroke-width", "3")
+    Tooltip
+        .transition()
+        .duration(200)
+        .style("opacity", 1)
+}
+const mousemove = function (event, d) {
+    Tooltip
+        .html("This is a tooltip")
+        .style("left", (event.pageX + 20) + "px")
+        .style("top", (event.pageY) + "px")
+}
+const mouseleave = function (event, d) {
+    d3.selectAll(".district")
+        .transition()
+        .duration(200)
+        .style("opacity", 1)
+        .style("stroke", "grey")
+  		.style("stroke-width", "1")
+    Tooltip
+        .transition()
+        .duration(300)
+        .style("opacity", 0);
+}
 
 
 // Draw the map
 svg.append("g")
-  .selectAll("path")
-  .data(topo.features)
-  .join("path")
+    .selectAll("path")
+    .data(topo.features)
+    .join("path")
     // draw each country
     .attr("d", d3.geoPath()
-      .projection(projection)
+        .projection(projection)
     )
     // set the color of each district
     .attr("fill", function (d) {
-      d.total = total_by_district.get(d.properties.name) || 0;
-      return colorScale(d.total);
-    });
+        d.total = total_by_district.get(d.properties.name) || 0;
+        return colorScale(d.total);
+    })
+    .attr("class", d => 'district')
+    .attr("stroke", "grey")
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseleave", mouseleave)
+
+
+# %% [javascript]
+
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+// LEGEND
+// create a list of keys
+var keys = [10000, 100000, 1000000, 10000000]
+
+// Add one dot in the legend for each name.
+var size = 20
+svg.selectAll("mydots")
+    .data(keys)
+    .enter()
+    .append("rect")
+    .attr("x", 800)
+    .attr("y", function (d, i) { return 50 + i * (size + 5) }) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", function (d) { return colorScale(d) })
+
+// Add one dot in the legend for each name.
+svg.selectAll("mylabels")
+    .data(keys)
+    .enter()
+    .append("text")
+    .attr("x", 800 + size * 1.2)
+    .attr("y", function (d, i) { return 50 + i * (size + 5) + (size / 2) }) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", function (d) { return colorScale(d) })
+    .text(function (d) { return d })
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+# %%--- [css]
+# properties:
+#   run_on_load: true
+# ---%%
