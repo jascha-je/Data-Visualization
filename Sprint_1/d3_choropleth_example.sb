@@ -23,6 +23,7 @@ await import("https://d3js.org/d3.v6.js")
 var data = await d3.json("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_1/data/data.json")
 var total_by_district = d3.rollup(Object.values(data), v => d3.sum(v, d => d[2014] || 0), d => d.Bezirk)
 console.log(data)
+console.log(total_by_district)
 # %%--- [css]
 # properties:
 #   run_on_load: true
@@ -82,7 +83,7 @@ const mouseover_district = function (event, d) {
         .transition()
         .duration(200)
         .style("opacity", 1)
-        .style("stroke", "pink")
+        .style("stroke", "grey")
         .style("stroke-width", "3")
     Tooltip
         .transition()
@@ -100,7 +101,7 @@ const mouseleave_district = function (event, d) {
         .transition()
         .duration(200)
         .style("opacity", 1)
-        .style("stroke", "grey")
+        .style("stroke", "DimGrey")
         .style("stroke-width", "1")
   
     if (event.toElement.tagName != 'circle') {
@@ -127,7 +128,7 @@ svg.append("g")
         return colorScale(d.total);
     })
     .attr("class", d => 'district')
-    .attr("stroke", "grey")
+    .attr("stroke", "DimGrey")
     .on("mouseover", mouseover_district)
     .on("mousemove", mousemove_district)
     .on("mouseleave", mouseleave_district)
@@ -162,8 +163,8 @@ svg.selectAll("myCircles")
     .attr("r", d => scale(d[2014]) || 1)
     .attr("class", "circle")
     .style("fill", "black")
-    .attr("stroke", "#69b3a2")
-    .attr("stroke-width", 1)
+    .attr("stroke", "DimGrey")
+    .attr("stroke-width", 0.3)
     .attr("fill-opacity", .6)
     .on("mouseover", mouseover_location)
     .on("mousemove", mousemove_location)
@@ -206,7 +207,3 @@ svg.selectAll("mylabels")
     .text(d => legend_text[d])
     .attr("text-anchor", "left")
     .style("alignment-baseline", "middle")
-# %%--- [css]
-# properties:
-#   run_on_load: true
-# ---%%
