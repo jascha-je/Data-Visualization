@@ -131,7 +131,14 @@ svg.append("g")
 # ---%%
 // LEGEND
 // create a list of keys
-var keys = [10000, 100000, 1000000, 10000000]
+const keys = [10000, 100000, 1000000, 10000000, 100000000]
+const legend_text = {
+	10000: '< 10k visitors',
+  	100000: '10k - 100k visitors',
+  	1000000: '100k - 1m visitors',
+  	10000000: '1m - 10m visitors',
+  	100000000: '> 10m visitors'
+}
 
 // Add one dot in the legend for each name.
 var size = 20
@@ -139,7 +146,7 @@ svg.selectAll("mydots")
     .data(keys)
     .enter()
     .append("rect")
-    .attr("x", 800)
+    .attr("x", 775)
     .attr("y", function (d, i) { return 50 + i * (size + 5) }) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("width", size)
     .attr("height", size)
@@ -150,10 +157,10 @@ svg.selectAll("mylabels")
     .data(keys)
     .enter()
     .append("text")
-    .attr("x", 800 + size * 1.2)
+    .attr("x", 775 + size * 1.2)
     .attr("y", function (d, i) { return 50 + i * (size + 5) + (size / 2) }) // 100 is where the first dot appears. 25 is the distance between dots
     .style("fill", function (d) { return colorScale(d) })
-    .text(function (d) { return d })
+    .text(d => legend_text[d])
     .attr("text-anchor", "left")
     .style("alignment-baseline", "middle")
 # %%--- [css]
