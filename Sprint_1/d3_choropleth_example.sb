@@ -5,12 +5,17 @@ Try editing this cell by clicking the pencil on the left!
 # properties:
 #   run_on_load: true
 # ---%%
-<!DOCTYPE html>
 <meta charset="utf-8">
 
 <!-- Create an element where the map will take place -->
-<div id="div_template" style="border:solid 1px red">
-  <svg id="choropleth" width=980 height=850 style="border:solid 1px orange"></svg>
+<div id="container">
+    <svg id="choropleth" width=980 height=830 style="border:solid 1px lightgrey; border-radius:5px"></svg>
+    <div style="padding:10px">
+        Filtern nach Kategorie: 
+        <select id="selectButton" style="border-color: lightgrey; border-radius:5px">
+            <option value="all">Alle Kategorien</option>
+        </select>
+    </div>
 </div>
 # %%--- [javascript]
 # properties:
@@ -19,18 +24,13 @@ Try editing this cell by clicking the pencil on the left!
 // load d3.js
 await import("https://d3js.org/d3.v6.js")
 
-// load institution data
-var data = await d3.json("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_1/data/data.json")
-var total_by_district = d3.rollup(Object.values(data), v => d3.sum(v, d => d[2014] || 0), d => d.Bezirk)
-console.log(data)
-console.log(total_by_district)
-# %% [javascript]
-console.log(total_by_district.get('Mitte'))
-# %%--- [javascript]
-# properties:
-#   run_on_load: true
-# ---%%
-// The svg
+// load institution data 
+var institutions_by_name = await d3.json("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_1/data/data.json")
+
+// load disticts geojson
+var topo = await d3.json("https://raw.githubusercontent.com/funkeinteraktiv/Berlin-Geodaten/master/berlin_bezirke.geojson")
+
+// assign svg element to variable
 var svg = d3.select("#choropleth")
 const width = +svg.attr("width")
 const height = +svg.attr("height")
@@ -51,188 +51,238 @@ svg.call(zoom);
 const path = d3.geoPath();
 var projection = d3.geoMercator()
     .scale(80000)
-    .center([13.42, 52.51])
+    .center([13.424, 52.507])
     .translate([width / 2, height / 2]);
 
-var colorScale = d3.scaleThreshold()
-    .domain([10000, 100000, 1000000, 10000000])
-    .range(d3.schemeBlues[5]);
-
-// Load external data and boot
-var topo = await d3.json("https://raw.githubusercontent.com/funkeinteraktiv/Berlin-Geodaten/master/berlin_bezirke.geojson")
-console.log(topo)
-
-// RESET PREVIOUSE CHILDREN OF SVG ELEMENT 
-// TODO REMOVE FOR PRODUCTION?
-svg.node().innerHTML = ''
-
-
+// helper function to format numbers with points
 function formatNumber(num) {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
 }
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+function choropleth(filter) {
+    let institutions = Object.values(institutions_by_name)
+    if (filter != 'all') {
+        institutions = institutions.filter(el => el.GruppeA == filter)
+    }
 
-// Create Tooltip
-var Tooltip = d3.select("#div_template")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
+    const total_by_district = d3.rollup(institutions, v => d3.sum(v, d => d[2014] || 0), d => d.Bezirk)
 
-// Three function that change the tooltip when user hover / move / leave a cell
-const mouseover_district = function (event, d) {
-    d3.selectAll(".district")
-        .transition()
-        .duration(150)
-        .style("opacity", .7)
-        .style("stroke", "grey")
-        .style("stroke-width", "1")
-    d3.select(this)
-        .transition()
-        .duration(150)
-        .style("opacity", 1)
-        .style("stroke", "grey")
-        .style("stroke-width", "3")
-    Tooltip
-        .transition()
-        .duration(150)
-        .style("opacity", 1)
+    // create logarithmic (base-10) color scale
+    const colorScale = d3.scaleThreshold()
+        .domain([10000, 100000, 1000000, 10000000])
+        .range(d3.schemeBlues[5]);
+
+    const Tooltip = add_tooltip(total_by_district)
+    add_map(total_by_district, colorScale, Tooltip)
+    add_bubbles(institutions, Tooltip)
+    add_legend(colorScale)
+    return institutions
 }
-const mousemove_district = function (event, d) {
-    Tooltip
-        .html(d.properties.name + '<br>' + formatNumber(total_by_district.get(d.properties.name) || 0))
-        .style("left", (event.pageX + 20) + "px")
-        .style("top", (event.pageY) + "px")
-}
-const mouseleave_district = function (event, d) {
-    d3.selectAll(".district")
-        .transition()
-        .duration(150)
-        .style("opacity", 1)
-        .style("stroke", "DimGrey")
-        .style("stroke-width", "1")
 
-    if (event.toElement.tagName != 'circle') {
+
+function add_tooltip(total_by_district) {
+
+    // Create Tooltip
+    const Tooltip = d3.select("#container")
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-color", "grey")
+        .style("border-width", "3px")
+        .style("border-radius", "5px")
+        .style("padding", "5px")
+
+    return Tooltip
+}
+
+
+function add_map(total_by_district, colorScale, Tooltip) {
+
+    // reset svg element
+    svg.node().innerHTML = ''
+
+    // functions that change the tooltip when user hover / move / leave a cell
+    const mouseover_district = function (event, d) {
+        d3.selectAll(".district")
+            .transition()
+            .duration(150)
+            .style("opacity", .7)
+            .style("stroke", "grey")
+            .style("stroke-width", "1")
+        d3.select(this)
+            .transition()
+            .duration(150)
+            .style("opacity", 1)
+            .style("stroke", "grey")
+            .style("stroke-width", "3")
         Tooltip
             .transition()
             .duration(150)
-            .style("opacity", 0);
+            .style("opacity", 1)
     }
+    const mousemove_district = function (event, d) {
+        Tooltip
+            .html(d.properties.name + '<br>' + formatNumber(total_by_district.get(d.properties.name) || 0))
+            .style("left", (event.pageX + 20) + "px")
+            .style("top", (event.pageY) + "px")
+    }
+    const mouseleave_district = function (event, d) {
+        d3.selectAll(".district")
+            .transition()
+            .duration(150)
+            .style("opacity", 1)
+            .style("stroke", "DimGrey")
+            .style("stroke-width", "1")
+
+        if (event.toElement.tagName != 'circle') {
+            Tooltip
+                .transition()
+                .duration(150)
+                .style("opacity", 0);
+        }
+    }
+
+
+    // Draw the map
+    svg.append("g")
+        .selectAll("path")
+        .data(topo.features)
+        .join("path")
+        .on("mouseover", mouseover_district)
+        .on("mousemove", mousemove_district)
+        .on("mouseleave", mouseleave_district)
+        .attr("d", d3.geoPath()
+            .projection(projection)
+        )
+        .attr("fill", colorScale(0))
+        .transition()
+        .duration(800)
+        .attr("fill", function (d) {
+            d.total = total_by_district.get(d.properties.name) || 0;
+            return colorScale(d.total);
+        })
+        .attr("class", d => 'district')
+        .attr("stroke", "DimGrey")
 }
 
 
-// Draw the map
-svg.append("g")
-    .selectAll("path")
-    .data(topo.features)
-    .join("path")
-    // draw each country
-    .attr("d", d3.geoPath()
-        .projection(projection)
-    )
-    // set the color of each district
-    .attr("fill", function (d) {
-        d.total = total_by_district.get(d.properties.name) || 0;
-        return colorScale(d.total);
-    })
-    .attr("class", d => 'district')
-    .attr("stroke", "DimGrey")
-    .on("mouseover", mouseover_district)
-    .on("mousemove", mousemove_district)
-    .on("mouseleave", mouseleave_district)
+function add_bubbles(institutions, Tooltip) {
+    // Add location bubbles
+    const mouseover_location = function (event, d) {
+        Tooltip.style("opacity", 1)
+        d3.select(this).attr('stroke-opacity', 0.5).attr('stroke', 'orange')
 
+    }
+    const mousemove_location = function (event, d) {
+        Tooltip
+            .html(d.Institution_Kultureinrichtungen + '<br>' + formatNumber(d[2014]))
+            .style("left", (event.pageX + 20) + "px")
+            .style("top", (event.pageY) + "px")
+    }
+    const mouseleave_location = function (event, d) {
+        Tooltip.style("opacity", 0)
+        d3.select(this).attr('stroke-opacity', 0.5).attr('stroke', 'black')
+    }
+
+    const scale = d3.scaleLinear()
+        .domain([1, 1.5e6])
+        .range([4, 25])
+
+    svg.append("g")
+        .selectAll("locations")
+        .data(institutions)
+        .join("circle")
+        .on("mouseover", mouseover_location)
+        .on("mousemove", mousemove_location)
+        .on("mouseleave", mouseleave_location)
+        .attr("cx", d => projection([d.Lon, d.Lat])[0])
+        .attr("cy", d => projection([d.Lon, d.Lat])[1])
+        .attr("r", 1.5)
+        .attr("class", "circle")
+        .style("fill", "black")
+        .attr("stroke", "black")
+        .transition()
+        .duration(1000)
+        .attr("stroke-width", d => scale(d[2014]) || 1)
+        .attr("fill-opacity", 1)
+        .attr("stroke-opacity", 0.5)
+
+}
+
+
+function add_legend(colorScale) {
+    // LEGEND
+    // create a list of keys
+    const keys = [10000, 100000, 1000000, 10000000, 100000000]
+    const legend_text = {
+        10000: '< 10k visitors',
+        100000: '10k - 100k visitors',
+        1000000: '100k - 1m visitors',
+        10000000: '1m - 10m visitors',
+        100000000: '> 10m visitors'
+    }
+
+    // add white background for legend
+    svg.append('rect')
+        .attr('x', 750)
+        .attr('y', 0)
+        .attr('width', 300)
+        .attr('height', 200)
+        .attr('stroke', 'transparent')
+        .attr('fill', 'white')
+        .attr('ry', 5)
+
+
+    // legend color rectangles
+    const size = 20
+    svg.append("g")
+        .selectAll("legend-rect")
+        .data(keys)
+        .enter()
+        .append("rect")
+        .attr("x", 775)
+        .attr("y", function (d, i) { return 50 + i * (size + 5) }) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("width", size)
+        .attr("height", size)
+        .style("fill", function (d) { return colorScale(d - 1) })
+
+    // legend text
+    svg.append("g").selectAll("legend_text")
+        .data(keys)
+        .enter()
+        .append("text")
+        .attr("x", 775 + size * 1.2)
+        .attr("y", function (d, i) { return 50 + i * (size + 5) + (size / 2) }) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", function (d) { return colorScale(d) })
+        .text(d => legend_text[d])
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+}
+
+
+choropleth('all')
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
 # ---%%
-// Add location bubbles
-const mouseover_location = function (event, d) {
-    Tooltip.style("opacity", 1)
-  	d3.select(this).attr('stroke-opacity', 0.5).attr('stroke', 'orange')
-  
-}
-const mousemove_location = function (event, d) {
-    Tooltip
-        .html(d.Institution_Kultureinrichtungen + '<br>' + formatNumber(d['2014']))
-        .style("left", (event.pageX + 20) + "px")
-        .style("top", (event.pageY) + "px")
-}
-const mouseleave_location = function (event, d) {
-    Tooltip.style("opacity", 0)
-  	d3.select(this).attr('stroke-opacity', 0.5).attr('stroke', 'black')
-}
+const categories = Array.from(d3.group(Object.values(institutions_by_name), v => v.GruppeA).keys()).sort()
 
-var scale = d3.scaleLinear()
-    .domain([1, 1.5e6])
-    .range([4, 25])
-
-svg.append("g")
-  	.selectAll("locations")
-    .data(Object.values(data))
-    .join("circle")
-    .attr("cx", d => projection([d.Lon, d.Lat])[0])
-    .attr("cy", d => projection([d.Lon, d.Lat])[1])
-    .attr("r", 1.5)
-    .attr("class", "circle")
-    .style("fill", "black")
-    .attr("stroke", "black")
-    .attr("stroke-width", d => scale(d[2014]) || 1)
-    .attr("fill-opacity", 1)
-  	.attr("stroke-opacity", 0.5)
-    .on("mouseover", mouseover_location)
-    .on("mousemove", mousemove_location)
-    .on("mouseleave", mouseleave_location)
-# %%--- [javascript]
-# properties:
-#   run_on_load: true
-# ---%%
-// LEGEND
-// create a list of keys
-const keys = [10000, 100000, 1000000, 10000000, 100000000]
-const legend_text = {
-    10000: '< 10k visitors',
-    100000: '10k - 100k visitors',
-    1000000: '100k - 1m visitors',
-    10000000: '1m - 10m visitors',
-    100000000: '> 10m visitors'
-}
-
-// add white background for legend
-svg.append('rect')
-    .attr('x', 750)
-    .attr('y', 0)
-    .attr('width', 300)
-    .attr('height', 200)
-    .attr('stroke', 'transparent')
-    .attr('fill', 'white')
-    .attr('ry', 5)
-
-
-// legend color rectangles
-var size = 20
-svg.append("g")
-  .selectAll("legend-rect")
-    .data(keys)
+// add the options to the button
+d3.select("#selectButton")
+    .selectAll('filter_options')
+    .data(categories)
     .enter()
-    .append("rect")
-    .attr("x", 775)
-    .attr("y", function (d, i) { return 50 + i * (size + 5) }) // 100 is where the first dot appears. 25 is the distance between dots
-    .attr("width", size)
-    .attr("height", size)
-    .style("fill", function (d) { return colorScale(d-1) })
+    .append('option')
+    .text(function (d) { return d; }) // text showed in the menu
+    .attr("value", function (d) { return d; }) // corresponding value returned by the button
 
-// legend text
-svg.append("g").selectAll("legend_text")
-    .data(keys)
-    .enter()
-    .append("text")
-    .attr("x", 775 + size * 1.2)
-    .attr("y", function (d, i) { return 50 + i * (size + 5) + (size / 2) }) // 100 is where the first dot appears. 25 is the distance between dots
-    .style("fill", function (d) { return colorScale(d) })
-    .text(d => legend_text[d])
-    .attr("text-anchor", "left")
-    .style("alignment-baseline", "middle")
 
+d3.select("#selectButton").on("change", function (event, d) {
+    const selectedOption = d3.select(this).property("value")
+    choropleth(selectedOption)
+})
