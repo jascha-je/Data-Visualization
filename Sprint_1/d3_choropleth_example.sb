@@ -9,8 +9,8 @@ Try editing this cell by clicking the pencil on the left!
 <meta charset="utf-8">
 
 <!-- Create an element where the map will take place -->
-<div id="div_template">
-  <svg id="choropleth" width=1000 height = 1000></svg>
+<div id="div_template" style="border:solid 1px red">
+  <svg id="choropleth" width=980 height=1000 style="border:solid 1px orange"></svg>
 </div>
 # %%--- [javascript]
 # properties:
@@ -29,7 +29,7 @@ console.log(total_by_district)
 #   run_on_load: true
 # ---%%
 .circle:hover{
-    stroke-width: 3;
+    stroke-opacity: 1;
 }
 # %%--- [javascript]
 # properties:
@@ -39,6 +39,18 @@ console.log(total_by_district)
 var svg = d3.select("#choropleth")
 const width = +svg.attr("width")
 const height = +svg.attr("height")
+
+// enable (limited) zoom and pan 
+var zoom = d3.zoom()
+    .scaleExtent([1, 4])
+    .translateExtent([[0, 0], [1000, 1000]])
+    .on('zoom', function (event) {
+        svg.selectAll('path')
+            .attr('transform', event.transform);
+        svg.selectAll('circle')
+            .attr('transform', event.transform);
+    });
+svg.call(zoom);
 
 // Map and projection
 const path = d3.geoPath();
@@ -103,7 +115,7 @@ const mouseleave_district = function (event, d) {
         .style("opacity", 1)
         .style("stroke", "DimGrey")
         .style("stroke-width", "1")
-  
+
     if (event.toElement.tagName != 'circle') {
         Tooltip
             .transition()
@@ -153,19 +165,20 @@ const mouseleave_location = function (event, d) {
 
 var scale = d3.scaleLinear()
     .domain([1, 1.5e6])
-    .range([2, 15])
+    .range([3, 20])
 
 svg.selectAll("myCircles")
     .data(Object.values(data))
     .join("circle")
     .attr("cx", d => projection([d.Lon, d.Lat])[0])
     .attr("cy", d => projection([d.Lon, d.Lat])[1])
-    .attr("r", d => scale(d[2014]) || 1)
+    .attr("r", 1.5)
     .attr("class", "circle")
     .style("fill", "black")
-    .attr("stroke", "DimGrey")
-    .attr("stroke-width", 0.3)
-    .attr("fill-opacity", .6)
+    .attr("stroke", "black")
+    .attr("stroke-width", d => scale(d[2014]) || 1)
+    .attr("fill-opacity", 1)
+  	.attr("stroke-opacity", 0.5)
     .on("mouseover", mouseover_location)
     .on("mousemove", mousemove_location)
     .on("mouseleave", mouseleave_location)
@@ -177,12 +190,23 @@ svg.selectAll("myCircles")
 // create a list of keys
 const keys = [10000, 100000, 1000000, 10000000, 100000000]
 const legend_text = {
-	10000: '< 10k visitors',
-  	100000: '10k - 100k visitors',
-  	1000000: '100k - 1m visitors',
-  	10000000: '1m - 10m visitors',
-  	100000000: '> 10m visitors'
+    10000: '< 10k visitors',
+    100000: '10k - 100k visitors',
+    1000000: '100k - 1m visitors',
+    10000000: '1m - 10m visitors',
+    100000000: '> 10m visitors'
 }
+
+// add white background for legend
+svg.append('rect')
+    .attr('x', 750)
+    .attr('y', 0)
+    .attr('width', 300)
+    .attr('height', 200)
+    .attr('stroke', 'transparent')
+    .attr('fill', 'white')
+    .attr('ry', 5)
+
 
 // Add one dot in the legend for each name.
 var size = 20
@@ -207,3 +231,4 @@ svg.selectAll("mylabels")
     .text(d => legend_text[d])
     .attr("text-anchor", "left")
     .style("alignment-baseline", "middle")
+
