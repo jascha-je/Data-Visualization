@@ -10,7 +10,7 @@ Try editing this cell by clicking the pencil on the left!
 
 <!-- Create an element where the map will take place -->
 <div id="div_template" style="border:solid 1px red">
-  <svg id="choropleth" width=980 height=1000 style="border:solid 1px orange"></svg>
+  <svg id="choropleth" width=980 height=850 style="border:solid 1px orange"></svg>
 </div>
 # %%--- [javascript]
 # properties:
@@ -24,13 +24,8 @@ var data = await d3.json("https://raw.githubusercontent.com/JJestel/Data-Visuali
 var total_by_district = d3.rollup(Object.values(data), v => d3.sum(v, d => d[2014] || 0), d => d.Bezirk)
 console.log(data)
 console.log(total_by_district)
-# %%--- [css]
-# properties:
-#   run_on_load: true
-# ---%%
-.circle:hover{
-    stroke-opacity: 1;
-}
+# %% [javascript]
+console.log(total_by_district.get('Mitte'))
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
@@ -43,7 +38,7 @@ const height = +svg.attr("height")
 // enable (limited) zoom and pan 
 var zoom = d3.zoom()
     .scaleExtent([1, 4])
-    .translateExtent([[0, 0], [1000, 1000]])
+    .translateExtent([[0, 0], [980, 850]])
     .on('zoom', function (event) {
         svg.selectAll('path')
             .attr('transform', event.transform);
@@ -72,6 +67,10 @@ console.log(topo)
 svg.node().innerHTML = ''
 
 
+function formatNumber(num) {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+}
+
 // Create Tooltip
 var Tooltip = d3.select("#div_template")
     .append("div")
@@ -87,31 +86,31 @@ var Tooltip = d3.select("#div_template")
 const mouseover_district = function (event, d) {
     d3.selectAll(".district")
         .transition()
-        .duration(200)
+        .duration(150)
         .style("opacity", .7)
         .style("stroke", "grey")
         .style("stroke-width", "1")
     d3.select(this)
         .transition()
-        .duration(200)
+        .duration(150)
         .style("opacity", 1)
         .style("stroke", "grey")
         .style("stroke-width", "3")
     Tooltip
         .transition()
-        .duration(200)
+        .duration(150)
         .style("opacity", 1)
 }
 const mousemove_district = function (event, d) {
     Tooltip
-        .html(d.properties.name)
+        .html(d.properties.name + '<br>' + formatNumber(total_by_district.get(d.properties.name) || 0))
         .style("left", (event.pageX + 20) + "px")
         .style("top", (event.pageY) + "px")
 }
 const mouseleave_district = function (event, d) {
     d3.selectAll(".district")
         .transition()
-        .duration(200)
+        .duration(150)
         .style("opacity", 1)
         .style("stroke", "DimGrey")
         .style("stroke-width", "1")
@@ -119,7 +118,7 @@ const mouseleave_district = function (event, d) {
     if (event.toElement.tagName != 'circle') {
         Tooltip
             .transition()
-            .duration(300)
+            .duration(150)
             .style("opacity", 0);
     }
 }
@@ -152,22 +151,26 @@ svg.append("g")
 // Add location bubbles
 const mouseover_location = function (event, d) {
     Tooltip.style("opacity", 1)
+  	d3.select(this).attr('stroke-opacity', 0.5).attr('stroke', 'orange')
+  
 }
 const mousemove_location = function (event, d) {
     Tooltip
-        .html(d.Institution_Kultureinrichtungen)
+        .html(d.Institution_Kultureinrichtungen + '<br>' + formatNumber(d['2014']))
         .style("left", (event.pageX + 20) + "px")
         .style("top", (event.pageY) + "px")
 }
 const mouseleave_location = function (event, d) {
     Tooltip.style("opacity", 0)
+  	d3.select(this).attr('stroke-opacity', 0.5).attr('stroke', 'black')
 }
 
 var scale = d3.scaleLinear()
     .domain([1, 1.5e6])
-    .range([3, 20])
+    .range([4, 25])
 
-svg.selectAll("myCircles")
+svg.append("g")
+  	.selectAll("locations")
     .data(Object.values(data))
     .join("circle")
     .attr("cx", d => projection([d.Lon, d.Lat])[0])
@@ -208,9 +211,10 @@ svg.append('rect')
     .attr('ry', 5)
 
 
-// Add one dot in the legend for each name.
+// legend color rectangles
 var size = 20
-svg.selectAll("mydots")
+svg.append("g")
+  .selectAll("legend-rect")
     .data(keys)
     .enter()
     .append("rect")
@@ -218,10 +222,10 @@ svg.selectAll("mydots")
     .attr("y", function (d, i) { return 50 + i * (size + 5) }) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("width", size)
     .attr("height", size)
-    .style("fill", function (d) { return colorScale(d) })
+    .style("fill", function (d) { return colorScale(d-1) })
 
-// Add one dot in the legend for each name.
-svg.selectAll("mylabels")
+// legend text
+svg.append("g").selectAll("legend_text")
     .data(keys)
     .enter()
     .append("text")
