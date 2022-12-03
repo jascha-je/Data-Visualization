@@ -1,7 +1,7 @@
 # Data-Visualization
 
-The index.html is currently hosted [here](https://jjestel.github.io/Data-Visualization/) using GitHub pages.
+The index.html is currently hosted under _https://jjestel.github.io/Data-Visualization/_ using GitHub pages.
 
-To import a starboard add the path as url-parameter like: 
+To import a starboard add the path as url-parameter like: _?sb=github/JJestel/Data-Visualization/blob/main/Sprint_1/index.sb_
 
-jjestel.github.io/Data-Visualization/**?sb=github/JJestel/Data-Visualization/blob/main/Sprint_1/index.sb**
+Link to the startboard for the first design sprint: [choropleth.sb](https://jjestel.github.io/Data-Visualization/?sb=github/JJestel/Data-Visualization/blob/main/Sprint_1/choropleth.sb)
