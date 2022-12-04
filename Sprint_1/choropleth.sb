@@ -1,5 +1,25 @@
 # %% [markdown]
-## **Besuchszahlen in öffentlich geförderten Kultureinrichtungen in den Berliner Bezirken im Jahr 2014**
+# Data Visualization WiSe 22/23 - Design Sprint 1
+
+#### Team Data Vizards: Henry el Bahnasawy, Gabriele Inciuraite, Jan Jascha Jestel, Frederik Safner
+
+### Description:
+
+This visualisation aims at helping political decision makers evaluate if there are attractive cultural facilities available in all Berlin districts and if some districts are in need of assistance, sponsorship or action. For creating the chart we have preprocessed and merged the data sets “__[Locations of Funded Cultural Institutions](https://daten.berlin.de/datensaetze/standorte-gef%C3%B6rderter-kultureinrichtungen)__” and “__[Number of Visits at Publicly Funded Cultural Institutions in Berlin](https://daten.berlin.de/datensaetze/besuchszahlen-%C3%B6ffentlich-gef%C3%B6rderten-berliner-kultureinrichtungen)__” provided by the __[Open Data Berlin](https://daten.berlin.de/)__ initiative in 2016.
+
+\
+The visualisation consists of the map of Berlin dissected into 12 districts. Each district is coloured based on a logarithmic scale of the absolute number of visits at the cultural facilities in 2014 which was the most recent available data to us. The intervals and discrete colour coding can be seen in the legend. In order to enable users to eyeball and observe how locations are distributed in the city, the map also entails bubbles for each institution. These bubbles are linearly scaled to represent the number of participants they received in 2014. We have chosen to visualise absolute numbers of visits in order to allow direct comparison of attractiveness of the cultural facilities between the districts and between the institutions.
+
+\
+Furthermore, the map allows a mouse based interaction: placing the cursor over a district makes it visually pop and display its name with the corresponding number of visitors, the same effect is achieved for the individual institutions. It is also possible to zoom in and out in order to explore areas that are more crowded with cultural facilities. Additionally, it is possible to use a dropdown menu at the bottom to select a particular type of institutions for more detailed exploration.
+
+\
+The chart suggests that there is a big disparity between districts in both, the number of cultural facilities and the amount of visitors. Particularly neglected are Marzahn and Spandau, followed by Reinickendorf, Treptow-Köpenick, and Neukölln. These districts could be the candidates for action.
+
+\
+The visualisation contains some limitations in terms of data. Firstly, the most recent visitor counts that we had access to were from 2014, which might misrepresent the current situation. In addition, only publicly funded cultural institutions were represented in the data. Cultural facilities that are not publicly funded are not included in the chart and therefore can not be considered in the interpretation of the visualisation. In regards to the chart design, it is unfortunately very difficult to differentiate between the bubble sizes, because the visitor numbers are covering a very big interval.
+
+## Besuchszahlen öffentlich geförderten Kultureinrichtungen in den Berliner Bezirken im Jahr 2014
 # %%--- [html]
 # properties:
 #   run_on_load: true
