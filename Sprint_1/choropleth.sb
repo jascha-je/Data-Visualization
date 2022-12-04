@@ -42,7 +42,7 @@ var zoom = d3.zoom()
     .on('zoom', function (event) {
         svg.selectAll('path')
             .attr('transform', event.transform);
-        svg.selectAll('circle')
+        svg.selectAll('.circle')
             .attr('transform', event.transform);
     });
 svg.call(zoom);
@@ -56,7 +56,7 @@ var projection = d3.geoMercator()
 
 // helper function to format numbers with points
 function formatNumber(num) {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
 }
 # %%--- [javascript]
 # properties:
@@ -127,7 +127,7 @@ function add_map(total_by_district, colorScale, Tooltip) {
     }
     const mousemove_district = function (event, d) {
         Tooltip
-            .html(d.properties.name + '<br>' + formatNumber(total_by_district.get(d.properties.name) || 0))
+            .html(d.properties.name + '<br>' + formatNumber(total_by_district.get(d.properties.name) || 0) + ' Besuche')
             .style("left", (event.pageX + 20) + "px")
             .style("top", (event.pageY) + "px")
     }
@@ -180,7 +180,7 @@ function add_bubbles(institutions, Tooltip) {
     }
     const mousemove_location = function (event, d) {
         Tooltip
-            .html(d.Institution_Kultureinrichtungen + '<br>' + formatNumber(d[2014]))
+            .html(d.Institution_Kultureinrichtungen + '<br>' + formatNumber(d[2014]) + ' Besuche')
             .style("left", (event.pageX + 20) + "px")
             .style("top", (event.pageY) + "px")
     }
@@ -208,7 +208,7 @@ function add_bubbles(institutions, Tooltip) {
         .attr("stroke", "black")
         .transition()
         .duration(1000)
-        .attr("stroke-width", d => scale(d[2014]) || 1)
+        .attr("stroke-width", d => scale(d[2014]))
         .attr("fill-opacity", 1)
         .attr("stroke-opacity", 0.5)
 
@@ -220,19 +220,19 @@ function add_legend(colorScale) {
     // create a list of keys
     const keys = [10000, 100000, 1000000, 10000000, 100000000]
     const legend_text = {
-        10000: '< 10k visitors',
-        100000: '10k - 100k visitors',
-        1000000: '100k - 1m visitors',
-        10000000: '1m - 10m visitors',
-        100000000: '> 10m visitors'
+        10000: '0 - 10.000',
+        100000: '10.000 - 100.000',
+        1000000: '100.000 - 1 Mio.',
+        10000000: '1 Mio. - 10 Mio.',
+        100000000: 'über 10 Mio.'
     }
 
     // add white background for legend
     svg.append('rect')
-        .attr('x', 750)
+        .attr('x', 770)
         .attr('y', 0)
-        .attr('width', 300)
-        .attr('height', 200)
+        .attr('width', 280)
+        .attr('height', 235)
         .attr('stroke', 'transparent')
         .attr('fill', 'white')
         .attr('ry', 5)
@@ -245,7 +245,7 @@ function add_legend(colorScale) {
         .data(keys)
         .enter()
         .append("rect")
-        .attr("x", 775)
+        .attr("x", 800)
         .attr("y", function (d, i) { return 50 + i * (size + 5) }) // 100 is where the first dot appears. 25 is the distance between dots
         .attr("width", size)
         .attr("height", size)
@@ -256,12 +256,42 @@ function add_legend(colorScale) {
         .data(keys)
         .enter()
         .append("text")
-        .attr("x", 775 + size * 1.2)
+        .attr("x", 800 + size * 1.25)
         .attr("y", function (d, i) { return 50 + i * (size + 5) + (size / 2) }) // 100 is where the first dot appears. 25 is the distance between dots
         .style("fill", function (d) { return colorScale(d) })
         .text(d => legend_text[d])
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
+
+    // legend title
+    svg.append("text")
+        .attr("x", 800)
+        .attr("y", 30)
+        .style("fill", "DimGrey")
+        .text(d => "Anzahl Besuche")
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+
+    // location bubble text 
+    svg.append("text")
+        .attr("x", 826)
+        .attr("y", 201)
+        .style("fill", "DimGrey")
+        .text(d => "Kultureinrichtung")
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+
+    // location bubble circle 
+    svg.append("circle")
+        .attr("cx", 785 + 25)
+        .attr("cy", 200)
+        .attr("r", 1.5)
+        .style("fill", "black")
+        .attr("stroke", "black")
+        .attr("stroke-width", 14)
+        .attr("fill-opacity", 1)
+        .attr("stroke-opacity", 0.5)
+
 }
 
 
