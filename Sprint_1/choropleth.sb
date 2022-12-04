@@ -19,7 +19,7 @@ The chart suggests that there is a big disparity between districts in both, the 
 \
 The visualisation contains some limitations in terms of data. Firstly, the most recent visitor counts that we had access to were from 2014, which might misrepresent the current situation. In addition, only publicly funded cultural institutions were represented in the data. Cultural facilities that are not publicly funded are not included in the chart and therefore can not be considered in the interpretation of the visualisation. In regards to the chart design, it is unfortunately very difficult to differentiate between the bubble sizes, because the visitor numbers are covering a very big interval.
 
-## Besuchszahlen öffentlich geförderten Kultureinrichtungen in den Berliner Bezirken im Jahr 2014
+## Besuchszahlen öffentlich geförderter Kultureinrichtungen in den Berliner Bezirken im Jahr 2014
 # %%--- [html]
 # properties:
 #   run_on_load: true
