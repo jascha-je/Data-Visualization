@@ -1,9 +1,9 @@
 # %% [markdown]
-# d3-test
-Try editing this cell by clicking the pencil on the left!
+## **Besuchszahlen in öffentlich geförderten Kultureinrichtungen in den Berliner Bezirken im Jahr 2014**
 # %%--- [html]
 # properties:
 #   run_on_load: true
+#   top_hidden: true
 # ---%%
 <meta charset="utf-8">
 
@@ -20,6 +20,7 @@ Try editing this cell by clicking the pencil on the left!
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
+#   top_hidden: true
 # ---%%
 // load d3.js
 await import("https://d3js.org/d3.v6.js")
@@ -61,6 +62,8 @@ function formatNumber(num) {
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
+#   top_hidden: true
+#   bottom_hidden: true
 # ---%%
 function choropleth(filter) {
     let institutions = Object.values(institutions_by_name)
@@ -299,6 +302,8 @@ choropleth('all')
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
+#   top_hidden: true
+#   bottom_hidden: true
 # ---%%
 const categories = Array.from(d3.group(Object.values(institutions_by_name), v => v.GruppeA).keys()).sort()
 
