@@ -4,4 +4,3 @@ node_modules
 coverage
 projs.js
 .DS_STORE
-dist
