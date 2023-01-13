@@ -1,5 +1,5 @@
 ## Fahrraddiebstähle auf Ebene der Planungsräume
-Location: [Fahrraddiebstahl.csv](Fahrraddiebstahl.csv)
+Location: [fahrraddiebstahl.csv](fahrraddiebstahl.csv)
 
 Source: https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin
 
