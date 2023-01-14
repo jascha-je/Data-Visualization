@@ -1,0 +1,267 @@
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+<meta charset="utf-8">
+
+<!-- Create an element where the map will take place -->
+<div id="container" style="border:solid 1px lightgrey;">
+    <svg id="choropleth" width=980 height=830 style="border:solid 1px lightgrey; border-radius:5px"></svg>
+    <div style="padding:10px">
+        Filtern nach Kategorie: 
+        <select id="selectButton" style="border-color: lightgrey; border-radius:5px">
+            <option value="all">Alle Kategorien</option>
+        </select>
+    </div>
+</div>
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+// load d3.js
+await import("https://d3js.org/d3.v6.js")
+
+const base_path = "https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_2/data/"
+
+var fahrraddiebstahl = await d3.csv(base_path + "fahrraddiebstahl.csv")
+
+var demographie = await d3.json(base_path + "demographie/demographie_kombiniert_plr.json")
+
+// 542 planungsräume
+var planungsraeume = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_planungsraeume_2021_wgs84.geojson")
+// 143 bezirksregionen
+var bezirksregionen = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_bezirksregionen_2021_wgs84.geojson")
+// 58 prognoseraeume
+var prognoseraeume = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_prognoseraeume_2021_wgs84.geojson")
+// 12 bezirke
+var bezirke = await d3.json(base_path + "GeoJSON/EPSG_4326/bezirksgrenzen.geojson")
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+planungsraeume
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+demographie
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+count_per_lor = d3.rollup(fahrraddiebstahl, v => v.length, d => d.LOR)
+
+// for (const pr of count_per_lor.keys()) {
+//  x = count_per_lor.get(pr) / (demog[pr].gesamt || 1) * 100000
+//  count_per_lor.set(pr, x);
+// }
+
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+// assign svg element to variable
+var svg = d3.select("#choropleth")
+
+// helper function to format numbers with points
+function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+}
+
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+function render_choropleth(data, {
+    targetSVG,
+    colorScale,
+    fillFeature,
+    lorGeoJSON,
+    tooltip,
+  	legend,
+} = {}) {
+
+    // ------------------------------------------------------------------------------------
+    // Enable Zoom
+
+    // enable (limited) zoom and pan 
+    // var zoom = d3.zoom()
+    //     .scaleExtent([1, 4])
+    //     .translateExtent([[0, 0], [980, 850]])
+    //     .on('zoom', function (event) {
+    //         targetSVG.selectAll('path')
+    //             .attr('transform', event.transform);
+    //             targetSVG.selectAll('.circle')
+    //             .attr('transform', event.transform);
+    //     });
+    // targetSVG.call(zoom);
+
+    // ------------------------------------------------------------------------------------
+    // Create Tooltip
+
+    const Tooltip = d3.select("#container")
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-color", "grey")
+        .style("border-width", "2px")
+        .style("border-radius", "5px")
+        .style("padding", "5px")
+
+
+    // functions that change the tooltip when user hover / move / leave a cell
+    const mouseover_lor = function (event, d) {
+        d3.select(this)
+            .style("stroke-width", 3)
+            .style("stroke-opacity", 1)
+
+        Tooltip
+            .transition()
+            .duration(150)
+            .style("opacity", 1)
+    }
+
+    const mousemove_lor = function (event, d) {
+        Tooltip
+            .html(tooltip(d))
+            .style("left", (event.pageX + 20) + "px")
+            .style("top", (event.pageY) + "px")
+    }
+    const mouseleave_lor = function (event, d) {
+        d3.select(this)
+            .style("stroke-width", 1)
+            .style("stroke-opacity", 0.5)
+
+        if (event.toElement.tagName != 'circle') {
+            Tooltip
+                .transition()
+                .duration(150)
+                .style("opacity", 0);
+        }
+    }
+
+
+    // ------------------------------------------------------------------------------------
+    // Create Map
+
+
+    // Map and projection
+    const path = d3.geoPath();
+    const projection = d3.geoMercator()
+        .scale(80000)
+        .center([13.424, 52.507])
+        .translate([+svg.attr("width") / 2, +svg.attr("height") / 2]);
+
+    // reset svg element
+    targetSVG.node().innerHTML = ''
+
+
+
+    // LOR Ebene Zeichen
+    targetSVG.append("g")
+        .selectAll("path")
+        .data(lorGeoJSON.features)
+        .join("path")
+        .on("mouseover", mouseover_lor)
+        .on("mousemove", mousemove_lor)
+        .on("mouseleave", mouseleave_lor)
+        .attr("d", d3.geoPath().projection(projection))
+        .attr("fill", colorScale(0))
+        .transition()
+        .duration(800)
+        .attr("fill", d => colorScale(fillFeature(d)))
+        .attr("class", d => 'lor_area')
+        .attr("stroke", "black")
+        .attr("stroke-opacity", "50%")
+
+    // Bezirksgrenzen zeichen
+    targetSVG.append("g")
+        .selectAll("path")
+        .data(bezirke.features)
+        .join("path")
+        .attr("d", d3.geoPath().projection(projection))
+        .attr("fill", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", 2)
+
+
+    // ------------------------------------------------------------------------------------
+    // Create Legend
+
+
+    // add white background for legend
+    // svg.append('rect')
+    //     .attr('x', 770)
+    //     .attr('y', 0)
+    //     .attr('width', 280)
+    //     .attr('height', 235)
+    //     .attr('stroke', 'transparent')
+    //     .attr('fill', 'orange')
+    //     .attr('ry', 5)
+    
+
+    // legend color rectangles
+    const size = 20
+    const x_test_start = 850
+
+    svg.append("g")
+        .selectAll("legend-rect")
+        .data(colorScale.range())
+        .enter()
+        .append("rect")
+        .attr("x", x_test_start)
+        .attr("y", (d, i) => 50 + i * (size + 5) ) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("width", size)
+        .attr("height", size)
+        .style("fill", d => d)
+
+    // legend text
+    svg.append("g").selectAll("legend_text")
+        .data([legend.start, ...colorScale.domain()])
+        .enter()
+        .append("text")
+        .attr("x", x_test_start + size * 1.25)
+        .attr("y", (d, i) => 50 + i * (size + 5) + (size / 2)) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", d => d)
+        .text((d,i) => d + " - " + [legend.start, ...colorScale.domain(), legend.end][i+1] )
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+
+    // legend title
+    svg.append("text")
+        .attr("x", x_test_start)
+        .attr("y", 30)
+        //.style("fill", "DimGrey")
+        .text(d => legend.title)
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+
+}
+
+
+
+
+var colorScale = d3.scaleThreshold()
+    .domain([6.0, 14.0, 30.0, 62.0, 94])
+    .range(['#fef0d9', '#fdd49e', '#fdbb84', '#fc8d59', '#e34a33', '#b30000']);
+
+
+render_choropleth(fahrraddiebstahl, {
+    targetSVG: svg,
+    colorScale: colorScale,
+    fillFeature: d => count_per_lor.get(d.properties.PLR_ID) || 0,
+    lorGeoJSON: planungsraeume,
+    tooltip: d => d.properties.PLR_NAME + '<br>' + (count_per_lor.get(d.properties.PLR_ID) || 0) + ' Fälle',
+  	legend: {start: 0, end: 233, title: 'Fallzahlen'}
+})
+
+# %% [python]
+import pandas as pd
+import pyodide
+from js import fahrraddiebstahl
+
+df = pd.DataFrame(fahrraddiebstahl.to_py())
+df['LOR']
