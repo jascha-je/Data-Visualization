@@ -27,6 +27,10 @@ var fahrraddiebstahl = await d3.csv(base_path + "fahrraddiebstahl.csv")
 
 var demographie = await d3.json(base_path + "demographie/demographie_kombiniert_plr.json")
 
+var kriminalitaet = await d3.csv(base_path + "kriminalitaet_2021_fallzahlen_bzr.csv")
+
+var lor = await d3.csv(base_path + "LOR_2021.csv")
+
 // 542 planungsräume
 var planungsraeume = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_planungsraeume_2021_wgs84.geojson")
 // 143 bezirksregionen
@@ -45,6 +49,16 @@ planungsraeume
 #   run_on_load: true
 # ---%%
 demographie
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+kriminalitaet
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+lor
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
@@ -257,42 +271,6 @@ render_choropleth(fahrraddiebstahl, {
   	legend: {start: 0, end: 233, title: 'Fallzahlen'}
 })
 
-# %%--- [python]
-# properties:
-#   run_on_load: true
-# ---%%
-import pandas as pd
-import pyodide
-# %%--- [python]
-# properties:
-#   run_on_load: true
-# ---%%
-from js import fahrraddiebstahl, demographie
-
-demo = pd.DataFrame.from_dict(demographie.to_py(), orient='index')
-print(demo)
-# %%--- [python]
-# properties:
-#   run_on_load: true
-# ---%%
-fd = pd.DataFrame.from_dict(fahrraddiebstahl.to_py())
-print(fd)
-# %%--- [python]
-# properties:
-#   run_on_load: true
-# ---%%
-demo_fd = demo.merge(fd.groupby(by='LOR').size().to_frame().rename(columns={0: 'Fahrraddiebstähle'}), left_on='PLR-ID', right_index=True, how='left')
-correlation = demo_fd.corr()['Fahrraddiebstähle'].sort_values(ascending=False).to_dict()
-print(correlation)
-# %%--- [javascript]
-# properties:
-#   run_on_load: true
-# ---%%
-let result_py = pyodide.globals.get("correlation")
-var result_js = result_py.toJs();
-result_py.destroy();
-result_js
-
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
@@ -411,7 +389,91 @@ function DivergingBarChart(data, {
 
   return svg.node();
 }
-# %% [javascript]
+# %%--- [python]
+# properties:
+#   run_on_load: true
+# ---%%
+import pandas as pd
+import pyodide
+# %% [markdown]
+# Korrelation mit Kriminalität 2021
+# %%--- [python]
+# properties:
+#   run_on_load: true
+# ---%%
+from js import fahrraddiebstahl, lor
+fd = pd.DataFrame.from_dict(fahrraddiebstahl.to_py())
+
+lors = pd.DataFrame(lor.to_py())
+cols = ['Planungsraum (Nummer)', 'Planungsraum (Name)', 'Bezirksregion (Nummer)', 'Bezirksregion (Name)']
+fd = fd.merge(lors[cols], left_on='LOR', right_on='Planungsraum (Nummer)')
+
+print(fd)
+# %%--- [python]
+# properties:
+#   run_on_load: true
+# ---%%
+from js import kriminalitaet
+
+crime = pd.DataFrame(kriminalitaet.to_py())
+crime_fd = crime.merge(fd.groupby(by='Bezirksregion (Nummer)').size().to_frame().rename(columns={0: 'Fahrraddiebstähle'}), left_on='LOR-Schlüssel (Bezirksregion)', right_index=True, how='right')
+num_cols = crime_fd.columns[2:]
+crime_fd[num_cols] = crime_fd[num_cols].astype(float)
+crime_correlation = crime_fd.corr()['Fahrraddiebstähle'].sort_values(ascending=False).to_dict()
+print(crime_correlation)
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+let result_py = pyodide.globals.get("crime_correlation")
+var crime_correlation = result_py.toJs()
+result_py.destroy()
+
+chart = DivergingBarChart(Array.from(crime_correlation, x => x).slice(1), {
+    x: d => d[1],
+    y: d => d[0],
+    yDomain: Array.from(crime_correlation, x => x[0]).slice(1),
+    xDomain: [0, 1],
+    xFormat: "+f",
+    xLabel: "Pearson's Correlation Coefficient",
+    width: 980,
+    height: 830,
+    marginRight: 70,
+    marginLeft: 200,
+    colors: d3.schemeRdBu[3]
+})
+
+// create and show new div
+div = document.createElement("div")
+d3.select(div).append(x => chart)
+d3.select(div).node()
+# %% [markdown]
+# Korrelation mit Sozialstruktur
+# %%--- [python]
+# properties:
+#   run_on_load: true
+# ---%%
+from js import fahrraddiebstahl, demographie
+
+demo = pd.DataFrame.from_dict(demographie.to_py(), orient='index')
+print(demo)
+# %%--- [python]
+# properties:
+#   run_on_load: true
+# ---%%
+demo_fd = demo.merge(fd.groupby(by='LOR').size().to_frame().rename(columns={0: 'Fahrraddiebstähle'}), left_on='PLR-ID', right_index=True, how='left')
+correlation = demo_fd.corr()['Fahrraddiebstähle'].sort_values(ascending=False).to_dict()
+print(correlation)
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+let result_py = pyodide.globals.get("correlation")
+var result_js = result_py.toJs();
+result_py.destroy();
+result_js
+
+
 chart = DivergingBarChart(Array.from(result_js, x => x).slice(1), {
     x: d => d[1],
     y: d => d[0],
