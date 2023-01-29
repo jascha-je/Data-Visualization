@@ -1,0 +1,145 @@
+# %% [css]
+table {
+  width: 100%;
+  table-layout: fixed;
+  border: #ffffff solid;
+}
+
+td {
+  border: #ffffff solid;
+  text-align: center;
+  }
+
+tr {
+  border: #ffffff solid;
+}
+
+table td:first-child {
+    border: #ffffff solid;
+}
+
+table td:last-child {
+    border: #ffffff solid;
+}
+# %%--- [html]
+# properties:
+#   run_on_load: true
+# ---%%
+<table cellspacing="0" cellpadding="0">
+  <tr>
+    <td style="font-size: 20px">Gesamtschaden</td>
+    <td style="font-size: 20px">Berlin 2022 gesamt</td>
+    <td style="font-size: 20px">&oslash; Schaden pro Diebstahl</td>
+  </tr>
+   <tr>
+    <td style="font-size: 30px; color: rgb(255, 33, 44); font-weight: bold;">23,2 Mio. €</td>
+    <td style="font-size: 30px; color: rgb(255, 33, 44); font-weight: bold;">22.362</td>
+    <td style="font-size: 30px; color: rgb(255, 33, 44); font-weight: bold;">1039€</td>
+  </tr>
+    <tr>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/euro.png"></td>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/brandenburger-tor.png"></td>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/bike.png"></td>
+  </tr>
+</table>
+<br>
+<br>
+<table>
+  <tr>
+    <td style="font-size: 20px">Aufklärungsquote</td>
+    <td style="font-size: 20px">&oslash; Diebstähle pro Tag</td>
+  </tr>
+   <tr>
+    <td style="font-size: 30px; color: rgb(255, 33, 44); font-weight: bold;">4,6 %</td>
+    <td style="font-size: 30px; color: rgb(255, 33, 44); font-weight: bold;">61</td>
+  </tr>
+  <tr>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/handcuffs.png"></td>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/day.png"></td>
+  </tr>
+</table>
+# %%--- [html]
+# properties:
+#   top_hidden: true
+#   run_on_load: true
+# ---%%
+<h1>In Berlin werden die meisten Räder geklaut</h1>
+<h3>Fahrraddiebstähle je 100.000 Einwohner 2017</h3>
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+const response = await fetch("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_2/data/fahrraddiebstaehle_deutschland_2017.json");
+let data = await response.json();
+
+let arrayData = [];
+let arrayLabel = [];
+
+for (let key in data) {
+	arrayData.push(data[key]);
+  	arrayLabel.push(key);
+}
+
+arrayOfObj = arrayLabel.map(function(d, i) {
+  return {
+    label: d,
+    data: arrayData[i] || 0
+  };
+});
+
+sortedArrayOfObj = arrayOfObj.sort(function(a, b) {
+  return b.data>a.data;
+});
+
+let newArrayLabel = [];
+let newArrayData = [];
+let backgroundColor = [];
+sortedArrayOfObj.forEach(function(d){
+  newArrayLabel.push(d.label);
+  newArrayData.push(d.data);
+  if(d.label == "Deutschland"){
+    backgroundColor.push("rgb(139, 0, 0)");
+  } else {
+    backgroundColor.push("rgb(255, 33, 44)");
+  }
+});
+
+await import("https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js");
+
+const canvas = document.createElement("canvas");
+const myChart = new Chart(canvas.getContext("2d"),
+    {
+        type: "bar",
+        data: {
+            labels: newArrayLabel,
+            datasets: [
+                {
+                  data: newArrayData,
+                  label: "Fahrraddiebstähle je 100.000 Einwohner 2017",
+                  backgroundColor: backgroundColor
+                },
+            ],
+        },
+      options: {
+        plugins: {
+            legend: {
+                display: false
+            },
+        }
+    }
+    },
+);
+
+canvas
+# %%--- [html]
+# properties:
+#   top_hidden: true
+#   run_on_load: true
+# ---%%
+Credits:
+<br>day by Anton Anuchin from <a href="https://thenounproject.com/browse/icons/term/day/" target="_blank" title="day Icons">Noun Project</a>
+<br>Euro by Adrien Coquet from <a href="https://thenounproject.com/browse/icons/term/euro/" target="_blank" title="Euro Icons">Noun Project</a>
+<br>Brandenburg Gate by Álvaro Y. from <a href="https://thenounproject.com/browse/icons/term/brandenburg-gate/" target="_blank" title="Brandenburg Gate Icons">Noun Project</a>
+<br>Bike by Liberus from <a href="https://thenounproject.com/browse/icons/term/bike/" target="_blank" title="Bike Icons">Noun Project</a>
+<br>Handcuffs by Fran Couto from <a href="https://thenounproject.com/browse/icons/term/handcuffs/" target="_blank" title="Handcuffs Icons">Noun Project</a>
