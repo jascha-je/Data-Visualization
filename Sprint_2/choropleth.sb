@@ -1,0 +1,544 @@
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+// load d3.js
+await import("https://d3js.org/d3.v7.min.js")
+var D3 = d3
+
+// load chart js 
+await import("https://cdn.jsdelivr.net/npm/chart.js");
+
+// load all necessary data
+const base_path = "https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_2/data/"
+
+// fahrraddiebstahl fälle
+var fahrraddiebstahl = await d3.csv(base_path + "fahrraddiebstahl.csv")
+// filter nur jahr 2022
+fahrraddiebstahl = fahrraddiebstahl.filter(x => x['ANGELEGT_AM'].slice(-4) == "2022")
+
+// kombinierte sozialstruktur/demographie daten je planungsraum
+var demographie = await d3.json(base_path + "demographie/demographie_kombiniert_plr.json")
+
+// delikzahlen je bezirksregion
+var kriminalitaet = await d3.csv(base_path + "kriminalitaet_2021_fallzahlen_bzr.csv")
+
+// verbindet planungsräume mit bezirksregionen und prognoseräumen
+var lor = await d3.csv(base_path + "LOR_2021.csv")
+
+// 542 planungsräume
+var planungsraeume = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_planungsraeume_2021_wgs84.geojson")
+// 143 bezirksregionen
+var bezirksregionen = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_bezirksregionen_2021_wgs84.geojson")
+// 58 prognoseraeume
+var prognoseraeume = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_prognoseraeume_2021_wgs84.geojson")
+// 12 bezirke
+var bezirke = await d3.json(base_path + "GeoJSON/EPSG_4326/bezirksgrenzen.geojson")
+
+
+// import plotly js
+try{
+  await import("https://cdn.plot.ly/plotly-2.18.0.min.js")
+} catch(error) {
+  console.log(error)
+}
+# %%--- [html]
+# properties:
+#   run_on_load: true
+# ---%%
+<!-- Create an element where the map will take place -->
+<div id="container" style="border:solid 0px pink;">
+  
+  <p style="padding-left: 10px;">
+    Standort in Koordinaten:
+  	<input type="text" id="input-longlat" size="50" style="margin-top:10px; border: solid 1px lightgrey; border-radius:4px;" placeholder="52.45606, 13.29717">
+   </p>
+  <svg id="choropleth" width=980 height=830 style="border:solid 0px pink; border-radius:5px"></svg>
+  <div style="padding:10px">
+    
+    <p style="display: inline-block; ">
+      LOR Ebene:
+      <select id="select_ebene" style="border-color: lightgrey; border-radius:4px">
+        <option value="plr">Planungsräume (542)</option>
+        <option value="bzr">Bezirksregionen (143)</option>
+        <option value="pgr">Prognoseräume (58)</option>
+      </select>
+    </p>
+    
+    <p style="padding-left: 50px; display: inline-block; ">
+      Fallzahlen:
+      <select id="select_measure" style="border-color: lightgrey; border-radius:4px">
+        <option value="cases">Absolut</option>
+        <option value="cases_per_100k">Je 100.000 Einwohner:innen</option>
+      </select>
+    </p>
+  </div>
+  
+  <div id="div-barchart" style="border:solid 0px pink; width:100%">
+  </div>
+  <div id="tooltip"></div>
+</div>
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+const count_per_plr = D3.rollup(fahrraddiebstahl, v => v.length, d => d.LOR)
+
+// create missing plr with 0 cases
+for (const el of D3.difference(Array.from(lor, x => x['Planungsraum (Nummer)']), Array.from(count_per_plr.keys()))) {
+  count_per_plr.set(el, 0)
+}
+
+// count per 100 k ew
+const count_per_plr_per_100k = new Map(count_per_plr)
+
+for (const pr of count_per_plr_per_100k.keys()) {
+  if (demographie[pr].Gesamt) {
+    x = count_per_plr_per_100k.get(pr) / (demographie[pr].Gesamt) * 100000
+  } else {
+    x = null
+  }
+  count_per_plr_per_100k.set(pr, x);
+}
+
+// add count and count per 100k to lor 
+lor.map(el => {
+  el.cases = count_per_plr.get(el['Planungsraum (Nummer)']);
+  el.cases_per_100k = count_per_plr_per_100k.get(el['Planungsraum (Nummer)']);
+  return el
+})
+
+var plr_index = D3.index(lor, v => v['Planungsraum (Nummer)'])
+var bzr_index = new Map();
+var pgr_index = new Map();
+
+for (const x of plr_index.values()) {
+  bzr_id = x["Bezirksregion (Nummer)"]
+
+  let bzr = bzr_index.get(bzr_id)
+  if (bzr == undefined) {
+    bzr_index.set(bzr_id, {
+      "Bezirksregion (Nummer)": bzr_id,
+      "Bezirksregion (Name)": x['Bezirksregion (Name)'],
+      "cases": x['cases'],
+      "cases_per_100k": x['cases_per_100k'],
+    });
+  } else {
+    bzr['cases'] += x['cases']
+    bzr['cases_per_100k'] += x['cases_per_100k']
+  }
+
+  pgr_id = x["Prognoseraum (Nummer)"]
+  let pgr = bzr_index.get(pgr_id)
+  if (pgr == undefined) {
+    pgr_index.set(pgr_id, {
+      "Prognoseraum (Nummer)": pgr_id,
+      "Prognoseraum (Name)": x['Prognoseraum (Name)'],
+      "cases": x['cases'],
+      "cases_per_100k": x['cases_per_100k'],
+    });
+  } else {
+    pgr['cases'] += x['cases']
+    pgr['cases_per_100k'] += x['cases_per_100k']
+  }
+}
+
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+// helper function to format numbers with points
+function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+}
+
+// Path and projection
+const svg = D3.select("#choropleth")
+var path = D3.geoPath();
+var projection = D3.geoMercator()
+  .scale(80000)
+  .center([13.424, 52.507])
+  .translate([+svg.attr("width") / 2, +svg.attr("height") / 2]);
+
+// function to create choropleth
+function render_choropleth(data, {
+  targetSVG,
+  colorScale,
+  fillFeature,
+  lorGeoJSON,
+  tooltip,
+  legend,
+} = {}) {
+
+  // ------------------------------------------------------------------------------------
+  // Create Tooltip
+
+  const Tooltip = D3.select("#tooltip")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-color", "grey")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+
+  // functions that change the tooltip when user hover / move / leave a cell
+  const mouseover_lor = function (event, d) {
+    D3.select(this)
+      .style("stroke-width", 3)
+      .style("stroke-opacity", 1)
+
+    Tooltip
+      .transition()
+      .duration(150)
+      .style("opacity", 1)
+  }
+
+  const mousemove_lor = function (event, d) {
+    Tooltip
+      .html(tooltip(d))
+      .style("left", (event.pageX + 20) + "px")
+      .style("top", (event.pageY) + "px")
+  }
+  const mouseleave_lor = function (event, d) {
+    D3.select(this)
+      .style("stroke-width", 1)
+      .style("stroke-opacity", 0.5)
+
+    if (event.toElement.tagName != 'circle') {
+      Tooltip
+        .transition()
+        .duration(150)
+        .style("opacity", 0);
+    }
+  }
+
+  // ------------------------------------------------------------------------------------
+  // Create Map
+
+
+  // reset svg element
+  targetSVG.node().innerHTML = ''
+
+  // LOR Ebene Zeichen
+  targetSVG.append("g")
+    .selectAll("path")
+    .data(lorGeoJSON.features)
+    .join("path")
+    .on("mouseover", mouseover_lor)
+    .on("mousemove", mousemove_lor)
+    .on("mouseleave", mouseleave_lor)
+    .attr("d", path.projection(projection))
+    .attr("fill", colorScale(0))
+    .transition()
+    .duration(500)
+    .attr("fill", d => colorScale(fillFeature(d)))
+    .attr("class", d => 'lor_area')
+    .attr("stroke", "black")
+    .attr("stroke-opacity", "50%")
+  	.attr("data-id", d => d.properties['PLR_ID'] ||  d.properties['BZR_ID'] ||  d.properties['PGR_ID'])
+
+  // Bezirksgrenzen zeichen
+  targetSVG.append("g")
+    .selectAll("path")
+    .data(bezirke.features)
+    .join("path")
+    .attr("d", path.projection(projection))
+    .attr("fill", "none")
+    .attr("stroke", "black")
+    .attr("stroke-width", 2)
+
+
+  // ------------------------------------------------------------------------------------
+  // Create Legend
+
+  // legend color rectangles
+  const size = 20
+  const x_test_start = 820
+  const y_start = 64
+  
+  targetSVG.append("g")
+    .selectAll("legend-rect")
+    .data(colorScale.range())
+    .enter()
+    .append("rect")
+    .attr("x", x_test_start)
+    .attr("y", (d, i) => y_start + i * (size + 5)) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", d => d)
+
+  // legend text
+  targetSVG.append("g").selectAll("legend_text")
+    .data([legend.start, ...colorScale.domain()])
+    .enter()
+    .append("text")
+    .attr("x", x_test_start + size * 1.25)
+    .attr("y", (d, i) => y_start + i * (size + 5) + (size / 2)) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", d => d)
+    .text((d, i) => d + " - " + [legend.start, ...colorScale.domain(), legend.end][i + 1])
+    .attr("text-anchor", "left")
+    .attr("font-size", "12")
+    .style("alignment-baseline", "middle")
+
+  // legend title
+  const text = targetSVG.append("text")
+    .attr("x", x_test_start)
+    .attr("y", legend.line1 == ' '? 20 : 10)
+    .attr("text-anchor", "left")
+	.attr("font-size", "12")
+     //.style("alignment-baseline", "middle")
+  
+  text.append('svg:tspan')
+    .attr("dy", '1.2em')
+    .attr('x', x_test_start)
+    .text(d => legend.line1)
+  
+  text.append('svg:tspan')
+     .attr("dy", '1.2em')
+    .attr('x', x_test_start)
+    .text(d => legend.line2)
+
+    text.append('svg:tspan')
+     .attr("dy", '1.2em')
+    .attr('x', x_test_start)
+    .text(d => legend.line3)
+
+}
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+const svg = D3.select("#choropleth")
+
+function hightlight_location() {
+  let value = document.getElementById('input-longlat').value
+  try {
+
+    value = value.split(',').map(parseFloat)
+    console.log(value)
+    value = value.reverse()
+
+    if (value.length != 2) {
+      return 
+    }
+    
+    // reset old lor in choropleth
+    D3.select('.location-lor').attr('stroke', 'black')
+      .attr("stroke-width", 1)
+      .attr("stroke-opacity", "50%")
+      .attr('class', '')
+
+    // delete old location point in choropleth
+    svg.select("#location-circle").remove()
+
+    // add new location point in choropleth
+    svg.append('circle')
+      .attr("id", 'location-circle')
+      .attr("cx", d => projection(value)[0])
+      .attr("cy", d => projection(value)[1])
+      .attr('r', 5)
+      .attr('stroke', 'black')
+      .attr('fill', 'cyan');
+
+    // find corresponding lor 
+    const point = svg.node().createSVGPoint();
+    const circle = document.getElementById('location-circle')
+    point.x = circle.getAttribute('cx');
+    point.y = circle.getAttribute('cy');
+
+    for (const n of D3.selectAll('.lor_area').nodes()) {
+      if (n.isPointInFill(point)) {
+        const id = n.getAttribute('data-id')
+        const value_key = D3.select('#select_ebene').property("value")
+        let index = plr_index
+        let name_key = 'Planungsraum (Name)'
+
+        if (value_key == 'bzr') {
+          index = bzr_index
+          name_key = 'Bezirksregion (Name)'
+        } else if (value_key == 'pgr') {
+          index = pgr_index
+          name_key = 'Prognoseraum (Name)'
+        }
+
+        D3.select(n).attr('stroke', 'cyan')
+          .attr("stroke-width", 2)
+          .attr("stroke-opacity", "100%")
+          .attr('class', 'location-lor')
+
+        const name = index.get(id)[name_key]
+        const graphDiv = document.getElementById('div-barchart')
+        
+        const data = graphDiv.data
+        const idx = data[0].x.findIndex(x => x == name)
+        const color = data[0].y.map(colorScale)
+        color[idx] = '#00ffff'
+
+        data[0].marker.color = color
+
+        Plotly.newPlot(graphDiv, data, graphDiv.layout)
+
+        break
+      }
+    }
+
+  } catch (err) {
+    console.error(err)
+  }
+
+}
+
+D3.select("#input-longlat").on("change", (event) => hightlight_location());
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+# ---%%
+function get_tooltip(d, index, name, id, value_key) {
+  let tt = d.properties[name] + '<br>'
+  if (index.get(d.properties[id])[value_key] == null) {
+    tt += 'Keine Daten'
+  } else if (value_key == 'cases') {
+    tt += formatNumber(index.get(d.properties[id])[value_key]) + ' Fälle'
+  } else if (value_key == 'cases_per_100k') {
+    const f = D3.format(".1f");
+    tt += formatNumber(f(index.get(d.properties[id])[value_key]).replace(".", ",")) + ' Fälle je 100.000 <br> Einwohner:innen'
+  }
+  return tt
+}
+
+var colorScale
+
+function update_plots(event, d) {
+  const selectedLOR = D3.select('#select_ebene').property("value")
+  const value_key = D3.select('#select_measure').property("value")
+
+  // default values
+  let lorGeoJSON = planungsraeume
+  let index = plr_index
+  let id_key = 'PLR_ID'
+  let name_key = 'PLR_NAME'
+  let lor_name_key = 'Planungsraum (Name)'
+  let legendline3 = 'nach Planungsräumen'
+
+  switch (selectedLOR) {
+    case 'bzr':
+      lorGeoJSON = bezirksregionen
+      index = bzr_index
+      id_key = 'BZR_ID'
+      name_key = 'BZR_NAME'
+      lor_name_key = 'Bezirksregion (Name)'
+      legendline3 = 'nach Bezirksregionen'
+      break;
+    case 'pgr':
+      lorGeoJSON = prognoseraeume
+      index = pgr_index
+      id_key = 'PGR_ID'
+      name_key = 'PGR_NAME'
+      lor_name_key = 'Prognoseraum (Name)'
+      legendline3 = 'nach Prognoseräumen'
+      break;
+  }
+
+  const fillFeature = d => index.get(d.properties[id_key])[value_key] || 0
+  const tooltip = d => get_tooltip(d, index, name_key, id_key, value_key)
+
+  // calculate domain for color scale
+  let values = lorGeoJSON.features.map(fillFeature)
+  let qts = [0.2, 0.4, 0.6, 0.8, 0.95]
+  let domain = qts.map(d => Math.round(D3.quantile(values, d)))
+
+  // [6.0, 14.0, 30.0, 62.0, 94]
+  colorScale = D3.scaleThreshold()
+    .domain(domain)
+    .range(['#fef0d9', '#fdd49e', '#fdbb84', '#fc8d59', '#e34a33', '#b30000']);
+
+
+  render_choropleth(fahrraddiebstahl, {
+    targetSVG: D3.select("#choropleth"),
+    colorScale: colorScale,
+    legend: {
+      start: Math.round(D3.min(values)),
+      end: Math.round(D3.max(values)),
+      line1: value_key == 'cases' ? ' ' : 'Fahrraddiebstähle 2022',
+      line2: value_key == 'cases' ? 'Fahrraddiebstähle 2022' : 'je 100.000 Einwohner:innen',
+      line3: legendline3,
+    },
+    lorGeoJSON: lorGeoJSON,
+    fillFeature: fillFeature,
+    tooltip: tooltip,
+  })
+
+
+  // PLOT BARCHART
+  const arr = Array.from(index.values()).sort((a, b) => D3.ascending(a[value_key] || 0, b[value_key] || 0))
+
+  const data = [
+    {
+      x: arr.map(x => x[lor_name_key]),
+      y: arr.map(x => x[value_key]),
+      type: 'bar',
+      marker: {
+        color: arr.map(x => colorScale(x[value_key])),
+      },
+
+      // hovertemplate:
+      //       "<b>%{x}</b><br>" +
+      //       "%{yaxis.title.text}: %{y:$,.0f}<br>" +
+      //       "%{xaxis.title.text}: %{x:.0%}<br>" +
+      //       "Number Employed: %{marker.size:,}" +
+      //       "<extra></extra>"
+
+    }
+  ]
+
+  const layout = {
+    autosize: false,
+    width: 950,
+    height: 600,
+    margin: {
+      l: 60,
+      r: 10,
+      b: 200,
+      t: 10,
+      pad: 3,
+    },
+    xaxis: {
+      title: {
+        text: legendline3.slice(0, -2).replace('nach ', '').replace('ä', 'a'),
+        standoff: 10
+      },
+      tickfont: {
+        size: 11,
+      }
+    },
+    yaxis: {
+      title: {
+        text: 'Fahrraddiebstähle' + (value_key == 'cases' ? '' : ' je 100.000 Einwohner:innen'),
+        standoff: 20
+      }
+    }
+  }
+
+  const div = document.getElementById('div-barchart')
+  Plotly.react(div, data, layout);
+
+  // const div = document.createElement("div");
+  // div.setAttribute("id", "bar-div");
+  // Plotly.newPlot(div, data, layout);
+  // return div
+
+  // workaround to trigger location hightlight after changing the choropleth 
+  setTimeout(() => hightlight_location(), 500);
+}
+
+
+D3.select("#select_ebene").on("change", (event, d) => update_plots(event, d))
+D3.select("#select_measure").on("change", (event, d) => update_plots(event, d))
+
+update_plots(null, null)
