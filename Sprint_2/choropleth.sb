@@ -1,6 +1,211 @@
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+… wo werden die Fahrräder gestohlen?
+<br>
+…wie gefährdet sind Sie?
+
+<br>
+<br>
+Geben Sie dazu die Koordinaten eines Standorts ein, an dem Sie häufig ihr Fahrrad abstellen. <br/>
+Alternativ wird der Standort des Instituts für Informatik der FU Berlin (Takustraße 9) genutzt.
+<p style="">
+  Standort:
+  <input type="text" id="input-longlat" size="50"
+    style="margin-top:1px; border: solid 1px lightgrey; border-radius:4px; height:25px" value="52.456078936394185, 13.29709314232757">
+</p>
+
+<details>
+  <summary>Koordinaten erhalten</summary>
+  <ol>
+    <li>Öffnen Sie <a
+        href="https://www.google.de/maps">Google Maps</a>
+    </li>
+    <li>Mit einem Rechtsklick auf den gewünschten Standort öffnet sich das Kontextmenü. An oberster Stelle des Menüs sehen Sie die Koordinaten. 
+      	Mit einem Linksklick darauf werden die Koordinaten zwischengespeichert.
+    </li>
+    <li>Kopieren Sie die Koordinaten nun in das vorherige Feld und bestätigen Sie mit Enter.
+    </li>
+  </ol>
+</details>
+# %%--- [css]
+# properties:
+#   top_hidden: true
+# ---%%
+.tooltipp {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltipp .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltipp .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.tooltipp:hover .tooltiptext {
+  visibility: visible;
+}
+
+<div class="tooltipp">Hover over me
+  <span class="tooltiptext">Tooltip text</span>
+</div>
+
+<div class="tooltipp">Hover over me
+  <span class="tooltiptext">This is a test again asjdn. na jnjan jan j jn jn </span>
+</div>
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+<style>
+    .tooltip_b {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+
+    .tooltip_b .tooltiptext {
+        visibility: hidden;
+        width: 500px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        top: 150%;
+        left: 50%;
+        margin-left: -250px;
+    }
+
+    .tooltip_b .tooltiptext::after {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent black transparent;
+    }
+
+    .tooltip_b:hover .tooltiptext {
+        visibility: visible;
+    }
+</style>
+
+<h2>Karte Fahrraddiebstähle 2022</h2>
+
+Die Visualisierung zeigt die Anzahl der Fahrraddiebstähle auf Ebene der lebensweltlich orientierten Räume
+(<div class="tooltip_b">LOR<span class="tooltiptext">Lebensweltlich orientierte Räume (LOR) sind eine räumliche
+        Grundlage für die Planung, Prognose und Beobachtung demografischer und sozialer Entwicklungen in Berlin. Sie
+        lassen sich in 3 Ebenen einteilen: <br>
+        542 Planungsräume (PLR)<br>
+        143 Bezirksregionen (BZR)<br>
+        58 Prognoseräume (PRG)
+    </span></div>).
+<br>
+Die aktuelle Visualisierung ist auf Ebene der:
+
+<select id="select_ebene" style="border-color: lightgrey; border-radius:4px">
+    <option value="plr">Planungsräume (542)</option>
+    <option value="bzr">Bezirksregionen (143)</option>
+    <option value="pgr">Prognoseräume (58)</option>
+</select>
+<br>
+Eingefärbt werden die Räume nach der Anzahl der Fahrraddiebstähle
+
+<select id="select_measure" style="border-color: lightgrey; border-radius:4px">
+    <option value="cases">gesamt</option>
+    <option value="cases_per_100k">je 100.000 Einwohnende</option>
+</select>
+
+<br>
+Die Intervalle zur Einfärbung eines Raums werden anhand der folgenden
+<div class="tooltip_b">Quantile<span class="tooltiptext">Beispiel: Betrachten wir die Anzahl an Fahrraddiebstählen je
+        Planungsraum (543 Räume). Das 20 %-Quantil ist dann die Anzahl an Fahrraddiebstählen, sodass 20 % der
+        Plangungsräume (ca. 109 Räume) weniger Diebstähle als die besagte Anzahl aufweisen. <br> </span></div>
+berechnet 20/40/60/80/95/100 (%).
+
+
+
+
+
+
+<!-- Create an element where the map will take place -->
+<div id="container" style="border:solid 0px pink;">
+
+    <svg id="choropleth" width=980 height=830 style="border:solid 0px pink; border-radius:5px"></svg>
+
+    <div id="div-barchart" style="border:solid 0px pink; width:100%"></div>
+
+    <!-- <div style="padding:10px">
+        <p style="display: inline-block; ">
+            LOR Ebene:
+            <select id="select_ebene" style="border-color: lightgrey; border-radius:4px">
+                <option value="plr">Planungsräume (542)</option>
+                <option value="bzr">Bezirksregionen (143)</option>
+                <option value="pgr">Prognoseräume (58)</option>
+            </select>
+        </p>
+
+        <p>
+            Fallzahlen:
+            <select id="select_measure" style="border-color: lightgrey; border-radius:4px">
+                <option value="cases">Absolut</option>
+                <option value="cases_per_100k">Je 100.000 Einwohnende</option>
+            </select>
+        </p>
+    </div> -->
+
+    <div id="tooltip"></div>
+
+    <details>
+        <summary>Datenquellen</summary>
+        <ul>
+            <li>Fahrraddiebstähle <a
+                    href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
+            </li>
+            <li>Geodaten <a
+                    href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
+            </li>
+            <li>Bevölkerung <a
+                    href="https://www.statistik-berlin-brandenburg.de/a-i-16-hj">https://www.statistik-berlin-brandenburg.de/a-i-16-hj</a>
+            </li>
+        </ul>
+    </details>
+
+</div>
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
+#   top_hidden: true
 # ---%%
 // load d3.js
 await import("https://d3js.org/d3.v7.min.js")
@@ -37,47 +242,11 @@ var bezirke = await d3.json(base_path + "GeoJSON/EPSG_4326/bezirksgrenzen.geojso
 
 
 // import plotly js
-try{
+try {
   await import("https://cdn.plot.ly/plotly-2.18.0.min.js")
-} catch(error) {
+} catch (error) {
   console.log(error)
 }
-# %%--- [html]
-# properties:
-#   run_on_load: true
-# ---%%
-<!-- Create an element where the map will take place -->
-<div id="container" style="border:solid 0px pink;">
-  
-  <p style="padding-left: 10px;">
-    Standort in Koordinaten:
-  	<input type="text" id="input-longlat" size="50" style="margin-top:10px; border: solid 1px lightgrey; border-radius:4px;" placeholder="52.45606, 13.29717">
-   </p>
-  <svg id="choropleth" width=980 height=830 style="border:solid 0px pink; border-radius:5px"></svg>
-  <div style="padding:10px">
-    
-    <p style="display: inline-block; ">
-      LOR Ebene:
-      <select id="select_ebene" style="border-color: lightgrey; border-radius:4px">
-        <option value="plr">Planungsräume (542)</option>
-        <option value="bzr">Bezirksregionen (143)</option>
-        <option value="pgr">Prognoseräume (58)</option>
-      </select>
-    </p>
-    
-    <p style="padding-left: 50px; display: inline-block; ">
-      Fallzahlen:
-      <select id="select_measure" style="border-color: lightgrey; border-radius:4px">
-        <option value="cases">Absolut</option>
-        <option value="cases_per_100k">Je 100.000 Einwohner:innen</option>
-      </select>
-    </p>
-  </div>
-  
-  <div id="div-barchart" style="border:solid 0px pink; width:100%">
-  </div>
-  <div id="tooltip"></div>
-</div>
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
@@ -90,22 +259,12 @@ for (const el of D3.difference(Array.from(lor, x => x['Planungsraum (Nummer)']),
   count_per_plr.set(el, 0)
 }
 
-// count per 100 k ew
-const count_per_plr_per_100k = new Map(count_per_plr)
-
-for (const pr of count_per_plr_per_100k.keys()) {
-  if (demographie[pr].Gesamt) {
-    x = count_per_plr_per_100k.get(pr) / (demographie[pr].Gesamt) * 100000
-  } else {
-    x = null
-  }
-  count_per_plr_per_100k.set(pr, x);
-}
-
 // add count and count per 100k to lor 
 lor.map(el => {
-  el.cases = count_per_plr.get(el['Planungsraum (Nummer)']);
-  el.cases_per_100k = count_per_plr_per_100k.get(el['Planungsraum (Nummer)']);
+  const plr_id = el['Planungsraum (Nummer)']
+  el.cases = count_per_plr.get(plr_id);
+  el.population = demographie[plr_id].Gesamt
+  el.cases_per_100k = demographie[plr_id].Gesamt == null? null : el.cases / el.population * 100000;
   return el
 })
 
@@ -123,10 +282,12 @@ for (const x of plr_index.values()) {
       "Bezirksregion (Name)": x['Bezirksregion (Name)'],
       "cases": x['cases'],
       "cases_per_100k": x['cases_per_100k'],
+      "population": x['population'],
     });
   } else {
     bzr['cases'] += x['cases']
     bzr['cases_per_100k'] += x['cases_per_100k']
+    bzr['population'] += x['population']
   }
 
   pgr_id = x["Prognoseraum (Nummer)"]
@@ -137,10 +298,12 @@ for (const x of plr_index.values()) {
       "Prognoseraum (Name)": x['Prognoseraum (Name)'],
       "cases": x['cases'],
       "cases_per_100k": x['cases_per_100k'],
+      "population": x['population'],
     });
   } else {
     pgr['cases'] += x['cases']
     pgr['cases_per_100k'] += x['cases_per_100k']
+    pgr['population'] += x['population']
   }
 }
 
@@ -285,6 +448,25 @@ function render_choropleth(data, {
     .attr("font-size", "12")
     .style("alignment-baseline", "middle")
 
+  // location cirlce 
+  targetSVG.append('circle')
+      .attr("id", 'location-circle-legend')
+      .attr("cx", d => x_test_start + size/2)
+      .attr("cy", d => 230)
+      .attr('r', 5)
+      .attr('stroke', 'black')
+      .attr('fill', 'cyan');
+
+    targetSVG.append("text")
+    .attr("x", x_test_start + size * 1.25)
+    .attr("y", (d, i) => 230)
+  	.style("fill", d => d)
+    .text((d, i) => "Standort")
+    .attr("text-anchor", "left")
+    .attr("font-size", "12")
+    .style("alignment-baseline", "middle")
+
+  
   // legend title
   const text = targetSVG.append("text")
     .attr("x", x_test_start)
@@ -382,7 +564,7 @@ function hightlight_location() {
 
         data[0].marker.color = color
 
-        Plotly.newPlot(graphDiv, data, graphDiv.layout)
+        Plotly.react('div-barchart', data, graphDiv.layout)
 
         break
       }
@@ -398,16 +580,19 @@ D3.select("#input-longlat").on("change", (event) => hightlight_location());
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
+#   top_hidden: true
 # ---%%
 function get_tooltip(d, index, name, id, value_key) {
   let tt = d.properties[name] + '<br>'
   if (index.get(d.properties[id])[value_key] == null) {
     tt += 'Keine Daten'
-  } else if (value_key == 'cases') {
-    tt += formatNumber(index.get(d.properties[id])[value_key]) + ' Fälle'
-  } else if (value_key == 'cases_per_100k') {
+  } else {
+    tt += 'Fahrraddiebstähle: ' + formatNumber(index.get(d.properties[id])['cases'])
+    tt += '<br>Einwohnende: ' + formatNumber(index.get(d.properties[id])['population'])
+
     const f = D3.format(".1f");
-    tt += formatNumber(f(index.get(d.properties[id])[value_key]).replace(".", ",")) + ' Fälle je 100.000 <br> Einwohner:innen'
+    tt += '<br>Fahrraddiebstähle je 100.000 Einwohnende: ' + formatNumber(f(index.get(d.properties[id])['cases_per_100k']).replace(".", ","))
+
   }
   return tt
 }
@@ -466,7 +651,7 @@ function update_plots(event, d) {
       start: Math.round(D3.min(values)),
       end: Math.round(D3.max(values)),
       line1: value_key == 'cases' ? ' ' : 'Fahrraddiebstähle 2022',
-      line2: value_key == 'cases' ? 'Fahrraddiebstähle 2022' : 'je 100.000 Einwohner:innen',
+      line2: value_key == 'cases' ? 'Fahrraddiebstähle 2022' : 'je 100.000 Einwohnende',
       line3: legendline3,
     },
     lorGeoJSON: lorGeoJSON,
@@ -477,23 +662,22 @@ function update_plots(event, d) {
 
   // PLOT BARCHART
   const arr = Array.from(index.values()).sort((a, b) => D3.ascending(a[value_key] || 0, b[value_key] || 0))
-
+  
   const data = [
     {
       x: arr.map(x => x[lor_name_key]),
       y: arr.map(x => x[value_key]),
+	  text: arr.map(x => x['population']),
+      textposition: 'none',
       type: 'bar',
       marker: {
         color: arr.map(x => colorScale(x[value_key])),
       },
-
-      // hovertemplate:
-      //       "<b>%{x}</b><br>" +
-      //       "%{yaxis.title.text}: %{y:$,.0f}<br>" +
-      //       "%{xaxis.title.text}: %{x:.0%}<br>" +
-      //       "Number Employed: %{marker.size:,}" +
-      //       "<extra></extra>"
-
+      hovertemplate:
+            "%{x}<br>" +
+            "%{yaxis.title.text}: %{y:,.0f}<br>" +
+            "Einwohnende: %{text:,.0f}<br>" +
+            "<extra></extra>"
     }
   ]
 
@@ -519,15 +703,15 @@ function update_plots(event, d) {
     },
     yaxis: {
       title: {
-        text: 'Fahrraddiebstähle' + (value_key == 'cases' ? '' : ' je 100.000 Einwohner:innen'),
+        text: 'Fahrraddiebstähle' + (value_key == 'cases' ? '' : ' je 100.000 Einwohnende'),
         standoff: 20
       }
     }
   }
 
   const div = document.getElementById('div-barchart')
-  Plotly.react(div, data, layout);
-
+  Plotly.newPlot('div-barchart', data, layout);
+  
   // const div = document.createElement("div");
   // div.setAttribute("id", "bar-div");
   // Plotly.newPlot(div, data, layout);
