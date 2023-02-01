@@ -131,7 +131,7 @@ Die Visualisierung zeigt die Anzahl der Fahrraddiebstähle auf Ebene der lebensw
         58 Prognoseräume (PRG)
     </span></div>).
 <br>
-Die aktuelle Visualisierung ist auf Ebene der:
+Die aktuelle Visualisierung ist auf Ebene der
 
 <select id="select_ebene" style="border-color: lightgrey; border-radius:4px">
     <option value="plr">Planungsräume (542)</option>
