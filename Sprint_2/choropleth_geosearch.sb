@@ -513,8 +513,8 @@ function canSplit(str, token){
 function hightlight_location() {
   let value = document.getElementById('input-longlat').value
   
-  if(canSplit(value, ',')){ // possibly coordinates
-		let splittedValue = value.split(',');
+  if(canSplit(value, ', ')){ // possibly coordinates
+		let splittedValue = value.split(', ');
 		if (value.length == 2) {
 			validCoordinates = check_lat_lon(value[0], value[1]);
 			value = splittedValue;
@@ -533,7 +533,7 @@ function hightlight_location() {
 				'Accept': 'application/json'
 			}
 		});
-		const geosearchData = JSON.parse(geosearch);
+		const geosearchData = JSON.parse(JSON.stringify(geosearch));
 		let city = geosearchData["results"][0]["geometry"]["components"];
 			
 		if(city != "Berlin") {
