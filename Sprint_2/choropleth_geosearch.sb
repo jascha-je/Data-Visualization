@@ -612,11 +612,6 @@ function hightlight_location() {
         break
       }
     }
-
-  } catch (err) {
-    console.error(err)
-  }
-
 }
 
 D3.select("#input-longlat").on("change", (event) => hightlight_location());
