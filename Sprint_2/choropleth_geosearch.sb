@@ -522,7 +522,9 @@ function hightlight_location() {
 		if(data["results"].length > 0){
 			let lat = data["results"][0]["geometry"]["lat"];
 			let lng = data["results"][0]["geometry"]["lng"];
-			value = [lat, lng];
+			value = [lng, lat];
+			console.log("lat: " + lat);
+			console.log("lng: " + lng);
 			
 			    // reset old lor in choropleth
     D3.select('.location-lor').attr('stroke', 'black')
