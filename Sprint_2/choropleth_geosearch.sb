@@ -510,6 +510,30 @@ function canSplit(str, token){
     return (str || '').split(token).length > 1;         
 }
 
+function geoserachApi(value) {
+		fetch("https://api.opencagedata.com/geocode/v1/json?key=2d21a053360948e9b5c9793d6d069edf&pretty=1&no_annotations=1&q=" + 	encodeURIComponent(value), {
+                method: 'get',
+                headers: { 'content-type': 'application/json' }
+            })
+		.then((response) => response.json())
+		.then(function(data) {
+
+          })
+          .catch(function(error) {
+			console.log(error);
+		})
+  }
+
+async function geosearchApi(value) {
+  const geosearchData = await fetch("https://api.opencagedata.com/geocode/v1/json?key=2d21a053360948e9b5c9793d6d069edf&pretty=1&no_annotations=1&q=" + 	encodeURIComponent("Mirabellenstraße 46"), {
+			method: 'GET',
+			headers: {
+				'Accept': 'application/json'
+			}
+		});
+  return geosearchData.json();
+}
+
 function hightlight_location() {
   let value = document.getElementById('input-longlat').value
   
@@ -527,12 +551,7 @@ function hightlight_location() {
 			value += ", Berlin";
 		}
    
-		const geosearchData = fetch("https://api.opencagedata.com/geocode/v1/json?key=2d21a053360948e9b5c9793d6d069edf&pretty=1&no_annotations=1&q=" + 	encodeURIComponent(value), {
-			method: 'GET',
-			headers: {
-				'Accept': 'application/json'
-			}
-		});
+		const geosearchData = await geosearchApi(value);
 		let city = geosearchData["results"][0]["components"]["city"];
 			
 		if(city != "Berlin") {
