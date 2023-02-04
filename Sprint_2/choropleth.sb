@@ -3,80 +3,36 @@
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
-… wo werden die Fahrräder gestohlen?
+…wo werden die Fahrräder gestohlen?
 <br>
 …wie gefährdet sind Sie?
 
 <br>
 <br>
-Geben Sie dazu die Koordinaten eines Standorts ein, an dem Sie häufig ihr Fahrrad abstellen. <br/>
-Alternativ wird der Standort des Instituts für Informatik der FU Berlin (Takustraße 9) genutzt.
+Geben Sie dazu eine Adresse ein, an dem Sie häufig Ihr Fahrrad abstellen. <br />
+Alternativ wird der Standort des Instituts für Informatik der FU Berlin genutzt.
 <p style="">
-  Standort:
-  <input type="text" id="input-longlat" size="50"
-    style="margin-top:1px; border: solid 1px lightgrey; border-radius:4px; height:25px" value="52.456078936394185, 13.29709314232757">
+    Standort:
+    <input type="text" id="input-longlat" size="40"
+        style="margin-top:1px; border: solid 1px lightgrey; border-radius:4px; height:25px"
+        value="Takustraße 9, 14195 Berlin">
+    <button id="submit-btn" type="button"
+        style="border: solid 1px lightgrey; border-radius:4px; height:26px">Suchen</button>
 </p>
 
-<details>
-  <summary>Koordinaten erhalten</summary>
-  <ol>
-    <li>Öffnen Sie <a
-        href="https://www.google.de/maps">Google Maps</a>
-    </li>
-    <li>Mit einem Rechtsklick auf den gewünschten Standort öffnet sich das Kontextmenü. An oberster Stelle des Menüs sehen Sie die Koordinaten. 
-      	Mit einem Linksklick darauf werden die Koordinaten zwischengespeichert.
-    </li>
-    <li>Kopieren Sie die Koordinaten nun in das vorherige Feld und bestätigen Sie mit Enter.
-    </li>
-  </ol>
-</details>
-# %%--- [css]
-# properties:
-#   top_hidden: true
-# ---%%
-.tooltipp {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
-}
-
-.tooltipp .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 150%;
-  left: 50%;
-  margin-left: -60px;
-}
-
-.tooltipp .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: black transparent transparent transparent;
-}
-
-.tooltipp:hover .tooltiptext {
-  visibility: visible;
-}
-
-<div class="tooltipp">Hover over me
-  <span class="tooltiptext">Tooltip text</span>
-</div>
-
-<div class="tooltipp">Hover over me
-  <span class="tooltiptext">This is a test again asjdn. na jnjan jan j jn jn </span>
-</div>
+<!-- <details>
+    <summary>Koordinaten erhalten</summary>
+    <ol>
+        <li>Öffnen Sie <a href="https://www.google.de/maps">Google Maps</a>
+        </li>
+        <li>Mit einem Rechtsklick auf den gewünschten Standort öffnet sich das Kontextmenü. An oberster Stelle des Menüs
+            sehen Sie die Koordinaten.
+            Mit einem Linksklick darauf werden die Koordinaten zwischengespeichert.
+        </li>
+        <li>Kopieren Sie die Koordinaten nun in das vorherige Feld und bestätigen Sie mit Enter.
+        </li>
+    </ol>
+</details> -->
 # %%--- [html]
 # properties:
 #   run_on_load: true
@@ -131,7 +87,7 @@ Die Visualisierung zeigt die Anzahl der Fahrraddiebstähle auf Ebene der lebensw
         58 Prognoseräume (PRG)
     </span></div>).
 <br>
-Die aktuelle Visualisierung ist auf Ebene der
+Die aktuelle Visualisierung ist auf Ebene der:
 
 <select id="select_ebene" style="border-color: lightgrey; border-radius:4px">
     <option value="plr">Planungsräume (542)</option>
@@ -498,85 +454,124 @@ function render_choropleth(data, {
 # ---%%
 const svg = D3.select("#choropleth")
 
+var current_lng = 0
+var current_lat = 0
+var current_address = ''
+
 function hightlight_location() {
   let value = document.getElementById('input-longlat').value
-  try {
 
-    value = value.split(',').map(parseFloat)
-    console.log(value)
-    value = value.reverse()
-
-    if (value.length != 2) {
-      return 
-    }
-    
-    // reset old lor in choropleth
-    D3.select('.location-lor').attr('stroke', 'black')
-      .attr("stroke-width", 1)
-      .attr("stroke-opacity", "50%")
-      .attr('class', '')
-
-    // delete old location point in choropleth
-    svg.select("#location-circle").remove()
-
-    // add new location point in choropleth
-    svg.append('circle')
-      .attr("id", 'location-circle')
-      .attr("cx", d => projection(value)[0])
-      .attr("cy", d => projection(value)[1])
-      .attr('r', 5)
-      .attr('stroke', 'black')
-      .attr('fill', 'cyan');
-
-    // find corresponding lor 
-    const point = svg.node().createSVGPoint();
-    const circle = document.getElementById('location-circle')
-    point.x = circle.getAttribute('cx');
-    point.y = circle.getAttribute('cy');
-
-    for (const n of D3.selectAll('.lor_area').nodes()) {
-      if (n.isPointInFill(point)) {
-        const id = n.getAttribute('data-id')
-        const value_key = D3.select('#select_ebene').property("value")
-        let index = plr_index
-        let name_key = 'Planungsraum (Name)'
-
-        if (value_key == 'bzr') {
-          index = bzr_index
-          name_key = 'Bezirksregion (Name)'
-        } else if (value_key == 'pgr') {
-          index = pgr_index
-          name_key = 'Prognoseraum (Name)'
-        }
-
-        D3.select(n).attr('stroke', 'cyan')
-          .attr("stroke-width", 2)
-          .attr("stroke-opacity", "100%")
-          .attr('class', 'location-lor')
-
-        const name = index.get(id)[name_key]
-        const graphDiv = document.getElementById('div-barchart')
-        
-        const data = graphDiv.data
-        const idx = data[0].x.findIndex(x => x == name)
-        const color = data[0].y.map(colorScale)
-        color[idx] = '#00ffff'
-
-        data[0].marker.color = color
-
-        Plotly.react('div-barchart', data, graphDiv.layout)
-
-        break
-      }
-    }
-
-  } catch (err) {
-    console.error(err)
+  if (value == current_address) {
+    alert('Der Standort wird bereits angezeigt.')
+    return
   }
 
+  current_address = value
+  
+  if (!value.includes("Berlin")) {
+    value += ", Berlin";
+  }
+
+  fetch("https://api.opencagedata.com/geocode/v1/json?key=2d21a053360948e9b5c9793d6d069edf&pretty=1&no_annotations=1&q=" + encodeURIComponent(value), {
+    method: 'get',
+    headers: { 'content-type': 'application/json' }
+  })
+    .then((response) => response.json())
+    .then(function (data) {
+
+      console.log(data["results"].length);
+      if (data["results"].length > 0) {
+        let city = data["results"][0]["components"]["city"];
+
+        if (city != "Berlin") {
+          alert("Die Adresse liegt außerhalb von Berlin.");
+          return;
+        } else {
+          let lat = data["results"][0]["geometry"]["lat"];
+          let lng = data["results"][0]["geometry"]["lng"];
+
+          if (current_lng == lng && current_lat == lat) {
+            return 
+          }
+          
+          value = [lng, lat];
+          current_lng = lng
+          current_lat = lat
+          console.log("lat: " + lat);
+          console.log("lng: " + lng);
+
+          // reset old lor in choropleth
+          D3.select('.location-lor').attr('stroke', 'black')
+            .attr("stroke-width", 1)
+            .attr("stroke-opacity", "50%")
+            .attr('class', '')
+
+          // delete old location point in choropleth
+          svg.select("#location-circle").remove()
+
+          // add new location point in choropleth
+          svg.append('circle')
+            .attr("id", 'location-circle')
+            .attr("cx", d => projection(value)[0])
+            .attr("cy", d => projection(value)[1])
+            .attr('r', 5)
+            .attr('stroke', 'black')
+            .attr('fill', 'cyan');
+
+          // find corresponding lor 
+          const point = svg.node().createSVGPoint();
+          const circle = document.getElementById('location-circle')
+          point.x = circle.getAttribute('cx');
+          point.y = circle.getAttribute('cy');
+
+          for (const n of D3.selectAll('.lor_area').nodes()) {
+            if (n.isPointInFill(point)) {
+              const id = n.getAttribute('data-id')
+              const value_key = D3.select('#select_ebene').property("value")
+              let index = plr_index
+              let name_key = 'Planungsraum (Name)'
+
+              if (value_key == 'bzr') {
+                index = bzr_index
+                name_key = 'Bezirksregion (Name)'
+              } else if (value_key == 'pgr') {
+                index = pgr_index
+                name_key = 'Prognoseraum (Name)'
+              }
+
+              D3.select(n).attr('stroke', 'cyan')
+                .attr("stroke-width", 2)
+                .attr("stroke-opacity", "100%")
+                .attr('class', 'location-lor')
+
+              const name = index.get(id)[name_key]
+              const graphDiv = document.getElementById('div-barchart')
+
+              const data = graphDiv.data
+              const idx = data[0].x.findIndex(x => x == name)
+              const color = data[0].y.map(colorScale)
+              color[idx] = '#00ffff'
+
+              data[0].marker.color = color
+
+              Plotly.react('div-barchart', data, graphDiv.layout)
+
+              break
+            }
+          }
+        }
+      } else {
+        alert("Die Adresse konnte leider nicht gefunden werden.");
+        return;
+      }
+
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
 }
 
-D3.select("#input-longlat").on("change", (event) => hightlight_location());
+D3.select("#submit-btn").on("click", (event) => hightlight_location());
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
