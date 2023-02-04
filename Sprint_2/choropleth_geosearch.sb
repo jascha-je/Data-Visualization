@@ -585,6 +585,7 @@ function hightlight_location() {
         break
       }
     }		
+    }
 			} else {
 				alert("Die Adresse konnte leider nicht gefunden werden.");
 				return;
