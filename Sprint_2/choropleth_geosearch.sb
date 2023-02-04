@@ -519,7 +519,7 @@ function hightlight_location() {
 			return;
 		}
 	
-		if(geosearchData["results"].length > 0){
+		if(data["results"].length > 0){
 			let lat = data["results"][0]["geometry"]["lat"];
 			let lng = data["results"][0]["geometry"]["lng"];
 			value = [lat, lng];
