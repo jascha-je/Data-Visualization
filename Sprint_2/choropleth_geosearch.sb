@@ -14,7 +14,7 @@ Alternativ wird der Standort des Instituts für Informatik der FU Berlin (Takust
 <p style="">
   Standort:
   <input type="text" id="input-longlat" size="50"
-    style="margin-top:1px; border: solid 1px lightgrey; border-radius:4px; height:25px" value="52.456078936394185, 13.29709314232757">
+    style="margin-top:1px; border: solid 1px lightgrey; border-radius:4px; height:25px" value="Takustraße 9, 14195 Berlin">
 </p>
 
 <details>
@@ -498,61 +498,21 @@ function render_choropleth(data, {
 # ---%%
 const svg = D3.select("#choropleth")
 
-let validCoordinates = false;
-
-function check_lat_lon(lat, lon) {
-  let validLat = regexLat.test(lat);
-  let validLon = regexLon.test(lon);
-  return validLat && validLon;
-}
-
-function canSplit(str, token){
-    return (str || '').split(token).length > 1;         
-}
-
-function geoserachApi(value) {
-		fetch("https://api.opencagedata.com/geocode/v1/json?key=2d21a053360948e9b5c9793d6d069edf&pretty=1&no_annotations=1&q=" + 	encodeURIComponent(value), {
+function hightlight_location() {
+  let value = document.getElementById('input-longlat').value
+		if(!value.includes("Berlin")) {
+			value += ", Berlin";
+		}
+   
+   
+   fetch("https://api.opencagedata.com/geocode/v1/json?key=2d21a053360948e9b5c9793d6d069edf&pretty=1&no_annotations=1&q=" + 	encodeURIComponent(value), {
                 method: 'get',
                 headers: { 'content-type': 'application/json' }
             })
 		.then((response) => response.json())
 		.then(function(data) {
-
-          })
-          .catch(function(error) {
-			console.log(error);
-		})
-  }
-
-async function geosearchApi(value) {
-  const geosearchData = await fetch("https://api.opencagedata.com/geocode/v1/json?key=2d21a053360948e9b5c9793d6d069edf&pretty=1&no_annotations=1&q=" + 	encodeURIComponent("Mirabellenstraße 46"), {
-			method: 'GET',
-			headers: {
-				'Accept': 'application/json'
-			}
-		});
-  return geosearchData.json();
-}
-
-function hightlight_location() {
-  let value = document.getElementById('input-longlat').value
-  
-  if(canSplit(value, ', ')){ // possibly coordinates
-		let splittedValue = value.split(', ');
-		if (value.length == 2) {
-			validCoordinates = check_lat_lon(value[0], value[1]);
-			value = splittedValue;
-		}
-  } 
-  
-	if (!validCoordinates) {
-  
-		if(!value.includes("Berlin")) {
-			value += ", Berlin";
-		}
-   
-		const geosearchData = await geosearchApi(value);
-		let city = geosearchData["results"][0]["components"]["city"];
+          
+	  let city = data["results"][0]["components"]["city"];
 			
 		if(city != "Berlin") {
 			alert("Die Adresse liegt außerhalb von Berlin.");
@@ -560,18 +520,11 @@ function hightlight_location() {
 		}
 	
 		if(geosearchData["results"].length > 0){
-			let lat = geosearchData["results"][0]["geometry"]["lat"];
-			let lng = geosearchData["results"][0]["geometry"]["lng"];
+			let lat = data["results"][0]["geometry"]["lat"];
+			let lng = data["results"][0]["geometry"]["lng"];
 			value = [lat, lng];
-			} else {
-				alert("Die Adresse konnte leider nicht gefunden werden.");
-				return;
-			}
-	}
-  
-    value = value.reverse()
-    
-    // reset old lor in choropleth
+			
+			    // reset old lor in choropleth
     D3.select('.location-lor').attr('stroke', 'black')
       .attr("stroke-width", 1)
       .attr("stroke-opacity", "50%")
@@ -629,7 +582,16 @@ function hightlight_location() {
 
         break
       }
-    }
+    }		
+			} else {
+				alert("Die Adresse konnte leider nicht gefunden werden.");
+				return;
+			}
+
+          })
+          .catch(function(error) {
+			console.log(error);
+		})
 }
 
 D3.select("#input-longlat").on("change", (event) => hightlight_location());
