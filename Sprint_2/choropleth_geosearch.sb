@@ -511,15 +511,15 @@ function hightlight_location() {
             })
 		.then((response) => response.json())
 		.then(function(data) {
-          
+		
+		console.log(data["results"].length);
+       if(data["results"].length > 0){
 	  let city = data["results"][0]["components"]["city"];
 			
 		if(city != "Berlin") {
 			alert("Die Adresse liegt außerhalb von Berlin.");
 			return;
-		}
-	
-		if(data["results"].length > 0){
+		} else {
 			let lat = data["results"][0]["geometry"]["lat"];
 			let lng = data["results"][0]["geometry"]["lng"];
 			value = [lng, lat];
