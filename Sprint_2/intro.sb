@@ -37,7 +37,7 @@ table td:last-child {
     <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">1039€</td>
   </tr>
     <tr>
-    <td><img width=src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/euro.png" width="200px" height="200px"></td>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/euro.png" width="200px" height="200px"></td>
     <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/brandenburger_tor.png" width="200px" height="200px"></td>
     <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/bike.png" width="200px" height="200px"></td>
   </tr>
@@ -63,7 +63,7 @@ table td:last-child {
 #   top_hidden: true
 #   run_on_load: true
 # ---%%
-<h1>In Berlin werden die meisten Räder geklaut</h1>
+<h1>Berlin zählt zu den Fahrraddiebstahl-Hochburgen Deutschlands</h1>
 <h3>Fahrraddiebstähle je 100.000 Einwohner 2019</h3>
 # %%--- [javascript]
 # properties:
@@ -137,9 +137,27 @@ canvas
 #   top_hidden: true
 #   run_on_load: true
 # ---%%
-Credits:
-<br>day by Anton Anuchin from <a href="https://thenounproject.com/browse/icons/term/day/" target="_blank" title="day Icons">Noun Project</a>
-<br>Euro by Lnhi from <a href="https://thenounproject.com/browse/icons/term/euro/" target="_blank" title="Euro Icons">Noun Project</a>
-<br>Brandenburg Gate by Álvaro Y. from <a href="https://thenounproject.com/browse/icons/term/brandenburg-gate/" target="_blank" title="Brandenburg Gate Icons">Noun Project</a>
-<br>Bike by Liberus from <a href="https://thenounproject.com/browse/icons/term/bike/" target="_blank" title="Bike Icons">Noun Project</a>
-<br>Handcuffs by Fran Couto from <a href="https://thenounproject.com/browse/icons/term/handcuffs/" target="_blank" title="Handcuffs Icons">Noun Project</a>
+<details>
+        <summary>Datenquellen</summary>
+        <ul>
+            <li>GDV/Polizeiliche Kriminalstatistik <a
+                    href="https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf">https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf</a>
+            </li>
+        </ul>
+    </details>
+
+<details>
+        <summary>Bildquellen</summary>
+        <ul>
+            <li>day by Anton Anuchin from <a href="https://thenounproject.com/browse/icons/term/day/" target="_blank" title="day Icons">Noun Project</a>
+            </li>
+            <li>Euro by Lnhi from <a href="https://thenounproject.com/browse/icons/term/euro/" target="_blank" title="Euro Icons">Noun Project</a>
+            </li>
+            <li>Brandenburg Gate by Álvaro Y. from <a href="https://thenounproject.com/browse/icons/term/brandenburg-gate/" target="_blank" title="Brandenburg Gate Icons">Noun Project</a>
+            </li>
+	    <li>Bike by Liberus from <a href="https://thenounproject.com/browse/icons/term/bike/" target="_blank" title="Bike Icons">Noun Project</a>
+            </li>
+	    <li>Handcuffs by Fran Couto from <a href="https://thenounproject.com/browse/icons/term/handcuffs/" target="_blank" title="Handcuffs Icons">Noun Project</a>
+            </li>
+        </ul>
+    </details>
