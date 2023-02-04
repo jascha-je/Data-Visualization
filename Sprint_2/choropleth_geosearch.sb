@@ -527,14 +527,13 @@ function hightlight_location() {
 			value += ", Berlin";
 		}
    
-		const geosearch = fetch("https://api.opencagedata.com/geocode/v1/json?key=2d21a053360948e9b5c9793d6d069edf&pretty=1&no_annotations=1&q=" + 	encodeURIComponent(value), {
+		const geosearchData = fetch("https://api.opencagedata.com/geocode/v1/json?key=2d21a053360948e9b5c9793d6d069edf&pretty=1&no_annotations=1&q=" + 	encodeURIComponent(value), {
 			method: 'GET',
 			headers: {
 				'Accept': 'application/json'
 			}
 		});
-		const geosearchData = JSON.parse(JSON.stringify(geosearch));
-		let city = geosearchData["results"][0]["geometry"]["components"];
+		let city = geosearchData["results"][0]["components"]["city"];
 			
 		if(city != "Berlin") {
 			alert("Die Adresse liegt außerhalb von Berlin.");
