@@ -3,9 +3,13 @@
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
+Erfreulicherweise steigt die Anzahl der verkauften Fahrräder und E-Bikes Jahr für Jahr an. Leider nutzen auch Langfinger nach wie vor gute Gelegenheiten. Allem voran stehen die deutschen Stadtstaaten. Jährlich veröffentlicht der Gesamtverband der Deutschen Versicherungswirtschaft (GDV) seine Daten der zur Anzeige gebrachten Fahrraddiebstähle aller 16 deutschen Bundesländer.
+<br>
 <h1>Berlin zählt zu den Fahrraddiebstahl-Hochburgen Deutschlands</h1>
 <h3>Fahrraddiebstähle je 100.000 Einwohner 2020</h3>
-
+<br>
+Basis der Ermittlung der risikoreichsten Bundesländer für Zweiradfahrer ist die offizielle polizeiliche Kriminalstatistik. Ins Verhältnis auf 100.000 Einwohner thront die norddeutsche Hansestadt Bremen mit 876 gestohlenen Fahrrädern im Jahr 2020 auf dem ersten Platz. Bereits mit deutlichem Abstand folgen Hamburg mit 789 und Berlin mit 752 Diebstahlfällen auf 100.000 Einwohner. Am Ende der Liste befinden sich Baden-Württemberg (177), Rheinland-Pfalz (151) und das Saarland (104). Deutschlandweit wurden im Jahr 2020 laut der GDV 314 Fahrräder pro 100.000 Einwohner gestohlen.
+<br>
 <canvas id="intro-canvas">
 </canvas>
 # %%--- [javascript]
