@@ -37,9 +37,9 @@ table td:last-child {
     <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">1039€</td>
   </tr>
     <tr>
-    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/euro.png" width="200px" height="200px"></td>
-    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/brandenburger_tor.png" width="200px" height="200px"></td>
-    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/bike.png" width="200px" height="200px"></td>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/euro.png" width="150px" height="150px"></td>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/brandenburger_tor.png" width="150px" height="150px"></td>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/bike.png" width="150px" height="150px"></td>
   </tr>
 </table>
 <br>
@@ -54,8 +54,8 @@ table td:last-child {
     <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">61</td>
   </tr>
   <tr>
-    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/handcuffs.png" width="200px" height="200px"></td>
-    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/day.png" width="200px" height="200px"></td>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/handcuffs.png" width="150px" height="150px"></td>
+    <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/day.png" width="150px" height="150px"></td>
   </tr>
 </table>
 # %%--- [html]
@@ -95,17 +95,50 @@ sortedArrayOfObj = arrayOfObj.sort(function(a, b) {
 let newArrayLabel = [];
 let newArrayData = [];
 let backgroundColor = [];
+let germany = 0;
 sortedArrayOfObj.forEach(function(d){
-  newArrayLabel.push(d.label);
-  newArrayData.push(d.data);
-  if(d.label == "Berlin"){
-    backgroundColor.push("rgb(139, 0, 0)");
+
+  if(d.label == "Deutschland"){
+    germany = d.data;
   } else {
-    backgroundColor.push("rgb(255, 33, 44)");
+      if(d.label == "Berlin"){
+    	backgroundColor.push("rgb(139, 0, 0)");
+  	} else {
+   	 	backgroundColor.push("rgb(255, 33, 44)");
+  	}
+    newArrayLabel.push(d.label);
+  	newArrayData.push(d.data);
   }
+
 });
 
 await import("https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js");
+await import("https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.2/dist/chartjs-plugin-annotation.min.js");
+
+const options = {
+  plugins: {
+    annotation: {
+      annotations: {
+        line1: {
+          type: 'line',
+          yMin: germany,
+          yMax: germany,
+          borderColor: 'blue',
+          borderWidth: 2,
+          label: {
+    		rotation: 'auto',
+    		content: 'Deutschland',
+   		 	display: true,
+            position: "end"
+  		},
+        }
+      }
+    },
+    legend: {
+                display: false
+            }
+  }
+};
 
 const canvas = document.createElement("canvas");
 const myChart = new Chart(canvas.getContext("2d"),
@@ -121,13 +154,7 @@ const myChart = new Chart(canvas.getContext("2d"),
                 },
             ],
         },
-      options: {
-        plugins: {
-            legend: {
-                display: false
-            },
-        }
-    }
+      options: options
     },
 );
 
