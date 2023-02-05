@@ -12,6 +12,7 @@
 # properties:
 #   run_on_load: true
 #   top_hidden: true
+#   bottom_hidden: true
 # ---%%
 // load d3.js
 await import("https://d3js.org/d3.v7.min.js")
