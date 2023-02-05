@@ -1,0 +1,1155 @@
+# %%--- [markdown]
+# properties:
+#   top_hidden: true
+# ---%%
+# Fahrraddiebstähle in Berlin
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+<h1>Berlin zählt zu den Fahrraddiebstahl-Hochburgen Deutschlands</h1>
+<h3>Fahrraddiebstähle je 100.000 Einwohner 2019</h3>
+
+<canvas id="intro-canvas">
+</canvas>
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+// load d3.js
+await import("https://d3js.org/d3.v7.min.js")
+var D3 = d3
+
+// load chart js 
+await import("https://cdn.jsdelivr.net/npm/chart.js");
+await import("https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.2/dist/chartjs-plugin-annotation.min.js");
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+const response = await fetch("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_2/data/fahrraddiebstaehle_deutschland_2019.json");
+let data = await response.json();
+
+let arrayData = [];
+let arrayLabel = [];
+
+for (let key in data) {
+  arrayData.push(data[key]);
+  arrayLabel.push(key);
+}
+
+arrayOfObj = arrayLabel.map(function (d, i) {
+  return {
+    label: d,
+    data: arrayData[i] || 0
+  };
+});
+
+sortedArrayOfObj = arrayOfObj.slice().sort((a, b) => D3.descending(a.data, b.data))
+
+let newArrayLabel = [];
+let newArrayData = [];
+let backgroundColor = [];
+let germany = 0;
+sortedArrayOfObj.forEach(function (d) {
+
+  if (d.label == "Deutschland") {
+    germany = d.data;
+  } else {
+    if (d.label == "Berlin") {
+      backgroundColor.push(D3.schemeRdBu[3][0]);
+    } else {
+      backgroundColor.push(D3.schemeRdBu[3][2]);
+    }
+    newArrayLabel.push(d.label);
+    newArrayData.push(d.data);
+  }
+
+});
+
+const options = {
+  plugins: {
+    annotation: {
+      annotations: {
+        line1: {
+          type: 'line',
+          yMin: germany,
+          yMax: germany,
+          borderColor: D3.schemeRdBu[4][3],
+          borderWidth: 2,
+          label: {
+            rotation: 'auto',
+            content: 'Deutschland',
+            display: true,
+            position: "end"
+          },
+        }
+      }
+    },
+    legend: {
+      display: false
+    }
+  },
+  scales: {
+    y: {
+      title: {
+        display: true,
+        text: 'Fahrraddiebstähle je 100.000 Einwohnende 2019'
+      }
+    },
+    x: {
+      title: {
+        display: false,
+        text: "Bundesland"
+      }
+    }
+  },
+};
+
+
+try {
+  Chart.getChart("intro-canvas").destroy()
+} catch (error) {
+
+}
+
+const canvas = document.getElementById("intro-canvas");
+const myChart = new Chart(canvas.getContext("2d"),
+  {
+    type: "bar",
+    data: {
+      labels: newArrayLabel,
+      datasets: [
+        {
+          data: newArrayData,
+          label: "Fahrraddiebstähle je 100.000 Einwohner 2019",
+          backgroundColor: backgroundColor
+        },
+      ],
+    },
+    options: options
+  },
+);
+# %% [markdown]
+## Über 60 Fahrraddiebstähle durchschnittlich jeden Tag in Berlin
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+<style>
+    table {
+        width: 100%;
+        table-layout: fixed;
+        border: #ffffff solid;
+    }
+
+    td {
+        border: #ffffff solid;
+        text-align: center;
+    }
+
+    tr {
+        border: #ffffff solid;
+    }
+
+    table td:first-child {
+        border: #ffffff solid;
+    }
+
+    table td:last-child {
+        border: #ffffff solid;
+    }
+</style>
+
+
+<table cellspacing="0" cellpadding="0">
+    <tr>
+        <td style="font-size: 20px">Gesamtschaden</td>
+        <td style="font-size: 20px">Berlin 2022 gesamt</td>
+        <td style="font-size: 20px">&oslash; Schaden pro Diebstahl</td>
+    </tr>
+    <tr>
+        <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">23,2 Mio. €</td>
+        <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">22.362</td>
+        <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">1039€</td>
+    </tr>
+    <tr>
+        <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/euro.png" width="150px" height="150px"></td>
+        <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/brandenburger_tor.png" width="150px" height="150px"></td>
+        <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/bike.png" width="150px" height="150px"></td>
+    </tr>
+</table>
+<br>
+<br>
+<table>
+    <tr>
+        <td style="font-size: 20px">Aufklärungsquote</td>
+        <td style="font-size: 20px">&oslash; Diebstähle pro Tag</td>
+    </tr>
+    <tr>
+        <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">4,6 %</td>
+        <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">61</td>
+    </tr>
+    <tr>
+        <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/handcuffs.png" width="150px" height="150px"></td>
+        <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/day.png" width="150px" height="150px"></td>
+    </tr>
+</table>
+
+<details>
+    <summary>Datenquellen</summary>
+    <ul>
+        <li>GDV/Polizeiliche Kriminalstatistik <a
+                href="https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf">https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf</a>
+        </li>
+    </ul>
+</details>
+
+<details>
+    <summary>Bildquellen</summary>
+    <ul>
+        <li>day by Anton Anuchin from <a href="https://thenounproject.com/browse/icons/term/day/" target="_blank"
+                title="day Icons">Noun Project</a>
+        </li>
+        <li>Euro by Lnhi from <a href="https://thenounproject.com/browse/icons/term/euro/" target="_blank"
+                title="Euro Icons">Noun Project</a>
+        </li>
+        <li>Brandenburg Gate by Álvaro Y. from <a href="https://thenounproject.com/browse/icons/term/brandenburg-gate/"
+                target="_blank" title="Brandenburg Gate Icons">Noun Project</a>
+        </li>
+        <li>Bike by Liberus from <a href="https://thenounproject.com/browse/icons/term/bike/" target="_blank"
+                title="Bike Icons">Noun Project</a>
+        </li>
+        <li>Handcuffs by Fran Couto from <a href="https://thenounproject.com/browse/icons/term/handcuffs/"
+                target="_blank" title="Handcuffs Icons">Noun Project</a>
+        </li>
+    </ul>
+</details>
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+…wo werden die Fahrräder gestohlen?
+<br>
+…wie gefährdet sind Sie?
+
+<br>
+<br>
+Geben Sie dazu eine Adresse ein, an dem Sie häufig Ihr Fahrrad abstellen. <br />
+Alternativ wird der Standort des Instituts für Informatik der FU Berlin genutzt.
+<p style="">
+    Standort:
+    <input type="text" id="input-longlat" size="40"
+        style="margin-top:1px; border: solid 1px lightgrey; border-radius:4px; height:25px"
+        value="Takustraße 9, 14195 Berlin">
+    <button id="submit-btn" type="button"
+        style="border: solid 1px lightgrey; border-radius:4px; height:26px">Suchen</button>
+</p>
+
+<!-- <details>
+    <summary>Koordinaten erhalten</summary>
+    <ol>
+        <li>Öffnen Sie <a href="https://www.google.de/maps">Google Maps</a>
+        </li>
+        <li>Mit einem Rechtsklick auf den gewünschten Standort öffnet sich das Kontextmenü. An oberster Stelle des Menüs
+            sehen Sie die Koordinaten.
+            Mit einem Linksklick darauf werden die Koordinaten zwischengespeichert.
+        </li>
+        <li>Kopieren Sie die Koordinaten nun in das vorherige Feld und bestätigen Sie mit Enter.
+        </li>
+    </ol>
+</details> -->
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+<style>
+    .tooltip_b {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+
+    .tooltip_b .tooltiptext {
+        visibility: hidden;
+        width: 500px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        top: 150%;
+        left: 50%;
+        margin-left: -250px;
+    }
+
+    .tooltip_b .tooltiptext::after {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent black transparent;
+    }
+
+    .tooltip_b:hover .tooltiptext {
+        visibility: visible;
+    }
+</style>
+
+<h2>Karte Fahrraddiebstähle 2022</h2>
+
+Die Visualisierung zeigt die Anzahl der Fahrraddiebstähle auf Ebene der lebensweltlich orientierten Räume
+(<div class="tooltip_b">LOR<span class="tooltiptext">Lebensweltlich orientierte Räume (LOR) sind eine räumliche
+        Grundlage für die Planung, Prognose und Beobachtung demografischer und sozialer Entwicklungen in Berlin. Sie
+        lassen sich in 3 Ebenen einteilen: <br>
+        542 Planungsräume (PLR)<br>
+        143 Bezirksregionen (BZR)<br>
+        58 Prognoseräume (PRG)
+    </span></div>).
+<br>
+Die aktuelle Visualisierung ist auf Ebene der:
+
+<select id="select_ebene" style="border-color: lightgrey; border-radius:4px">
+    <option value="plr">Planungsräume (542)</option>
+    <option value="bzr">Bezirksregionen (143)</option>
+    <option value="pgr">Prognoseräume (58)</option>
+</select>
+<br>
+Eingefärbt werden die Räume nach der Anzahl der Fahrraddiebstähle
+
+<select id="select_measure" style="border-color: lightgrey; border-radius:4px">
+    <option value="cases">gesamt</option>
+    <option value="cases_per_100k">je 100.000 Einwohnende</option>
+</select>
+
+<br>
+Die Intervalle zur Einfärbung eines Raums werden anhand der folgenden
+<div class="tooltip_b">Quantile<span class="tooltiptext">Beispiel: Betrachten wir die Anzahl an Fahrraddiebstählen je
+        Planungsraum (543 Räume). Das 20 %-Quantil ist dann die Anzahl an Fahrraddiebstählen, sodass 20 % der
+        Plangungsräume (ca. 109 Räume) weniger Diebstähle als die besagte Anzahl aufweisen. <br> </span></div>
+berechnet 20/40/60/80/95/100 (%).
+
+
+
+
+
+
+<!-- Create an element where the map will take place -->
+<div id="container" style="border:solid 0px pink;">
+
+    <svg id="choropleth" width=980 height=830 style="border:solid 0px pink; border-radius:5px"></svg>
+
+    <div id="div-barchart" style="border:solid 0px pink; width:100%"></div>
+
+    <!-- <div style="padding:10px">
+        <p style="display: inline-block; ">
+            LOR Ebene:
+            <select id="select_ebene" style="border-color: lightgrey; border-radius:4px">
+                <option value="plr">Planungsräume (542)</option>
+                <option value="bzr">Bezirksregionen (143)</option>
+                <option value="pgr">Prognoseräume (58)</option>
+            </select>
+        </p>
+
+        <p>
+            Fallzahlen:
+            <select id="select_measure" style="border-color: lightgrey; border-radius:4px">
+                <option value="cases">Absolut</option>
+                <option value="cases_per_100k">Je 100.000 Einwohnende</option>
+            </select>
+        </p>
+    </div> -->
+
+    <div id="tooltip"></div>
+
+    <details>
+        <summary>Datenquellen</summary>
+        <ul>
+            <li>Fahrraddiebstähle <a
+                    href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
+            </li>
+            <li>Geodaten <a
+                    href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
+            </li>
+            <li>Bevölkerung <a
+                    href="https://www.statistik-berlin-brandenburg.de/a-i-16-hj">https://www.statistik-berlin-brandenburg.de/a-i-16-hj</a>
+            </li>
+        </ul>
+    </details>
+
+</div>
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+// load all necessary data
+const base_path = "https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_2/data/"
+
+// fahrraddiebstahl fälle
+var fahrraddiebstahl = await d3.csv(base_path + "fahrraddiebstahl.csv")
+// filter nur jahr 2022
+fahrraddiebstahl = fahrraddiebstahl.filter(x => x['ANGELEGT_AM'].slice(-4) == "2022")
+
+// kombinierte sozialstruktur/demographie daten je planungsraum
+var demographie = await d3.json(base_path + "demographie/demographie_kombiniert_plr.json")
+
+// delikzahlen je bezirksregion
+var kriminalitaet = await d3.csv(base_path + "kriminalitaet_2021_fallzahlen_bzr.csv")
+
+// verbindet planungsräume mit bezirksregionen und prognoseräumen
+var lor = await d3.csv(base_path + "LOR_2021.csv")
+
+// 542 planungsräume
+var planungsraeume = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_planungsraeume_2021_wgs84.geojson")
+// 143 bezirksregionen
+var bezirksregionen = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_bezirksregionen_2021_wgs84.geojson")
+// 58 prognoseraeume
+var prognoseraeume = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_prognoseraeume_2021_wgs84.geojson")
+// 12 bezirke
+var bezirke = await d3.json(base_path + "GeoJSON/EPSG_4326/bezirksgrenzen.geojson")
+
+
+// import plotly js
+try {
+  await import("https://cdn.plot.ly/plotly-2.18.0.min.js")
+} catch (error) {
+  console.log(error)
+}
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+const count_per_plr = D3.rollup(fahrraddiebstahl, v => v.length, d => d.LOR)
+
+// create missing plr with 0 cases
+for (const el of D3.difference(Array.from(lor, x => x['Planungsraum (Nummer)']), Array.from(count_per_plr.keys()))) {
+  count_per_plr.set(el, 0)
+}
+
+// add count and count per 100k to lor 
+lor.map(el => {
+  const plr_id = el['Planungsraum (Nummer)']
+  el.cases = count_per_plr.get(plr_id);
+  el.population = demographie[plr_id].Gesamt
+  el.cases_per_100k = demographie[plr_id].Gesamt == null? null : el.cases / el.population * 100000;
+  return el
+})
+
+var plr_index = D3.index(lor, v => v['Planungsraum (Nummer)'])
+var bzr_index = new Map();
+var pgr_index = new Map();
+
+for (const x of plr_index.values()) {
+  bzr_id = x["Bezirksregion (Nummer)"]
+
+  let bzr = bzr_index.get(bzr_id)
+  if (bzr == undefined) {
+    bzr_index.set(bzr_id, {
+      "Bezirksregion (Nummer)": bzr_id,
+      "Bezirksregion (Name)": x['Bezirksregion (Name)'],
+      "cases": x['cases'],
+      "cases_per_100k": x['cases_per_100k'],
+      "population": x['population'],
+    });
+  } else {
+    bzr['cases'] += x['cases']
+    bzr['cases_per_100k'] += x['cases_per_100k']
+    bzr['population'] += x['population']
+  }
+
+  pgr_id = x["Prognoseraum (Nummer)"]
+  let pgr = bzr_index.get(pgr_id)
+  if (pgr == undefined) {
+    pgr_index.set(pgr_id, {
+      "Prognoseraum (Nummer)": pgr_id,
+      "Prognoseraum (Name)": x['Prognoseraum (Name)'],
+      "cases": x['cases'],
+      "cases_per_100k": x['cases_per_100k'],
+      "population": x['population'],
+    });
+  } else {
+    pgr['cases'] += x['cases']
+    pgr['cases_per_100k'] += x['cases_per_100k']
+    pgr['population'] += x['population']
+  }
+}
+
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+// helper function to format numbers with points
+function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+}
+
+// Path and projection
+const svg = D3.select("#choropleth")
+var path = D3.geoPath();
+var projection = D3.geoMercator()
+  .scale(80000)
+  .center([13.424, 52.507])
+  .translate([+svg.attr("width") / 2, +svg.attr("height") / 2]);
+
+// function to create choropleth
+function render_choropleth(data, {
+  targetSVG,
+  colorScale,
+  fillFeature,
+  lorGeoJSON,
+  tooltip,
+  legend,
+} = {}) {
+
+  // ------------------------------------------------------------------------------------
+  // Create Tooltip
+
+  const Tooltip = D3.select("#tooltip")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-color", "grey")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+
+  // functions that change the tooltip when user hover / move / leave a cell
+  const mouseover_lor = function (event, d) {
+    D3.select(this)
+      .style("stroke-width", 3)
+      .style("stroke-opacity", 1)
+
+    Tooltip
+      .transition()
+      .duration(150)
+      .style("opacity", 1)
+  }
+
+  const mousemove_lor = function (event, d) {
+    Tooltip
+      .html(tooltip(d))
+      .style("left", (event.pageX + 20) + "px")
+      .style("top", (event.pageY) + "px")
+  }
+  const mouseleave_lor = function (event, d) {
+    D3.select(this)
+      .style("stroke-width", 1)
+      .style("stroke-opacity", 0.5)
+
+    if (event.toElement.tagName != 'circle') {
+      Tooltip
+        .transition()
+        .duration(150)
+        .style("opacity", 0);
+    }
+  }
+
+  // ------------------------------------------------------------------------------------
+  // Create Map
+
+
+  // reset svg element
+  targetSVG.node().innerHTML = ''
+
+  // LOR Ebene Zeichen
+  targetSVG.append("g")
+    .selectAll("path")
+    .data(lorGeoJSON.features)
+    .join("path")
+    .on("mouseover", mouseover_lor)
+    .on("mousemove", mousemove_lor)
+    .on("mouseleave", mouseleave_lor)
+    .attr("d", path.projection(projection))
+    .attr("fill", colorScale(0))
+    .transition()
+    .duration(500)
+    .attr("fill", d => colorScale(fillFeature(d)))
+    .attr("class", d => 'lor_area')
+    .attr("stroke", "black")
+    .attr("stroke-opacity", "50%")
+  	.attr("data-id", d => d.properties['PLR_ID'] ||  d.properties['BZR_ID'] ||  d.properties['PGR_ID'])
+
+  // Bezirksgrenzen zeichen
+  targetSVG.append("g")
+    .selectAll("path")
+    .data(bezirke.features)
+    .join("path")
+    .attr("d", path.projection(projection))
+    .attr("fill", "none")
+    .attr("stroke", "black")
+    .attr("stroke-width", 2)
+
+
+  // ------------------------------------------------------------------------------------
+  // Create Legend
+
+  // legend color rectangles
+  const size = 20
+  const x_test_start = 820
+  const y_start = 64
+  
+  targetSVG.append("g")
+    .selectAll("legend-rect")
+    .data(colorScale.range())
+    .enter()
+    .append("rect")
+    .attr("x", x_test_start)
+    .attr("y", (d, i) => y_start + i * (size + 5)) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", d => d)
+
+  // legend text
+  targetSVG.append("g").selectAll("legend_text")
+    .data([legend.start, ...colorScale.domain()])
+    .enter()
+    .append("text")
+    .attr("x", x_test_start + size * 1.25)
+    .attr("y", (d, i) => y_start + i * (size + 5) + (size / 2)) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", d => d)
+    .text((d, i) => d + " - " + [legend.start, ...colorScale.domain(), legend.end][i + 1])
+    .attr("text-anchor", "left")
+    .attr("font-size", "12")
+    .style("alignment-baseline", "middle")
+
+  // location cirlce 
+  targetSVG.append('circle')
+      .attr("id", 'location-circle-legend')
+      .attr("cx", d => x_test_start + size/2)
+      .attr("cy", d => 230)
+      .attr('r', 5)
+      .attr('stroke', 'black')
+      .attr('fill', 'cyan');
+
+    targetSVG.append("text")
+    .attr("x", x_test_start + size * 1.25)
+    .attr("y", (d, i) => 230)
+  	.style("fill", d => d)
+    .text((d, i) => "Standort")
+    .attr("text-anchor", "left")
+    .attr("font-size", "12")
+    .style("alignment-baseline", "middle")
+
+  
+  // legend title
+  const text = targetSVG.append("text")
+    .attr("x", x_test_start)
+    .attr("y", legend.line1 == ' '? 20 : 10)
+    .attr("text-anchor", "left")
+	.attr("font-size", "12")
+     //.style("alignment-baseline", "middle")
+  
+  text.append('svg:tspan')
+    .attr("dy", '1.2em')
+    .attr('x', x_test_start)
+    .text(d => legend.line1)
+  
+  text.append('svg:tspan')
+     .attr("dy", '1.2em')
+    .attr('x', x_test_start)
+    .text(d => legend.line2)
+
+    text.append('svg:tspan')
+     .attr("dy", '1.2em')
+    .attr('x', x_test_start)
+    .text(d => legend.line3)
+
+}
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+const svg = D3.select("#choropleth")
+
+var current_lng = 0
+var current_lat = 0
+var current_address = ''
+
+function hightlight_location() {
+  let value = document.getElementById('input-longlat').value
+
+  if (value == current_address) {
+    alert('Der Standort wird bereits angezeigt.')
+    return
+  }
+
+  current_address = value
+  
+  if (!value.includes("Berlin")) {
+    value += ", Berlin";
+  }
+
+  fetch("https://api.opencagedata.com/geocode/v1/json?key=2d21a053360948e9b5c9793d6d069edf&pretty=1&no_annotations=1&q=" + encodeURIComponent(value), {
+    method: 'get',
+    headers: { 'content-type': 'application/json' }
+  })
+    .then((response) => response.json())
+    .then(function (data) {
+
+      console.log(data["results"].length);
+      if (data["results"].length > 0) {
+        let city = data["results"][0]["components"]["city"];
+
+        if (city != "Berlin") {
+          alert("Die Adresse liegt außerhalb von Berlin.");
+          return;
+        } else {
+          let lat = data["results"][0]["geometry"]["lat"];
+          let lng = data["results"][0]["geometry"]["lng"];
+
+          if (current_lng == lng && current_lat == lat) {
+            return 
+          }
+          
+          value = [lng, lat];
+          current_lng = lng
+          current_lat = lat
+          console.log("lat: " + lat);
+          console.log("lng: " + lng);
+
+          // reset old lor in choropleth
+          D3.select('.location-lor').attr('stroke', 'black')
+            .attr("stroke-width", 1)
+            .attr("stroke-opacity", "50%")
+            .attr('class', '')
+
+          // delete old location point in choropleth
+          svg.select("#location-circle").remove()
+
+          // add new location point in choropleth
+          svg.append('circle')
+            .attr("id", 'location-circle')
+            .attr("cx", d => projection(value)[0])
+            .attr("cy", d => projection(value)[1])
+            .attr('r', 5)
+            .attr('stroke', 'black')
+            .attr('fill', 'cyan');
+
+          // find corresponding lor 
+          const point = svg.node().createSVGPoint();
+          const circle = document.getElementById('location-circle')
+          point.x = circle.getAttribute('cx');
+          point.y = circle.getAttribute('cy');
+
+          for (const n of D3.selectAll('.lor_area').nodes()) {
+            if (n.isPointInFill(point)) {
+              const id = n.getAttribute('data-id')
+              const value_key = D3.select('#select_ebene').property("value")
+              let index = plr_index
+              let name_key = 'Planungsraum (Name)'
+
+              if (value_key == 'bzr') {
+                index = bzr_index
+                name_key = 'Bezirksregion (Name)'
+              } else if (value_key == 'pgr') {
+                index = pgr_index
+                name_key = 'Prognoseraum (Name)'
+              }
+
+              D3.select(n).attr('stroke', 'cyan')
+                .attr("stroke-width", 2)
+                .attr("stroke-opacity", "100%")
+                .attr('class', 'location-lor')
+
+              const name = index.get(id)[name_key]
+              const graphDiv = document.getElementById('div-barchart')
+
+              const data = graphDiv.data
+              const idx = data[0].x.findIndex(x => x == name)
+              const color = data[0].y.map(colorScale)
+              color[idx] = '#00ffff'
+
+              data[0].marker.color = color
+
+              Plotly.react('div-barchart', data, graphDiv.layout)
+
+              break
+            }
+          }
+        }
+      } else {
+        alert("Die Adresse konnte leider nicht gefunden werden.");
+        return;
+      }
+
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+}
+
+D3.select("#submit-btn").on("click", (event) => hightlight_location());
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+function get_tooltip(d, index, name, id, value_key) {
+  let tt = d.properties[name] + '<br>'
+  if (index.get(d.properties[id])[value_key] == null) {
+    tt += 'Keine Daten'
+  } else {
+    tt += 'Fahrraddiebstähle: ' + formatNumber(index.get(d.properties[id])['cases'])
+    tt += '<br>Einwohnende: ' + formatNumber(index.get(d.properties[id])['population'])
+
+    const f = D3.format(".1f");
+    tt += '<br>Fahrraddiebstähle je 100.000 Einwohnende: ' + formatNumber(f(index.get(d.properties[id])['cases_per_100k']).replace(".", ","))
+
+  }
+  return tt
+}
+
+var colorScale
+
+function update_plots(event, d) {
+  const selectedLOR = D3.select('#select_ebene').property("value")
+  const value_key = D3.select('#select_measure').property("value")
+
+  // default values
+  let lorGeoJSON = planungsraeume
+  let index = plr_index
+  let id_key = 'PLR_ID'
+  let name_key = 'PLR_NAME'
+  let lor_name_key = 'Planungsraum (Name)'
+  let legendline3 = 'nach Planungsräumen'
+
+  switch (selectedLOR) {
+    case 'bzr':
+      lorGeoJSON = bezirksregionen
+      index = bzr_index
+      id_key = 'BZR_ID'
+      name_key = 'BZR_NAME'
+      lor_name_key = 'Bezirksregion (Name)'
+      legendline3 = 'nach Bezirksregionen'
+      break;
+    case 'pgr':
+      lorGeoJSON = prognoseraeume
+      index = pgr_index
+      id_key = 'PGR_ID'
+      name_key = 'PGR_NAME'
+      lor_name_key = 'Prognoseraum (Name)'
+      legendline3 = 'nach Prognoseräumen'
+      break;
+  }
+
+  const fillFeature = d => index.get(d.properties[id_key])[value_key] || 0
+  const tooltip = d => get_tooltip(d, index, name_key, id_key, value_key)
+
+  // calculate domain for color scale
+  let values = lorGeoJSON.features.map(fillFeature)
+  let qts = [0.2, 0.4, 0.6, 0.8, 0.95]
+  let domain = qts.map(d => Math.round(D3.quantile(values, d)))
+
+  // [6.0, 14.0, 30.0, 62.0, 94]
+  colorScale = D3.scaleThreshold()
+    .domain(domain)
+    .range(['#fef0d9', '#fdd49e', '#fdbb84', '#fc8d59', '#e34a33', '#b30000']);
+
+
+  render_choropleth(fahrraddiebstahl, {
+    targetSVG: D3.select("#choropleth"),
+    colorScale: colorScale,
+    legend: {
+      start: Math.round(D3.min(values)),
+      end: Math.round(D3.max(values)),
+      line1: value_key == 'cases' ? ' ' : 'Fahrraddiebstähle 2022',
+      line2: value_key == 'cases' ? 'Fahrraddiebstähle 2022' : 'je 100.000 Einwohnende',
+      line3: legendline3,
+    },
+    lorGeoJSON: lorGeoJSON,
+    fillFeature: fillFeature,
+    tooltip: tooltip,
+  })
+
+
+  // PLOT BARCHART
+  const arr = Array.from(index.values()).sort((a, b) => D3.ascending(a[value_key] || 0, b[value_key] || 0))
+  
+  const data = [
+    {
+      x: arr.map(x => x[lor_name_key]),
+      y: arr.map(x => x[value_key]),
+	  text: arr.map(x => x['population']),
+      textposition: 'none',
+      type: 'bar',
+      marker: {
+        color: arr.map(x => colorScale(x[value_key])),
+      },
+      hovertemplate:
+            "%{x}<br>" +
+            "%{yaxis.title.text}: %{y:,.0f}<br>" +
+            "Einwohnende: %{text:,.0f}<br>" +
+            "<extra></extra>"
+    }
+  ]
+
+  const layout = {
+    autosize: false,
+    width: 950,
+    height: 600,
+    margin: {
+      l: 60,
+      r: 10,
+      b: 200,
+      t: 10,
+      pad: 3,
+    },
+    xaxis: {
+      title: {
+        text: legendline3.slice(0, -2).replace('nach ', '').replace('ä', 'a'),
+        standoff: 10
+      },
+      tickfont: {
+        size: 11,
+      }
+    },
+    yaxis: {
+      title: {
+        text: 'Fahrraddiebstähle' + (value_key == 'cases' ? '' : ' je 100.000 Einwohnende'),
+        standoff: 20
+      }
+    }
+  }
+
+  const div = document.getElementById('div-barchart')
+  Plotly.newPlot('div-barchart', data, layout);
+  
+  // const div = document.createElement("div");
+  // div.setAttribute("id", "bar-div");
+  // Plotly.newPlot(div, data, layout);
+  // return div
+
+  // workaround to trigger location hightlight after changing the choropleth 
+  setTimeout(() => hightlight_location(), 500);
+}
+
+
+D3.select("#select_ebene").on("change", (event, d) => update_plots(event, d))
+D3.select("#select_measure").on("change", (event, d) => update_plots(event, d))
+
+update_plots(null, null)
+# %%--- [markdown]
+# properties:
+#   top_hidden: true
+# ---%%
+# KORRELATION TODO REMOVE
+# %%--- [python]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+import pyodide
+import pandas as pd
+
+from js import fahrraddiebstahl, lor, kriminalitaet, fahrraddiebstahl, demographie
+fd = pd.DataFrame.from_dict(fahrraddiebstahl.to_py())
+
+lors = pd.DataFrame(lor.to_py())
+cols = ['Planungsraum (Nummer)', 'Planungsraum (Name)', 'Bezirksregion (Nummer)', 'Bezirksregion (Name)']
+fd = fd.merge(lors[cols], left_on='LOR', right_on='Planungsraum (Nummer)')
+
+
+crime = pd.DataFrame(kriminalitaet.to_py())
+crime_fd = crime.merge(fd.groupby(by='Bezirksregion (Nummer)').size().to_frame().rename(columns={0: 'Fahrraddiebstähle'}), left_on='LOR-Schlüssel (Bezirksregion)', right_index=True, how='right')
+num_cols = crime_fd.columns[2:]
+crime_fd[num_cols] = crime_fd[num_cols].astype(float)
+crime_correlation = crime_fd.corr()['Fahrraddiebstähle'].sort_values(ascending=False).to_dict()
+
+
+demo = pd.DataFrame.from_dict(demographie.to_py(), orient='index')
+demo_fd = demo.merge(fd.groupby(by='LOR').size().to_frame().rename(columns={0: 'Fahrraddiebstähle'}), left_on='PLR-ID', right_index=True, how='left')
+correlation = demo_fd.corr()['Fahrraddiebstähle'].sort_values(ascending=False).to_dict()
+# %% [markdown]
+## **Wenn du dein Fahrrad abstellst, hast du dich schon gewundert, welche Merkmale des Ortes mit Fahrraddiebstählen öfter zusammenhängen?**
+
+(Erklärung)
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+let result_py = pyodide.globals.get("crime_correlation")
+var crime_correlation = result_py.toJs()
+result_py.destroy()
+
+let result_py2 = pyodide.globals.get("correlation")
+var result_js = result_py2.toJs();
+result_py2.destroy();
+result_js
+
+
+let res_unfiltered = Object.fromEntries(result_js)
+
+let keysToRemove = ["Fahrraddiebstähle", "ausländer", "Dynamik-summe", "Status-summe", "EW 31.12.2020",
+                   "zD1", "zD3", "zD4", "Veränderung Ausländeranteil", "K11",
+                   "K04", "K05", "K06", "K16", "K07", "K17"]
+
+let res = Object.fromEntries(Object.entries(res_unfiltered).filter(([key]) => !keysToRemove.includes(key)))
+
+let names = {K01: "Jugendarbeitslosigkeit",
+K02: "Alleinerziehende Haushalte",
+K03: "Altersarmut",
+//K04: "Kinder und Jugendliche mit Migrationshintergrund",
+//K05: "Einwohnerinnen und Einwohner mit Migrationshintergrund",
+//K16: "Ausländerinnen und Ausländer",
+//K06: "Veränderung Ausländeranteil",
+//K07: "Ausländische Transferbezieher",
+//K17: "Nicht-EU-Ausländerinnen und Nicht-EU-Ausländer",
+K08: "Städtische Wohnungen",
+K14: "Wohnräume",
+K15: "Wohnfläche",
+K09: "Einfache Wohnlage (einschl. Lärmbelastung)",
+K10: "Wohndauer über 5 Jahre",
+//K11: "Wanderungsvolumen",
+K12: "Wanderungssaldo",
+K13: "Wanderungssaldo von Kindern unter 6 Jahren",
+
+zS1: "Arbeitslose", //z-Wert 
+zS3: "Transferbezieher", //z-Wert 
+zS4: "Transferbezieher unter 15 Jahre", //z-Wert 
+
+//zD1: "z-Wert Veränderung Anteil Arbeitslose",
+//zD3: "z-Wert Veränderung Anteil Transferbezieher",
+//zD4: "z-Wert Veränderung Anteil Transferbezieher unter 15 Jahren",
+               
+"Dynamik-Index (standardisierte Dynamik-summe)": "Dynamik-Index",
+"Status-Index (standardisierte Statussumme)": "Status-Index",
+//"EW 31.12.2020": "Gesamte Zahl Einwohner:innen",
+
+unter6: "0-6-jährige",
+"6-15": "6-15-jährige",
+"15-18": "15-18-jährige",
+"18-27": "18-27-jährige",
+"27-45": "27-45-jährige",
+"45-55": "45-55-jährige",
+"55-65": "45-55-jährige",
+"65undmehr": "65+jährige",
+weiblich: "Weibliche Einwohnerinnen",
+Gesamt: "Gesamte Zahl Einwohner:innen",      
+}
+
+let res_keys = Object.keys(res)
+let names_keys = Object.keys(names)
+
+let map_names = res_keys.map(v => names_keys.includes(v) ? Object.values(names)[names_keys.indexOf(names_keys.find(k => k == v))] : v)
+
+let map_colors = Object.values(res).map(v => v >= 0 ? D3.schemeRdBu[3][2] : D3.schemeRdBu[3][0])
+
+// A simple bar chart using Chart.js
+const canvas = document.createElement("canvas");
+const myChart = new Chart(canvas.getContext("2d"), {
+  type: "bar",
+  data: {
+    labels: map_names,
+    datasets: [{data: Object.values(res),
+                borderColor: map_colors,
+                backgroundColor: map_colors}]},
+  options: {
+    indexAxis: 'y',
+    elements: {bar: {borderWidth: 2}},
+    scales: {
+      y: {min: 0,
+          max: 50,
+          title: {display: false,
+                  text: 'Variables'}},
+      x: {min: -0.4,
+          max: 0.7,
+          title: {display: true,
+          text: "Korrelationskoeffizient nach Pearson"}}
+    },
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 1|1,
+    plugins: {
+      legend: {display: false},
+      title: {display: false,
+              text: 'Assoziationen'}
+    }}})
+
+canvas
+# %% [markdown]
+## Und in wie fern hängen die Fahrraddiebstähle zusammen mit anderen kriminelle Tätigkeiten?
+
+(Erklärung)
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+let res_unfiltered = Object.fromEntries(crime_correlation)
+
+let keysToRemove = ["Fahrraddiebstahl", "Fahrraddiebstähle"]
+
+let res = Object.fromEntries(Object.entries(res_unfiltered).filter(([key]) => !keysToRemove.includes(key)))
+
+let names = {"Diebstahl-insgesamt": "Diebstahl",
+               "Sachbeschädigung-insgesamt": "Sachbeschädigung",
+               "Straftaten-insgesamt": "Straftaten",
+               "Körperverletzungen-insgesamt": "Körperverletzungen",
+               "Branddelikte-insgesamt": "Branddelikte",
+               "Gefährl und schwere Körperverletzung": "Gefährliche und schwere Körperverletzungen",
+               "Straßenraub- Handtaschenraub": "Straßen- und Handtaschenraub",
+               "Diebstahl an/aus Kfz": "Diebstahl an/aus Kraftfahrzeug",
+               "Freiheitsberaubung- Nötigung- Bedrohung- Nachstellung": "Freiheitsberaubung, Nötigung, Bedrohung und Nachstellung",
+            }
+
+let res_keys = Object.keys(res)
+let names_keys = Object.keys(names)
+
+let map_names = res_keys.map(v => names_keys.includes(v) ? Object.values(names)[names_keys.indexOf(names_keys.find(k => k == v))] : v)
+
+let map_colors = Object.values(res).map(v => v >= 0 ? D3.schemeRdBu[3][2] : D3.schemeRdBu[3][0])
+
+// A simple bar chart using Chart.js
+const canvas = document.createElement("canvas");
+const myChart = new Chart(canvas.getContext("2d"), {
+  type: "bar",
+  data: {
+    labels: map_names,
+    datasets: [{data: Object.values(res),
+                borderColor: map_colors,
+                backgroundColor: map_colors}]},
+  options: {
+    indexAxis: 'y',
+    elements: {bar: {borderWidth: 2}},
+    scales: {
+      y: {min: 0,
+          max: 50,
+          title: {display: false,
+                  text: 'Variables'}},
+      x: {min: 0.,
+          max: 1.,
+          title: {display: true,
+          text: "Korrelationskoeffizient nach Pearson"}}
+    },
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 1|1,
+    plugins: {
+      legend: {display: false},
+      title: {display: false,
+              text: 'Assoziationen'}
+    }}})
+
+canvas
+# %% [markdown]
+### Informationen zu den verwendeten Daten
+
+Als Datenquelle dient in erster Linie die Datenquelle, die von der Polizei Berlin über BerlinOpenData bereitgestellt wird. Diese enthält tagesaktuelle Daten über Fahrraddiebstähle in Berlin auf der Ebene der Planungsräume. Die Daten umfassen das laufende Jahr bis zum Vortag der Aktualisierung und das gesamte Vorjahr, sofern sich die Tatzeit auf maximal drei Tage begrenzen lässt. Die Daten sind unter der Creative Commons Namensnennung CC-BY License lizenziert und betreffen das Thema Öffentliche Sicherheit. Die geographische Abdeckung ist auf Berlin beschränkt und die granularen Informationen sind auf die Ebene von Berlin und den Tag beschränkt. Die Daten wurden am 8. September 2021 veröffentlicht und am 9. September 2021 aktualisiert. Die Veröffentlichung erfolgt durch die Polizei Berlin LKA St 14 und Kontakt kann über E-Mail an onlineredaktion@polizei.berlin.de aufgenommen werden. Die Daten werden angereichert mit weiteren Datensätzen von anderen Quellen. Dazu gehört der Kriminalitätsatlas, welcher die Kriminalitätsbelastung in Berlin beschreibt.
