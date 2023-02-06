@@ -678,7 +678,9 @@ var current_address = ''
 function hightlight_location() {
   let value = document.getElementById('input-longlat').value
 
-  if (value == current_address) {
+  let location_el = document.getElementById("location-circle")
+  
+  if (value == current_address && location_el != null) {
     alert('Der Standort wird bereits angezeigt.')
     return
   }
@@ -707,7 +709,7 @@ function hightlight_location() {
           let lat = data["results"][0]["geometry"]["lat"];
           let lng = data["results"][0]["geometry"]["lng"];
 
-          if (current_lng == lng && current_lat == lat) {
+          if (current_lng == lng && current_lat == lat && location_el != null) {
             return 
           }
           
