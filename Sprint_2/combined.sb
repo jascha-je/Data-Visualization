@@ -28,6 +28,7 @@ await import("https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.2/dist/
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
+#   bottom_hidden: true
 #   top_hidden: true
 # ---%%
 let data = await D3.json("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_2/data/fahrraddiebstaehle_deutschland_2020.json");
@@ -230,13 +231,9 @@ const myChart = new Chart(canvas.getContext("2d"),
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
-…wo werden die Fahrräder gestohlen?
-<br>
-…wie gefährdet sind Sie?
-
-<br>
-<br>
-Geben Sie dazu eine Adresse ein, an dem Sie häufig Ihr Fahrrad abstellen. <br />
+<h3>Wo werden die meisten Fahrräder in Berlin gestohlen?</h3>
+<h3>Und wie gefährdet bist du?</h3>
+Gib dazu eine Adresse ein, an der du häufig dein Fahrrad abstellst. <br />
 Alternativ wird der Standort des Instituts für Informatik der FU Berlin genutzt.
 <p style="">
     Standort:
@@ -941,8 +938,6 @@ D3.select("#select_ebene").on("change", (event, d) => update_plots(event, d))
 D3.select("#select_measure").on("change", (event, d) => update_plots(event, d))
 
 update_plots(null, null)
-# %% [markdown]
-# KORRELATION TODO REMOVE
 # %%--- [python]
 # properties:
 #   run_on_load: true
@@ -973,7 +968,7 @@ correlation = demo_fd.corr()['Fahrraddiebstähle'].sort_values(ascending=False).
 # %% [markdown]
 ## **Wenn du dein Fahrrad abstellst, hast du dich schon gewundert, welche Merkmale des Ortes mit Fahrraddiebstählen öfter zusammenhängen?**
 
-(Erklärung)
+Um zu zeigen, welche demographischen und sozialen Aspekte eines LORs mit Fahrraddiebstählen im Zusammenhang stehen, wurde die Produkt-Moment-Korrelation berechnet. Die sich daraus ergebende Zahl gibt an, inwieweit die Anzahl der Fahrraddiebstähle pro LOR und ein anderes Merkmal tendenziell einen ähnlichen Trend aufweisen. 1 ist die höchste positive Korrelation, was bedeutet, dass die beiden Variablen zusammen auftreten, während -1 die höchste negative Korrelation ist, da dort, wo das eine auftritt, das andere einen umgekehrten Trend zeigt. 0-Korrelation bedeutet, dass keine lineare Beziehung besteht.
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
@@ -998,7 +993,7 @@ let keysToRemove = ["Fahrraddiebstähle", "ausländer", "Dynamik-summe", "Status
 let res = Object.fromEntries(Object.entries(res_unfiltered).filter(([key]) => !keysToRemove.includes(key)))
 
 let names = {K01: "Jugendarbeitslosigkeit",
-K02: "Alleinerziehende Haushalte",
+K02: "Anteil Alleinerziehender Haushalte",
 K03: "Altersarmut",
 //K04: "Kinder und Jugendliche mit Migrationshintergrund",
 //K05: "Einwohnerinnen und Einwohner mit Migrationshintergrund",
@@ -1006,25 +1001,25 @@ K03: "Altersarmut",
 //K06: "Veränderung Ausländeranteil",
 //K07: "Ausländische Transferbezieher",
 //K17: "Nicht-EU-Ausländerinnen und Nicht-EU-Ausländer",
-K08: "Städtische Wohnungen",
-K14: "Wohnräume",
-K15: "Wohnfläche",
-K09: "Einfache Wohnlage (einschl. Lärmbelastung)",
-K10: "Wohndauer über 5 Jahre",
+K08: "Städtische Wohnungen", //
+K14: "Wohnräume", //
+K15: "Wohnfläche", //
+K09: "Anteil einfacher Wohnlage", //Einfache Wohnlage (einschl. Lärmbelastung)",
+K10: "Anteil Wohndauer über 5 Jahre", 
 //K11: "Wanderungsvolumen",
-K12: "Wanderungssaldo",
-K13: "Wanderungssaldo von Kindern unter 6 Jahren",
+K12: "Wanderungssaldo****",
+K13: "Wanderungssaldo von Kindern unter 6 Jahren****",
 
-zS1: "Arbeitslose", //z-Wert 
-zS3: "Transferbezieher", //z-Wert 
-zS4: "Transferbezieher unter 15 Jahre", //z-Wert 
+zS1: "Arbeitslosigkeit", //z-Wert 
+zS3: "Anteil Transferbezieher**", //"Transferbezieher", //z-Wert 
+zS4: "Kinderarmut", //"Transferbezieher unter 15 Jahre", //z-Wert 
 
 //zD1: "z-Wert Veränderung Anteil Arbeitslose",
 //zD3: "z-Wert Veränderung Anteil Transferbezieher",
 //zD4: "z-Wert Veränderung Anteil Transferbezieher unter 15 Jahren",
                
-"Dynamik-Index (standardisierte Dynamik-summe)": "Dynamik-Index",
-"Status-Index (standardisierte Statussumme)": "Status-Index",
+"Dynamik-Index (standardisierte Dynamik-summe)": "Dynamik-Index*",
+"Status-Index (standardisierte Statussumme)": "Status-Index***",
 //"EW 31.12.2020": "Gesamte Zahl Einwohner:innen",
 
 unter6: "0-6-jährige",
@@ -1066,7 +1061,7 @@ const myChart = new Chart(canvas.getContext("2d"), {
       x: {min: -0.4,
           max: 0.7,
           title: {display: true,
-          text: "Korrelationskoeffizient nach Pearson"}}
+          text: "Produkt-Moment-Korrelation"}}
     },
     responsive: true,
     maintainAspectRatio: true,
@@ -1078,10 +1073,40 @@ const myChart = new Chart(canvas.getContext("2d"), {
     }}})
 
 canvas
-# %% [markdown]
-## Und in wie fern hängen die Fahrraddiebstähle zusammen mit anderen kriminelle Tätigkeiten?
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+<details>
+    <summary>Erläuterungen</summary>
+* <b>Dynamik-Index</b>: Entwicklung der Ausprägungen der drei Dynamik-Indikatoren: Veränderung der Arbeitslosigkeit, Veränderung des Transferbezugs und Veränderung der Kinderarmut im zweijährigen Beobachtungszeitraum, unterteilt in drei Klassen.
 
-(Erklärung)
+<br> ** <b>Anteil Transferbezieher</b>: Anteil der nicht arbeitslosen Empfängerinnen und Empfänger von Transferleistungen nach SGB II und SGB XII an den Einwohnerinnen und Einwohnern in Prozent.
+
+<br> *** <b>Status-Index</b>: soziale Lage anhand der Ausprägungen der drei Status-Indikatoren: Arbeitslosigkeit, Transferbezug und Kinderarmut, unterteilt in 4 Klassen.
+
+<br> **** <b>Wanderungssaldo</b>: Zuzüge minus Fortzüge je 100 Einwohnerinnen und Einwohner innerhalb von zwei Jahren in Prozent pro Jahr.
+  </details>
+
+<details>
+  <summary>Datenquellen</summary>
+  	<ul>
+            <li>Fahrraddiebstähle <a
+                    href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
+            </li>
+            <li>Bevölkerung <a
+                    href="https://www.statistik-berlin-brandenburg.de/a-i-16-hj">https://www.statistik-berlin-brandenburg.de/a-i-16-hj</a>
+            </li>
+            <li>Index-Indikatoren nach Status und Dynamik und Kontext-Indikatoren <a
+                    href="https://www.berlin.de/sen/sbw/stadtdaten/stadtwissen/monitoring-soziale-stadtentwicklung/bericht-2021/tabellen">https://www.berlin.de/sen/sbw/stadtdaten/stadtwissen/monitoring-soziale-stadtentwicklung/bericht-2021/tabellen</a>
+            </li>
+    </ul>
+</details>
+# %% [markdown]
+## Und in wie fern hängen die Fahrraddiebstähle zusammen mit anderen kriminellen Tätigkeiten?
+
+Auf der Grundlage der Produkt-Moment-Korrelation kann auch untersucht werden, welche anderen kriminellen Aktivitäten mit Fahrraddiebstählen assoziiert sind.
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
@@ -1131,7 +1156,7 @@ const myChart = new Chart(canvas.getContext("2d"), {
       x: {min: 0.,
           max: 1.,
           title: {display: true,
-          text: "Korrelationskoeffizient nach Pearson"}}
+          text: "Produkt-Moment-Korrelation"}}
     },
     responsive: true,
     maintainAspectRatio: true,
@@ -1143,3 +1168,19 @@ const myChart = new Chart(canvas.getContext("2d"), {
     }}})
 
 canvas
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+    <details>
+        <summary>Datenquellen</summary>
+        <ul>
+            <li>Fahrraddiebstähle <a
+                    href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
+            </li>
+            <li>Kriminalitätsatlas <a
+                    href="https://daten.berlin.de/datensaetze/kriminalitätsatlas-berlin">https://daten.berlin.de/datensaetze/kriminalitätsatlas-berlin</a>
+            </li>
+        </ul>
+    </details>
