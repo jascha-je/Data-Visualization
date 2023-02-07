@@ -15,8 +15,16 @@ Basis der Ermittlung der risikoreichsten Bundesländer für Zweiradfahrer ist di
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
-#   top_hidden: true
+# ---%%
+var main_bar_color_1 = '#91bfdb'
+var main_bar_color_2 = '#ef8a62'
+var highlight_color_1 = '#fc8d59' 
+var highligh_color_2 = '#67a9cf'
+# %%--- [javascript]
+# properties:
+#   run_on_load: true
 #   bottom_hidden: true
+#   top_hidden: true
 # ---%%
 // load d3.js
 await import("https://d3js.org/d3.v7.min.js")
@@ -32,6 +40,7 @@ await import("https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.2/dist/
 #   top_hidden: true
 # ---%%
 let data = await D3.json("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_2/data/fahrraddiebstaehle_deutschland_2020.json");
+
 let arrayData = [];
 let arrayLabel = [];
 
@@ -53,15 +62,16 @@ let newArrayLabel = [];
 let newArrayData = [];
 let backgroundColor = [];
 let germany = 0;
+
 sortedArrayOfObj.forEach(function (d) {
 
   if (d.label == "Deutschland") {
     germany = d.data;
   } else {
     if (d.label == "Berlin") {
-      backgroundColor.push(D3.schemeRdBu[3][0]);
+      backgroundColor.push(main_bar_color_2);
     } else {
-      backgroundColor.push(D3.schemeRdBu[3][2]);
+      backgroundColor.push('rgba(0, 0, 0, 0)');
     }
     newArrayLabel.push(d.label);
     newArrayData.push(d.data);
@@ -77,8 +87,8 @@ const options = {
           type: 'line',
           yMin: germany,
           yMax: germany,
-          borderColor: D3.schemeRdBu[4][3],
-          borderWidth: 2,
+          borderColor: highligh_color_2,
+          borderWidth: 3,
           label: {
             rotation: 'auto',
             content: 'Deutschland',
@@ -125,7 +135,9 @@ const myChart = new Chart(canvas.getContext("2d"),
         {
           data: newArrayData,
           label: "Fahrraddiebstähle je 100.000 Einwohner 2020",
-          backgroundColor: backgroundColor
+          backgroundColor: new Array(backgroundColor.length).fill(main_bar_color_1),
+          borderColor: backgroundColor,
+          borderWidth: 4
         },
       ],
     },
@@ -677,7 +689,7 @@ var current_address = ''
 
 function hightlight_location() {
   let value = document.getElementById('input-longlat').value
-
+  
   let location_el = document.getElementById("location-circle")
   
   if (value == current_address && location_el != null) {
@@ -971,6 +983,39 @@ correlation = demo_fd.corr()['Fahrraddiebstähle'].sort_values(ascending=False).
 ## **Wenn du dein Fahrrad abstellst, hast du dich schon gewundert, welche Merkmale des Ortes mit Fahrraddiebstählen öfter zusammenhängen?**
 
 Um zu zeigen, welche demographischen und sozialen Aspekte eines LORs mit Fahrraddiebstählen im Zusammenhang stehen, wurde die Produkt-Moment-Korrelation berechnet. Die sich daraus ergebende Zahl gibt an, inwieweit die Anzahl der Fahrraddiebstähle pro LOR und ein anderes Merkmal tendenziell einen ähnlichen Trend aufweisen. 1 ist die höchste positive Korrelation, was bedeutet, dass die beiden Variablen zusammen auftreten, während -1 die höchste negative Korrelation ist, da dort, wo das eine auftritt, das andere einen umgekehrten Trend zeigt. 0-Korrelation bedeutet, dass keine lineare Beziehung besteht.
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+<div style="height:900px">
+	<canvas id="correlation-canvas"></canvas>
+</div>
+<details>
+    <summary>Erläuterungen</summary>
+* <b>Dynamik-Index</b>: Entwicklung der Ausprägungen der drei Dynamik-Indikatoren: Veränderung der Arbeitslosigkeit, Veränderung des Transferbezugs und Veränderung der Kinderarmut im zweijährigen Beobachtungszeitraum, unterteilt in drei Klassen.
+
+<br> ** <b>Anteil Transferbezieher</b>: Anteil der nicht arbeitslosen Empfängerinnen und Empfänger von Transferleistungen nach SGB II und SGB XII an den Einwohnerinnen und Einwohnern in Prozent.
+
+<br> *** <b>Status-Index</b>: soziale Lage anhand der Ausprägungen der drei Status-Indikatoren: Arbeitslosigkeit, Transferbezug und Kinderarmut, unterteilt in 4 Klassen.
+
+<br> **** <b>Wanderungssaldo</b>: Zuzüge minus Fortzüge je 100 Einwohnerinnen und Einwohner innerhalb von zwei Jahren in Prozent pro Jahr.
+  </details>
+
+<details>
+  <summary>Datenquellen</summary>
+  	<ul>
+            <li>Fahrraddiebstähle <a
+                    href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
+            </li>
+            <li>Bevölkerung <a
+                    href="https://www.statistik-berlin-brandenburg.de/a-i-16-hj">https://www.statistik-berlin-brandenburg.de/a-i-16-hj</a>
+            </li>
+            <li>Index-Indikatoren nach Status und Dynamik und Kontext-Indikatoren <a
+                    href="https://www.berlin.de/sen/sbw/stadtdaten/stadtwissen/monitoring-soziale-stadtentwicklung/bericht-2021/tabellen">https://www.berlin.de/sen/sbw/stadtdaten/stadtwissen/monitoring-soziale-stadtentwicklung/bericht-2021/tabellen</a>
+            </li>
+    </ul>
+</details>
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
@@ -1041,10 +1086,16 @@ let names_keys = Object.keys(names)
 
 let map_names = res_keys.map(v => names_keys.includes(v) ? Object.values(names)[names_keys.indexOf(names_keys.find(k => k == v))] : v)
 
-let map_colors = Object.values(res).map(v => v >= 0 ? D3.schemeRdBu[3][2] : D3.schemeRdBu[3][0])
+let map_colors = Object.values(res).map(v => v >= 0 ? main_bar_color_1 : main_bar_color_2)
 
-// A simple bar chart using Chart.js
-const canvas = document.createElement("canvas");
+
+try {
+  Chart.getChart("correlation-canvas").destroy()
+} catch (error) {
+
+}
+
+const canvas = document.getElementById("correlation-canvas");
 const myChart = new Chart(canvas.getContext("2d"), {
   type: "bar",
   data: {
@@ -1066,49 +1117,36 @@ const myChart = new Chart(canvas.getContext("2d"), {
           text: "Produkt-Moment-Korrelation"}}
     },
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     aspectRatio: 1|1,
     plugins: {
       legend: {display: false},
       title: {display: false,
               text: 'Assoziationen'}
     }}})
+# %% [markdown]
+## Und in wie fern hängen die Fahrraddiebstähle zusammen mit anderen kriminellen Tätigkeiten?
 
-canvas
+Auf der Grundlage der Produkt-Moment-Korrelation kann auch untersucht werden, welche anderen kriminellen Aktivitäten mit Fahrraddiebstählen assoziiert sind.
 # %%--- [html]
 # properties:
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
+<div style="height:600px">
+	<canvas id="correlation-crime-canvas"></canvas>
+</div>
 <details>
-    <summary>Erläuterungen</summary>
-* <b>Dynamik-Index</b>: Entwicklung der Ausprägungen der drei Dynamik-Indikatoren: Veränderung der Arbeitslosigkeit, Veränderung des Transferbezugs und Veränderung der Kinderarmut im zweijährigen Beobachtungszeitraum, unterteilt in drei Klassen.
-
-<br> ** <b>Anteil Transferbezieher</b>: Anteil der nicht arbeitslosen Empfängerinnen und Empfänger von Transferleistungen nach SGB II und SGB XII an den Einwohnerinnen und Einwohnern in Prozent.
-
-<br> *** <b>Status-Index</b>: soziale Lage anhand der Ausprägungen der drei Status-Indikatoren: Arbeitslosigkeit, Transferbezug und Kinderarmut, unterteilt in 4 Klassen.
-
-<br> **** <b>Wanderungssaldo</b>: Zuzüge minus Fortzüge je 100 Einwohnerinnen und Einwohner innerhalb von zwei Jahren in Prozent pro Jahr.
-  </details>
-
-<details>
-  <summary>Datenquellen</summary>
-  	<ul>
-            <li>Fahrraddiebstähle <a
-                    href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
-            </li>
-            <li>Bevölkerung <a
-                    href="https://www.statistik-berlin-brandenburg.de/a-i-16-hj">https://www.statistik-berlin-brandenburg.de/a-i-16-hj</a>
-            </li>
-            <li>Index-Indikatoren nach Status und Dynamik und Kontext-Indikatoren <a
-                    href="https://www.berlin.de/sen/sbw/stadtdaten/stadtwissen/monitoring-soziale-stadtentwicklung/bericht-2021/tabellen">https://www.berlin.de/sen/sbw/stadtdaten/stadtwissen/monitoring-soziale-stadtentwicklung/bericht-2021/tabellen</a>
-            </li>
+    <summary>Datenquellen</summary>
+    <ul>
+        <li>Fahrraddiebstähle <a
+                href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
+        </li>
+        <li>Kriminalitätsatlas <a
+                href="https://daten.berlin.de/datensaetze/kriminalitätsatlas-berlin">https://daten.berlin.de/datensaetze/kriminalitätsatlas-berlin</a>
+        </li>
     </ul>
 </details>
-# %% [markdown]
-## Und in wie fern hängen die Fahrraddiebstähle zusammen mit anderen kriminellen Tätigkeiten?
-
-Auf der Grundlage der Produkt-Moment-Korrelation kann auch untersucht werden, welche anderen kriminellen Aktivitäten mit Fahrraddiebstählen assoziiert sind.
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
@@ -1136,10 +1174,15 @@ let names_keys = Object.keys(names)
 
 let map_names = res_keys.map(v => names_keys.includes(v) ? Object.values(names)[names_keys.indexOf(names_keys.find(k => k == v))] : v)
 
-let map_colors = Object.values(res).map(v => v >= 0 ? D3.schemeRdBu[3][2] : D3.schemeRdBu[3][0])
+let map_colors = Object.values(res).map(v => v >= 0 ? main_bar_color_1: main_bar_color_2)
 
-// A simple bar chart using Chart.js
-const canvas = document.createElement("canvas");
+try {
+  Chart.getChart("correlation-crime-canvas").destroy()
+} catch (error) {
+
+}
+
+const canvas = document.getElementById("correlation-crime-canvas");
 const myChart = new Chart(canvas.getContext("2d"), {
   type: "bar",
   data: {
@@ -1161,28 +1204,10 @@ const myChart = new Chart(canvas.getContext("2d"), {
           text: "Produkt-Moment-Korrelation"}}
     },
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     aspectRatio: 1|1,
     plugins: {
       legend: {display: false},
       title: {display: false,
               text: 'Assoziationen'}
     }}})
-
-canvas
-# %%--- [html]
-# properties:
-#   run_on_load: true
-#   top_hidden: true
-# ---%%
-    <details>
-        <summary>Datenquellen</summary>
-        <ul>
-            <li>Fahrraddiebstähle <a
-                    href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
-            </li>
-            <li>Kriminalitätsatlas <a
-                    href="https://daten.berlin.de/datensaetze/kriminalitätsatlas-berlin">https://daten.berlin.de/datensaetze/kriminalitätsatlas-berlin</a>
-            </li>
-        </ul>
-    </details>
