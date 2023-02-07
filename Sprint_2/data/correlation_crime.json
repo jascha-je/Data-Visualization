@@ -1,0 +1,20 @@
+{
+    "Fahrraddiebstähle": 1,
+    "Fahrraddiebstahl": 0.9541104008622443,
+    "Diebstahl-insgesamt": 0.8774381354541564,
+    "Sachbeschädigung-insgesamt": 0.8330924992205266,
+    "Straftaten-insgesamt": 0.8286055168097052,
+    "Kieztaten": 0.7984940039269965,
+    "Raub": 0.7958833765189011,
+    "Gefährl und schwere Körperverletzung": 0.7812477019029775,
+    "Sachbeschädigung durch Graffiti": 0.7763019391295671,
+    "Straßenraub- Handtaschenraub": 0.7612596756552483,
+    "Körperverletzungen-insgesamt": 0.7502945337293813,
+    "Rauschgiftdelikte": 0.6882194072592118,
+    "Freiheitsberaubung- Nötigung- Bedrohung- Nachstellung": 0.6764607149225798,
+    "Diebstahl an/aus Kfz": 0.6747048169723742,
+    "Branddelikte-insgesamt": 0.6119353410269246,
+    "Brandstiftung": 0.537752421327996,
+    "Wohnraumeinbruch": 0.4416044348894171,
+    "Diebstahl von Kraftwagen": 0.22905731716876204
+}
