@@ -954,6 +954,216 @@ D3.select("#select_ebene").on("change", (event, d) => update_plots(event, d))
 D3.select("#select_measure").on("change", (event, d) => update_plots(event, d))
 
 update_plots(null, null)
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+<h1>SAISON?</h1>
+<div>
+  <canvas id="canvas-saison"></canvas>
+</div>
+# %%--- [javascript]
+# properties:
+#   top_hidden: true
+#   run_on_load: true
+# ---%%
+// Make an object with dates as keys
+let cases = 0
+let dict = {}
+
+for (let obj of fahrraddiebstahl) { //in
+    if (!(obj["TATZEIT_ANFANG_DATUM"] in dict)) {
+        dict[obj["TATZEIT_ANFANG_DATUM"]] = 1
+    }
+    dict[obj["TATZEIT_ANFANG_DATUM"]] += 1
+}
+//console.log(dict)
+
+// Sort keys by date
+let sortedEntries = Object.entries(dict).sort(([keyA], [keyB]) => {
+    let dateA = new Date(keyA.split('.').reverse().join('-'));
+    let dateB = new Date(keyB.split('.').reverse().join('-'));
+    return dateA - dateB;
+});
+
+let sortedObject = {};
+
+for (let [key, value] of sortedEntries) {
+    sortedObject[key] = value;
+}
+//console.log(sortedObject)
+
+// Drop the first days not included in KW:
+let weeks = Object.fromEntries(Object.entries(sortedObject).filter(([key]) => !["01.01.2022", "02.01.2022"].includes(key)))
+//console.log(weeks)
+
+// Accumulate data for each week
+let keys = Object.keys(weeks)
+let accum = {}
+const acc = []
+
+for (let i = 0; i < keys.length; i += 7) {
+    let key = keys[i];
+    accum[key] = weeks[key];
+
+    for (let j = 1; j < 7; j++) {
+        if (i + j < keys.length) {
+            let nextKey = keys[i + j];
+            accum[key] += weeks[nextKey];
+        }
+    }
+    acc[key] = accum[key] // acc[key] -> for forst day of the week, acc[[keys[i+6]]] -> for last day of the week
+    //console.log(key)
+    //console.log(acc[key])
+}
+//console.log(acc)
+
+// Calculate weekly mean
+let mean = 0
+for (let v of Object.values(acc)) {
+    mean += v
+}
+mean = mean / Object.values(acc).length
+
+mean_arr = []
+for (let i = 0; i < Object.values(acc).length; i += 1) {
+    mean_arr.push(mean)
+}
+
+//console.log(mean)
+
+// Make an array with months as Integers
+let months = [];
+
+for (key of Object.keys(acc)) {
+    let char = Array.from(key)
+    let month = char[3] + char[4]
+    months.push(parseInt(month))
+}
+//console.log(months)
+
+// Make an array with months as Stirngs
+let months_words = months.map(v => {
+    if (v == 1) return "Januar"
+    if (v == 2) return "Februar"
+    if (v == 3) return "März"
+    if (v == 4) return "April"
+    if (v == 5) return "Mai"
+    if (v == 6) return "Juni"
+    if (v == 7) return "Juli"
+    if (v == 8) return "August"
+    if (v == 9) return "September"
+    if (v == 10) return "Oktober"
+    if (v == 11) return "November"
+    if (v == 12) return "Dezember"
+})
+
+//console.log(months_words)
+
+// Change keys to KW
+const acc_clone = structuredClone(acc);
+
+for (let i = 0; i < Object.keys(acc_clone).length; i += 1) {
+    newKey = "KW " + String(i)
+    acc_clone[newKey] = Object.values(acc_clone)[i]
+    delete acc_clone[Object.keys(acc_clone)[0]]
+}
+//console.log(acc)
+
+//////////////////////////////////////////
+
+// Make an array for plotting: kw; month
+var kw_month = Object.keys(acc_clone).map(function (e, i) {
+    return e + "; " + months_words[i]
+});
+//console.log(kw_month)
+
+try {
+    Chart.getChart("canvas-saison").destroy()
+} catch (error) {
+
+}
+
+const canvas = document.getElementById("canvas-saison");
+
+const myChart = new Chart(canvas.getContext("2d"), {
+    //type: "bar",
+    data: {
+        labels: kw_month,
+        datasets: [{
+            type: "line",
+            borderWidth: 2,
+            data: mean_arr,
+            borderColor: D3.schemeRdBu[4][2],
+            //backgroundColor: D3.schemeRdBu[3][0]},
+            //events: []
+        },
+        {
+            type: "bar",
+            data: Object.values(acc),
+            backgroundColor: main_bar_color_1,
+        }]
+    },
+    options: {
+        indexAxis: 'x',
+        elements: { bar: { borderWidth: 2 } },
+        scales: {
+            y: {//min: 0,
+                //max: 50,
+                title: {
+                    display: false,
+                    text: 'Variables'
+                }
+            },
+            x: {
+                ticks: {
+                    callback: function (label) {
+                        let realLabel = this.getLabelForValue(label)
+                        var kw = realLabel.split("; ")[0];
+                        var month = realLabel.split("; ")[1];
+                        return kw;
+                    }
+                }
+            },
+            xAxis2: {
+                type: "category",
+                grid: {
+                    drawOnChartArea: false, // only want the grid lines for one axis to show up
+                },
+                ticks: {
+                    callback: function (label) {
+                        let realLabel = this.getLabelForValue(label)
+
+                        var kw = realLabel.split("; ")[0];
+                        var month = realLabel.split("; ")[1];
+                        var num = kw.split(" ")[1];
+                        if ((parseInt(num)) == 0) {
+                            return ""
+                        } if (((parseInt(num)) % 4) == 0) {
+                            return month;
+                        } else {
+                            return "";
+                        }
+                    }
+                }
+            },
+        },
+
+        elements: { point: { radius: 0 } },
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 1 | 2,
+        plugins: {
+            legend: { display: false },
+            title: {
+                display: false,
+                text: 'Assoziationen'
+            }
+        }
+    }
+})
+
 # %% [markdown]
 ## **Wenn du dein Fahrrad abstellst, hast du dich schon gewundert, welche Merkmale des Ortes mit Fahrraddiebstählen öfter zusammenhängen?**
 
