@@ -425,6 +425,8 @@ var prognoseraeume = await d3.json(base_path + "GeoJSON/EPSG_4326/lor_prognosera
 // 12 bezirke
 var bezirke = await d3.json(base_path + "GeoJSON/EPSG_4326/bezirksgrenzen.geojson")
 
+var crime_correlation = await d3.json(base_path + "correlation_crime.json")
+var index_correlation = await d3.json(base_path + "correlation_index.json")
 
 // import plotly js
 try {
@@ -952,33 +954,6 @@ D3.select("#select_ebene").on("change", (event, d) => update_plots(event, d))
 D3.select("#select_measure").on("change", (event, d) => update_plots(event, d))
 
 update_plots(null, null)
-# %%--- [python]
-# properties:
-#   run_on_load: true
-#   bottom_hidden: true
-#   top_hidden: true
-# ---%%
-import pyodide
-import pandas as pd
-
-from js import fahrraddiebstahl, lor, kriminalitaet, fahrraddiebstahl, demographie
-fd = pd.DataFrame.from_dict(fahrraddiebstahl.to_py())
-
-lors = pd.DataFrame(lor.to_py())
-cols = ['Planungsraum (Nummer)', 'Planungsraum (Name)', 'Bezirksregion (Nummer)', 'Bezirksregion (Name)']
-fd = fd.merge(lors[cols], left_on='LOR', right_on='Planungsraum (Nummer)')
-
-
-crime = pd.DataFrame(kriminalitaet.to_py())
-crime_fd = crime.merge(fd.groupby(by='Bezirksregion (Nummer)').size().to_frame().rename(columns={0: 'Fahrraddiebstähle'}), left_on='LOR-Schlüssel (Bezirksregion)', right_index=True, how='right')
-num_cols = crime_fd.columns[2:]
-crime_fd[num_cols] = crime_fd[num_cols].astype(float)
-crime_correlation = crime_fd.corr()['Fahrraddiebstähle'].sort_values(ascending=False).to_dict()
-
-
-demo = pd.DataFrame.from_dict(demographie.to_py(), orient='index')
-demo_fd = demo.merge(fd.groupby(by='LOR').size().to_frame().rename(columns={0: 'Fahrraddiebstähle'}), left_on='PLR-ID', right_index=True, how='left')
-correlation = demo_fd.corr()['Fahrraddiebstähle'].sort_values(ascending=False).to_dict()
 # %% [markdown]
 ## **Wenn du dein Fahrrad abstellst, hast du dich schon gewundert, welche Merkmale des Ortes mit Fahrraddiebstählen öfter zusammenhängen?**
 
@@ -1021,17 +996,7 @@ Um zu zeigen, welche demographischen und sozialen Aspekte eines LORs mit Fahrrad
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
-let result_py = pyodide.globals.get("crime_correlation")
-var crime_correlation = result_py.toJs()
-result_py.destroy()
-
-let result_py2 = pyodide.globals.get("correlation")
-var result_js = result_py2.toJs();
-result_py2.destroy();
-result_js
-
-
-let res_unfiltered = Object.fromEntries(result_js)
+let res_unfiltered = index_correlation
 
 let keysToRemove = ["Fahrraddiebstähle", "ausländer", "Dynamik-summe", "Status-summe", "EW 31.12.2020",
                    "zD1", "zD3", "zD4", "Veränderung Ausländeranteil", "K11",
@@ -1150,9 +1115,10 @@ Auf der Grundlage der Produkt-Moment-Korrelation kann auch untersucht werden, we
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
+#   bottom_hidden: true
 #   top_hidden: true
 # ---%%
-let res_unfiltered = Object.fromEntries(crime_correlation)
+let res_unfiltered = crime_correlation
 
 let keysToRemove = ["Fahrraddiebstahl", "Fahrraddiebstähle"]
 
