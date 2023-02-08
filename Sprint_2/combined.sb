@@ -16,10 +16,10 @@ Basis der Ermittlung der risikoreichsten Bundesländer für Zweiradfahrer ist di
 # properties:
 #   run_on_load: true
 # ---%%
-var main_bar_color_1 = '#91bfdb'
-var main_bar_color_2 = '#ef8a62'
-var highlight_color_1 = '#fc8d59' 
-var highligh_color_2 = '#67a9cf'
+var main_bar_color_1 = '#91bfdb' // main bar chart color
+var main_bar_color_2 = '#ef8a62' // color of negative bars
+// var highlight_color_1 = '#fc8d59'
+var highlight_mean = '#67a9cf'
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
@@ -87,7 +87,7 @@ const options = {
           type: 'line',
           yMin: germany,
           yMax: germany,
-          borderColor: highligh_color_2,
+          borderColor: highlight_mean,
           borderWidth: 3,
           label: {
             rotation: 'auto',
@@ -180,7 +180,7 @@ const myChart = new Chart(canvas.getContext("2d"),
         }
 
         .img-filter {
-                filter: grayscale(70%);
+                filter: grayscale(100%);
                 height: 110px;
                 width: 110px;
         }
@@ -1182,7 +1182,7 @@ const myChart = new Chart(canvas.getContext("2d"), {
                         type: 'line',
                         yMin: mean_arr[0],
                         yMax: mean_arr[0],
-                        borderColor: highligh_color_2,
+                        borderColor: highlight_mean,
                         borderWidth: 3,
                         label: {
                             rotation: 'auto',
