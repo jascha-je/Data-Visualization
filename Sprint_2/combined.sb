@@ -982,8 +982,8 @@ update_plots(null, null)
 </div>
 # %%--- [javascript]
 # properties:
-#   top_hidden: true
 #   run_on_load: true
+#   top_hidden: true
 # ---%%
 // Make an object with dates as keys
 let cases = 0
@@ -1108,19 +1108,23 @@ const myChart = new Chart(canvas.getContext("2d"), {
     //type: "bar",
     data: {
         labels: kw_month,
-        datasets: [{
-            type: "line",
-            borderWidth: 2,
-            data: mean_arr,
-            borderColor: D3.schemeRdBu[4][2],
-            //backgroundColor: D3.schemeRdBu[3][0]},
-            //events: []
-        },
-        {
-            type: "bar",
-            data: Object.values(acc),
-            backgroundColor: main_bar_color_1,
-        }]
+        datasets: [
+            {
+                type: "bar",
+                data: Object.values(acc),
+                backgroundColor: main_bar_color_1,
+            },
+            {	
+                type: "line",
+                label: 'Cubic interpolation (monotone)',
+                data: Object.values(acc),
+                borderColor: main_bar_color_2,
+              	borderWidth: 2,
+                fill: false,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.4
+            }
+        ]
     },
     options: {
         indexAxis: 'x',
@@ -1129,18 +1133,13 @@ const myChart = new Chart(canvas.getContext("2d"), {
             y: {//min: 0,
                 //max: 50,
                 title: {
-                    display: false,
-                    text: 'Variables'
+                    display: true,
+                    text: 'Fahrraddiebstähle'
                 }
             },
             x: {
                 ticks: {
-                    callback: function (label) {
-                        let realLabel = this.getLabelForValue(label)
-                        var kw = realLabel.split("; ")[0];
-                        var month = realLabel.split("; ")[1];
-                        return kw;
-                    }
+                    callback: label => 'KW ' + String(label+1)
                 }
             },
             xAxis2: {
@@ -1152,9 +1151,9 @@ const myChart = new Chart(canvas.getContext("2d"), {
                     callback: function (label) {
                         let realLabel = this.getLabelForValue(label)
 
-                        var kw = realLabel.split("; ")[0];
-                        var month = realLabel.split("; ")[1];
-                        var num = kw.split(" ")[1];
+                        let kw = realLabel.split("; ")[0];
+                        let month = realLabel.split("; ")[1];
+                        let num = kw.split(" ")[1];
                         if ((parseInt(num)) == 0) {
                             return ""
                         } if (((parseInt(num)) % 4) == 0) {
@@ -1176,7 +1175,24 @@ const myChart = new Chart(canvas.getContext("2d"), {
             title: {
                 display: false,
                 text: 'Assoziationen'
-            }
+            },
+            annotation: {
+                annotations: {
+                    line1: {
+                        type: 'line',
+                        yMin: mean_arr[0],
+                        yMax: mean_arr[0],
+                        borderColor: highligh_color_2,
+                        borderWidth: 3,
+                        label: {
+                            rotation: 'auto',
+                            content: 'Mittelwert',
+                            display: true,
+                            position: "end"
+                        },
+                    }
+                }
+            },
         }
     }
 })
@@ -1190,7 +1206,7 @@ Um zu zeigen, welche demographischen und sozialen Aspekte eines LORs mit Fahrrad
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
-<div style="height:900px">
+<div style="height:800px">
 	<canvas id="correlation-canvas"></canvas>
 </div>
 <details>
