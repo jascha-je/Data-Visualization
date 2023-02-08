@@ -150,93 +150,110 @@ const myChart = new Chart(canvas.getContext("2d"),
 #   top_hidden: true
 # ---%%
 <style>
-    table {
-        width: 100%;
-        table-layout: fixed;
-        border: #ffffff solid;
-    }
+        table {
+                width: 100%;
+                table-layout: fixed;
+                border: #ffffff solid;
+        }
 
-    td {
-        border: #ffffff solid;
-        text-align: center;
-    }
+        td {
+                border: #ffffff solid;
+                text-align: center;
+        }
 
-    tr {
-        border: #ffffff solid;
-    }
+        tr {
+                border: #ffffff solid;
+        }
 
-    table td:first-child {
-        border: #ffffff solid;
-    }
+        table td:first-child {
+                border: #ffffff solid;
+        }
 
-    table td:last-child {
-        border: #ffffff solid;
-    }
+        table td:last-child {
+                border: #ffffff solid;
+        }
+
+        .td-content {
+                font-size: 36px !important;
+                color: #91bfdb;
+                font-weight: bold;
+        }
+
+        .img-filter {
+                filter: grayscale(70%);
+                height: 110px;
+                width: 110px;
+        }
 </style>
 
 
 <table cellspacing="0" cellpadding="0">
-    <tr>
-        <td style="font-size: 20px">Gesamtschaden</td>
-        <td style="font-size: 20px">Berlin 2022 gesamt</td>
-        <td style="font-size: 20px">&oslash; Schaden pro Diebstahl</td>
-    </tr>
-    <tr>
-        <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">23,2 Mio. €</td>
-        <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">22.362</td>
-        <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">1039€</td>
-    </tr>
-    <tr>
-        <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/euro.png" width="150px" height="150px"></td>
-        <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/brandenburger_tor.png" width="150px" height="150px"></td>
-        <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/bike.png" width="150px" height="150px"></td>
-    </tr>
+        <tr>
+                <td style="font-size: 20px">Gesamtschaden</td>
+                <td style="font-size: 20px">Gemeldete Diebstähle</td>
+                <td style="font-size: 20px">&oslash; Schaden pro Diebstahl</td>
+        </tr>
+        <tr>
+                <td class="td-content">23,2 Mio.€</td>
+                <td class="td-content">22.362</td>
+                <td class="td-content">1039€</td>
+        </tr>
+        <tr>
+                <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/euro.png" class="img-filter">
+                </td>
+                <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/brandenburger_tor.png"
+                                class="img-filter"></td>
+                <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/bike.png" class="img-filter">
+                </td>
+        </tr>
 </table>
 <br>
 <br>
 <table>
-    <tr>
-        <td style="font-size: 20px">Aufklärungsquote</td>
-        <td style="font-size: 20px">&oslash; Diebstähle pro Tag</td>
-    </tr>
-    <tr>
-        <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">4,6 %</td>
-        <td style="font-size: 30px; color: rgb(139, 0, 0); font-weight: bold;">61</td>
-    </tr>
-    <tr>
-        <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/handcuffs.png" width="150px" height="150px"></td>
-        <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/day.png" width="150px" height="150px"></td>
-    </tr>
+        <tr>
+                <td style="font-size: 20px">Aufklärungsquote</td>
+                <td style="font-size: 20px">&oslash; Diebstähle pro Tag</td>
+        </tr>
+        <tr>
+                <td class="td-content">4,6%</td>
+                <td class="td-content">61</td>
+        </tr>
+        <tr>
+                <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/handcuffs.png" class="img-filter"></td>
+                <td><img src="https://jjestel.github.io/Data-Visualization/Sprint_2/images/day.png" class="img-filter">
+                </td>
+        </tr>
 </table>
 
 <details>
-    <summary>Datenquellen</summary>
-    <ul>
-        <li>GDV/Polizeiliche Kriminalstatistik <a
-                href="https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf">https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf</a>
-        </li>
-    </ul>
+        <summary>Datenquellen</summary>
+        <ul>
+                <li>GDV/Polizeiliche Kriminalstatistik <a
+                                href="https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf">https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf</a>
+                </li>
+        </ul>
 </details>
 
 <details>
-    <summary>Bildquellen</summary>
-    <ul>
-        <li>day by Anton Anuchin from <a href="https://thenounproject.com/browse/icons/term/day/" target="_blank"
-                title="day Icons">Noun Project</a>
-        </li>
-        <li>Euro by Lnhi from <a href="https://thenounproject.com/browse/icons/term/euro/" target="_blank"
-                title="Euro Icons">Noun Project</a>
-        </li>
-        <li>Brandenburg Gate by Álvaro Y. from <a href="https://thenounproject.com/browse/icons/term/brandenburg-gate/"
-                target="_blank" title="Brandenburg Gate Icons">Noun Project</a>
-        </li>
-        <li>Bike by Liberus from <a href="https://thenounproject.com/browse/icons/term/bike/" target="_blank"
-                title="Bike Icons">Noun Project</a>
-        </li>
-        <li>Handcuffs by Fran Couto from <a href="https://thenounproject.com/browse/icons/term/handcuffs/"
-                target="_blank" title="Handcuffs Icons">Noun Project</a>
-        </li>
-    </ul>
+        <summary>Bildquellen</summary>
+        <ul>
+                <li>day by Anton Anuchin from <a href="https://thenounproject.com/browse/icons/term/day/"
+                                target="_blank" title="day Icons">Noun Project</a>
+                </li>
+                <li>Euro by Lnhi from <a href="https://thenounproject.com/browse/icons/term/euro/" target="_blank"
+                                title="Euro Icons">Noun Project</a>
+                </li>
+                <li>Brandenburg Gate by Álvaro Y. from <a
+                                href="https://thenounproject.com/browse/icons/term/brandenburg-gate/" target="_blank"
+                                title="Brandenburg Gate Icons">Noun Project</a>
+                </li>
+                <li>Bike by Liberus from <a href="https://thenounproject.com/browse/icons/term/bike/" target="_blank"
+                                title="Bike Icons">Noun Project</a>
+                </li>
+                <li>Handcuffs by Fran Couto from <a href="https://thenounproject.com/browse/icons/term/handcuffs/"
+                                target="_blank" title="Handcuffs Icons">Noun Project</a>
+                </li>
+        </ul>
 </details>
 # %%--- [html]
 # properties:
