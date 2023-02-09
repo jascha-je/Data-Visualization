@@ -36,7 +36,7 @@ Basis der Ermittlung der risikoreichsten Bundesländer für Zweiradfahrer ist di
 #   top_hidden: true
 # ---%%
 var main_bar_color_1 = '#ef8a62' //orange -> main bar chart color
-var main_bar_color_2 = "#A0A0A0" //grey -> color of negative bars
+var main_bar_color_2 = "#a6bddb" //grey -> color of negative bars
 var highlight_bars = "#e34a33"//red -> line around bar/season line
 var highlight_mean = '#b30000' //dark red -> mean
 
@@ -1321,8 +1321,8 @@ Um zu zeigen, welche demographischen und sozialen Aspekte eines LORs mit Anzahl 
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
-#   top_hidden: true
 #   bottom_hidden: true
+#   top_hidden: true
 # ---%%
 let res_unfiltered = index_correlation
 
