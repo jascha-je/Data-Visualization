@@ -3,23 +3,33 @@
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
-Erfreulicherweise steigt die Anzahl der verkauften Fahrräder und E-Bikes Jahr für Jahr an. Leider nutzen auch Langfinger nach wie vor gute Gelegenheiten. Allem voran stehen die deutschen Stadtstaaten. Jährlich veröffentlicht der Gesamtverband der Deutschen Versicherungswirtschaft (GDV) seine Daten der zur Anzeige gebrachten Fahrraddiebstähle aller 16 deutschen Bundesländer.
+<center><h1>Fahrraddiebstähle in Berlin</h1>
 <br>
-<h1>Berlin zählt zu den Fahrraddiebstahl-Hochburgen Deutschlands</h1>
-<h3>Fahrraddiebstähle je 100.000 Einwohner 2020</h3>
+<h2>Berlin zählt zu den Fahrraddiebstahl-Hochburgen Deutschlands</center></h2>
 <br>
+Laut dem Gesamtverband der Deutschen Versicherungswirtschaft (GDV) werden deutschlandweit die meisten Fahrräder in den Stadtstaaten gestohlen. 
+Für Berlin veröffentlicht die Berliner Polizei die gemeldenten Fahrraddiebstähle täglich. Um die Berliner Fahrraddiebstähle zu untersuchen, wurden auf Grundlage dieser Daten verschiedene Visualisierungen erstellt.
+<br>
+<h2><center></center></h2>
+<h3><center>Fahrraddiebstähle je 100.000 Einwohner in 2020</center></h3>
+<!--<br>
 Basis der Ermittlung der risikoreichsten Bundesländer für Zweiradfahrer ist die offizielle polizeiliche Kriminalstatistik. Ins Verhältnis auf 100.000 Einwohner thront die norddeutsche Hansestadt Bremen mit 876 gestohlenen Fahrrädern im Jahr 2020 auf dem ersten Platz. Bereits mit deutlichem Abstand folgen Hamburg mit 789 und Berlin mit 752 Diebstahlfällen auf 100.000 Einwohner. Am Ende der Liste befinden sich Baden-Württemberg (177), Rheinland-Pfalz (151) und das Saarland (104). Deutschlandweit wurden im Jahr 2020 laut der GDV 314 Fahrräder pro 100.000 Einwohner gestohlen.
-<br>
+<br>-->
 <canvas id="intro-canvas">
 </canvas>
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
+#   top_hidden: true
 # ---%%
-var main_bar_color_1 = '#91bfdb' // main bar chart color
-var main_bar_color_2 = '#ef8a62' // color of negative bars
-// var highlight_color_1 = '#fc8d59'
-var highlight_mean = '#67a9cf'
+//var main_bar_color_1 = '#91bfdb' // main bar chart color
+//var main_bar_color_2 = '#ef8a62' // color of negative bars
+//var highlight_mean = '#67a9cf'
+//'#fef0d9', '#fdd49e', '#fdbb84', '#fc8d59', '#e34a33', '#b30000'
+var main_bar_color_1 = '#ef8a62' //orange -> main bar chart color
+var main_bar_color_2 = "#A0A0A0" //grey -> color of negative bars
+var highlight_bars = "#e34a33"//red -> line around bar/season line
+var highlight_mean = '#b30000' //dark red -> mean
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
@@ -69,7 +79,7 @@ sortedArrayOfObj.forEach(function (d) {
     germany = d.data;
   } else {
     if (d.label == "Berlin") {
-      backgroundColor.push(main_bar_color_2);
+      backgroundColor.push(highlight_bars);
     } else {
       backgroundColor.push('rgba(0, 0, 0, 0)');
     }
@@ -91,7 +101,7 @@ const options = {
           borderWidth: 3,
           label: {
             rotation: 'auto',
-            content: 'Deutschland',
+            content: 'Durchschnitt Deutschland',
             display: true,
             position: "end"
           },
@@ -149,7 +159,11 @@ const myChart = new Chart(canvas.getContext("2d"),
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
-<style>
+<center><h3> Kennzahlen zu Fahrraddiebstählen in Berlin in 2022</h3></center>
+<br>
+<br>
+
+  <style>
         table {
                 width: 100%;
                 table-layout: fixed;
@@ -175,7 +189,7 @@ const myChart = new Chart(canvas.getContext("2d"),
 
         .td-content {
                 font-size: 36px !important;
-                color: #91bfdb;
+                color: #b30000;
                 font-weight: bold;
         }
 
@@ -189,9 +203,9 @@ const myChart = new Chart(canvas.getContext("2d"),
 
 <table cellspacing="0" cellpadding="0">
         <tr>
-                <td style="font-size: 20px">Gesamtschaden</td>
-                <td style="font-size: 20px">Gemeldete Diebstähle</td>
-                <td style="font-size: 20px">&oslash; Schaden pro Diebstahl</td>
+                <td style="font-size: 20px; color:#b30000"><b>Gesamtschaden</b></td>
+                <td style="font-size: 20px; color:#b30000"><b>Gemeldete Diebstähle</b></td>
+                <td style="font-size: 20px; color:#b30000"><b>&oslash; Schaden pro Diebstahl</b></td>
         </tr>
         <tr>
                 <td class="td-content">23,2 Mio.€</td>
@@ -211,8 +225,8 @@ const myChart = new Chart(canvas.getContext("2d"),
 <br>
 <table>
         <tr>
-                <td style="font-size: 20px">Aufklärungsquote</td>
-                <td style="font-size: 20px">&oslash; Diebstähle pro Tag</td>
+                <td style="font-size: 20px; color:#b30000"><b>Aufklärungsquote</b></td>
+                <td style="font-size: 20px; color:#b30000"><b>&oslash; Diebstähle pro Tag</b></td>
         </tr>
         <tr>
                 <td class="td-content">4,6%</td>
@@ -260,18 +274,22 @@ const myChart = new Chart(canvas.getContext("2d"),
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
-<h3>Wo werden die meisten Fahrräder in Berlin gestohlen?</h3>
-<h3>Und wie gefährdet bist du?</h3>
-Gib dazu eine Adresse ein, an der du häufig dein Fahrrad abstellst. <br />
-Alternativ wird der Standort des Instituts für Informatik der FU Berlin genutzt.
+<center><h2>Wo werden die meisten Fahrräder in Berlin gestohlen?</h2>
+
+<h3>Und wie gefährdet bist Du?</h3></center>
+<br>
+Gib dazu eine Adresse ein, an der Du häufig dein Fahrrad abstellst.
+Alternativ wird das Institut für Informatik der FU Berlin genutzt.
 <p style="">
-    Standort:
+<center>
+    Standort:  
     <input type="text" id="input-longlat" size="40"
         style="margin-top:1px; border: solid 1px lightgrey; border-radius:4px; height:25px"
         value="Takustraße 9, 14195 Berlin">
     <button id="submit-btn" type="button"
         style="border: solid 1px lightgrey; border-radius:4px; height:26px">Suchen</button>
 </p>
+</center>
 
 <!-- <details>
     <summary>Koordinaten erhalten</summary>
@@ -329,9 +347,9 @@ Alternativ wird der Standort des Instituts für Informatik der FU Berlin genutzt
     }
 </style>
 
-<h2>Karte Fahrraddiebstähle 2022</h2>
-
-Die Visualisierung zeigt die Anzahl der Fahrraddiebstähle auf Ebene der lebensweltlich orientierten Räume
+<center><h2>Karte Fahrraddiebstähle 2022</h2></center>
+<br>
+Die 2 folgenden Visualisierungen zeigen die Anzahl der Fahrraddiebstähle auf Ebene der lebensweltlich orientierten Räume
 (<div class="tooltip_b">LOR<span class="tooltiptext">Lebensweltlich orientierte Räume (LOR) sind eine räumliche
         Grundlage für die Planung, Prognose und Beobachtung demografischer und sozialer Entwicklungen in Berlin. Sie
         lassen sich in 3 Ebenen einteilen: <br>
@@ -356,11 +374,18 @@ Eingefärbt werden die Räume nach der Anzahl der Fahrraddiebstähle
 </select>
 
 <br>
-Die Intervalle zur Einfärbung eines Raums werden anhand der folgenden
-<div class="tooltip_b">Quantile<span class="tooltiptext">Beispiel: Betrachten wir die Anzahl an Fahrraddiebstählen je
+Die Einteilung der Farben in der Karte wird anhand der folgender
+<div class="tooltip_b">Quantilen<span class="tooltiptext">Beispiel: Betrachten wir die Anzahl an Fahrraddiebstählen je
         Planungsraum (543 Räume). Das 20 %-Quantil ist dann die Anzahl an Fahrraddiebstählen, sodass 20 % der
         Plangungsräume (ca. 109 Räume) weniger Diebstähle als die besagte Anzahl aufweisen. <br> </span></div>
 berechnet 20/40/60/80/95/100 (%).
+<br>
+Im <div class="tooltip_b">interaktiven<span class="tooltiptext">
+  In der oberen rechten Ecke gibt es Werkzeuge, um mit den Daten zu interagieren.
+Mit dem Mauszeiger kannst Du durch Klicken und Ziehen einen ausgewählten Bereich vergrößern. Ein Doppelklick bringt dich zurück zur ursprünglichen Darstellung.
+</span></div>
+Balkendiagram darunter sind die gleichen Daten aufsteigend sortiert dargestellt.
+
 
 
 
@@ -371,7 +396,6 @@ berechnet 20/40/60/80/95/100 (%).
 <div id="container" style="border:solid 0px pink;">
 
     <svg id="choropleth" width=980 height=830 style="border:solid 0px pink; border-radius:5px"></svg>
-
     <div id="div-barchart" style="border:solid 0px pink; width:100%"></div>
 
     <!-- <div style="padding:10px">
@@ -976,7 +1000,10 @@ update_plots(null, null)
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
-<h1>SAISON?</h1>
+<center><h2>Gibt es saisonalen Trends bei Fahrraddiebstählen?</h2></center>
+<br>
+In dieser Grafik ist zu sehen, wie viele Fahrräder in den Kalenderwochen (KW) des Jahres 2022 gestohlen wurden, wodurch saisonale Trends sichbar werden.
+<br><br>
 <div>
   <canvas id="canvas-saison"></canvas>
 </div>
@@ -1118,8 +1145,8 @@ const myChart = new Chart(canvas.getContext("2d"), {
                 type: "line",
                 label: 'Cubic interpolation (monotone)',
                 data: Object.values(acc),
-                borderColor: main_bar_color_2,
-              	borderWidth: 2,
+                borderColor: highlight_bars,
+              	borderWidth: 3,
                 fill: false,
                 cubicInterpolationMode: 'monotone',
                 tension: 0.4
@@ -1166,7 +1193,8 @@ const myChart = new Chart(canvas.getContext("2d"), {
             },
         },
 
-        elements: { point: { radius: 0 } },
+        elements: { point: { radius: 0 }, 
+                  bar: {borderRadius: 5}},
         responsive: true,
         maintainAspectRatio: true,
         aspectRatio: 1 | 2,
@@ -1183,10 +1211,10 @@ const myChart = new Chart(canvas.getContext("2d"), {
                         yMin: mean_arr[0],
                         yMax: mean_arr[0],
                         borderColor: highlight_mean,
-                        borderWidth: 3,
+                        borderWidth: 2,
                         label: {
                             rotation: 'auto',
-                            content: 'Mittelwert',
+                            content: 'Durchschnitt',
                             display: true,
                             position: "end"
                         },
@@ -1197,10 +1225,23 @@ const myChart = new Chart(canvas.getContext("2d"), {
     }
 })
 
-# %% [markdown]
-## **Wenn du dein Fahrrad abstellst, hast du dich schon gewundert, welche Merkmale des Ortes mit Fahrraddiebstählen öfter zusammenhängen?**
+# %%--- [html]
+# properties:
+#   run_on_load: true
+#   top_hidden: true
+# ---%%
+<br><br>
+<center><h2>Besteht ein Zusammenhang mit anderen Ortsmerkmalen?</h2></center>
+<br>
+Um zu zeigen, welche demographischen und sozialen Aspekte eines LORs mit Anzahl von Fahrraddiebstählen im Zusammenhang stehen, wurde die Produkt-Moment-Korrelation
 
-Um zu zeigen, welche demographischen und sozialen Aspekte eines LORs mit Fahrraddiebstählen im Zusammenhang stehen, wurde die Produkt-Moment-Korrelation berechnet. Die sich daraus ergebende Zahl gibt an, inwieweit die Anzahl der Fahrraddiebstähle pro LOR und ein anderes Merkmal tendenziell einen ähnlichen Trend aufweisen. 1 ist die höchste positive Korrelation, was bedeutet, dass die beiden Variablen zusammen auftreten, während -1 die höchste negative Korrelation ist, da dort, wo das eine auftritt, das andere einen umgekehrten Trend zeigt. 0-Korrelation bedeutet, dass keine lineare Beziehung besteht.
+<div class="tooltip_b">Produkt-Moment-Korrelation<span class="tooltiptext">1 ist die höchste positive Korrelation, was bedeutet, dass die beiden Variablen zusammen auftreten, 
+  während -1 die höchste negative Korrelation ist, da dort, wo das eine auftritt, das andere einen umgekehrten Trend zeigt. 
+  0-Korrelation bedeutet, dass keine lineare Beziehung besteht.<br> </span></div>
+
+
+ berechnet. Die sich daraus ergebende Zahl gibt an, inwieweit die Anzahl der Fahrraddiebstähle pro LOR und ein anderes Merkmal tendenziell einen ähnlichen Trend aufweisen. 
+<br>
 # %%--- [html]
 # properties:
 #   run_on_load: true
@@ -1242,20 +1283,22 @@ Um zu zeigen, welche demographischen und sozialen Aspekte eines LORs mit Fahrrad
 let res_unfiltered = index_correlation
 
 let keysToRemove = ["Fahrraddiebstähle", "ausländer", "Dynamik-summe", "Status-summe", "EW 31.12.2020",
-                   "zD1", "zD3", "zD4", "Veränderung Ausländeranteil", "K11",
-                   "K04", "K05", "K06", "K16", "K07", "K17"]
+                   "zD1", "zD3", "zD4", "K06", "K11", "weiblich",
+                   "K04", "K05", "K16", "K07", "K17"]
 
 let res = Object.fromEntries(Object.entries(res_unfiltered).filter(([key]) => !keysToRemove.includes(key)))
 
 let names = {K01: "Jugendarbeitslosigkeit",
 K02: "Anteil Alleinerziehender Haushalte",
 K03: "Altersarmut",
+             
 //K04: "Kinder und Jugendliche mit Migrationshintergrund",
-//K05: "Einwohnerinnen und Einwohner mit Migrationshintergrund",
-//K16: "Ausländerinnen und Ausländer",
+//K05: "Einwohner:innen mit Migrationshintergrund",
+//K16: "Anteil Ausländer:innen",
 //K06: "Veränderung Ausländeranteil",
-//K07: "Ausländische Transferbezieher",
-//K17: "Nicht-EU-Ausländerinnen und Nicht-EU-Ausländer",
+///K07: "Anteil Ausländischer Transferbezieher an Ausländer:innen",
+///K17: "Nicht-EU-Ausländer:innenr an Ausländer:innen",
+             
 K08: "Städtische Wohnungen", //
 K14: "Wohnräume", //
 K15: "Wohnfläche", //
@@ -1285,7 +1328,7 @@ unter6: "0-6-jährige",
 "45-55": "45-55-jährige",
 "55-65": "45-55-jährige",
 "65undmehr": "65+jährige",
-weiblich: "Weibliche Einwohnerinnen",
+//weiblich: "Weibliche Einwohnerinnen",
 Gesamt: "Gesamte Zahl Einwohner:innen",      
 }
 
@@ -1319,8 +1362,8 @@ const myChart = new Chart(canvas.getContext("2d"), {
           max: 50,
           title: {display: false,
                   text: 'Variables'}},
-      x: {min: -0.4,
-          max: 0.7,
+      x: {min: -1,
+          max: 1,
           title: {display: true,
           text: "Produkt-Moment-Korrelation"}}
     },
@@ -1332,15 +1375,17 @@ const myChart = new Chart(canvas.getContext("2d"), {
       title: {display: false,
               text: 'Assoziationen'}
     }}})
-# %% [markdown]
-## Und in wie fern hängen die Fahrraddiebstähle zusammen mit anderen kriminellen Tätigkeiten?
-
-Auf der Grundlage der Produkt-Moment-Korrelation kann auch untersucht werden, welche anderen kriminellen Aktivitäten mit Fahrraddiebstählen assoziiert sind.
 # %%--- [html]
 # properties:
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
+<br>
+<center><h2>Besteht ein Zusammenhang mit andenen Verbrechen?</h2></center>
+<br>
+Durch die Produkt-Moment-Korrelation kann auch untersucht werden, welche kriminellen Aktivitäten mit Fahrraddiebstählen assoziiert sind.
+<br>
+
 <div style="height:600px">
 	<canvas id="correlation-crime-canvas"></canvas>
 </div>
@@ -1407,7 +1452,7 @@ const myChart = new Chart(canvas.getContext("2d"), {
           max: 50,
           title: {display: false,
                   text: 'Variables'}},
-      x: {min: 0.,
+      x: {min: -1,
           max: 1.,
           title: {display: true,
           text: "Produkt-Moment-Korrelation"}}
@@ -1420,3 +1465,10 @@ const myChart = new Chart(canvas.getContext("2d"), {
       title: {display: false,
               text: 'Assoziationen'}
     }}})
+# %%--- [html]
+# properties:
+#   top_hidden: true
+# ---%%
+<center><h2>Bleib sicher und hab eine gute Fahrt!</h2>
+<span style="font-size:60px;">🚲</span>
+</center>
