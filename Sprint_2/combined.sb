@@ -30,17 +30,16 @@ Basis der Ermittlung der risikoreichsten Bundesländer für Zweiradfahrer ist di
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
-#   top_hidden: true
 #   bottom_hidden: true
+#   top_hidden: true
 # ---%%
-//var main_bar_color_1 = '#91bfdb' // main bar chart color
-//var main_bar_color_2 = '#ef8a62' // color of negative bars
-//var highlight_mean = '#67a9cf'
-//'#fef0d9', '#fdd49e', '#fdbb84', '#fc8d59', '#e34a33', '#b30000'
 var main_bar_color_1 = '#ef8a62' //orange -> main bar chart color
 var main_bar_color_2 = "#A0A0A0" //grey -> color of negative bars
 var highlight_bars = "#e34a33"//red -> line around bar/season line
 var highlight_mean = '#b30000' //dark red -> mean
+
+
+
 
 // load d3.js
 await import("https://d3js.org/d3.v7.min.js")
@@ -49,6 +48,9 @@ var D3 = d3
 // load chart js 
 await import("https://cdn.jsdelivr.net/npm/chart.js");
 await import("https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.2/dist/chartjs-plugin-annotation.min.js");
+
+
+
 
 let data = await D3.json("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_2/data/fahrraddiebstaehle_deutschland_2020.json");
 
@@ -155,6 +157,7 @@ const myChart = new Chart(canvas.getContext("2d"),
     options: options
   },
 );
+
 # %%--- [html]
 # properties:
 #   run_on_load: true
@@ -482,6 +485,15 @@ try {
   console.log(error)
 }
 
+
+
+
+// CELL ***************************************************************************************
+
+
+
+
+
 const count_per_plr = D3.rollup(fahrraddiebstahl, v => v.length, d => d.LOR)
 
 // create missing plr with 0 cases
@@ -536,6 +548,17 @@ for (const x of plr_index.values()) {
     pgr['population'] += x['population']
   }
 }
+
+
+
+
+
+
+
+
+// CELL ***************************************************************************************
+
+
 
 
 // helper function to format numbers with points
@@ -718,7 +741,16 @@ function render_choropleth(data, {
 
 }
 
-const svg = D3.select("#choropleth")
+
+
+
+
+
+// CELL ***************************************************************************************
+
+
+
+// const svg = D3.select("#choropleth")
 
 var current_lng = 0
 var current_lat = 0
@@ -840,6 +872,16 @@ function hightlight_location() {
 }
 
 D3.select("#submit-btn").on("click", (event) => hightlight_location());
+
+
+
+
+
+// CELL ***************************************************************************************
+
+
+
+
 
 function get_tooltip(d, index, name, id, value_key) {
   let tt = d.properties[name] + '<br>'
