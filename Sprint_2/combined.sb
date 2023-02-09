@@ -4,6 +4,7 @@
 #   top_hidden: true
 # ---%%
 <center><h1>Fahrraddiebstähle in Berlin</h1>
+<span style="font-size:60px;">🚲</span>
 <br>
 <h2>Berlin zählt zu den Fahrraddiebstahl-Hochburgen Deutschlands</center></h2>
 <br>
@@ -17,10 +18,20 @@ Basis der Ermittlung der risikoreichsten Bundesländer für Zweiradfahrer ist di
 <br>-->
 <canvas id="intro-canvas">
 </canvas>
+
+<details>
+        <summary>Datenquellen</summary>
+        <ul>
+                <li>GDV/Polizeiliche Kriminalstatistik <a
+                                href="https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf">https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf</a>
+                </li>
+        </ul>
+</details> 
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
 #   top_hidden: true
+#   bottom_hidden: true
 # ---%%
 //var main_bar_color_1 = '#91bfdb' // main bar chart color
 //var main_bar_color_2 = '#ef8a62' // color of negative bars
@@ -30,12 +41,7 @@ var main_bar_color_1 = '#ef8a62' //orange -> main bar chart color
 var main_bar_color_2 = "#A0A0A0" //grey -> color of negative bars
 var highlight_bars = "#e34a33"//red -> line around bar/season line
 var highlight_mean = '#b30000' //dark red -> mean
-# %%--- [javascript]
-# properties:
-#   run_on_load: true
-#   bottom_hidden: true
-#   top_hidden: true
-# ---%%
+
 // load d3.js
 await import("https://d3js.org/d3.v7.min.js")
 var D3 = d3
@@ -43,12 +49,7 @@ var D3 = d3
 // load chart js 
 await import("https://cdn.jsdelivr.net/npm/chart.js");
 await import("https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.2/dist/chartjs-plugin-annotation.min.js");
-# %%--- [javascript]
-# properties:
-#   run_on_load: true
-#   bottom_hidden: true
-#   top_hidden: true
-# ---%%
+
 let data = await D3.json("https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_2/data/fahrraddiebstaehle_deutschland_2020.json");
 
 let arrayData = [];
@@ -239,13 +240,17 @@ const myChart = new Chart(canvas.getContext("2d"),
         </tr>
 </table>
 
+
 <details>
-        <summary>Datenquellen</summary>
-        <ul>
-                <li>GDV/Polizeiliche Kriminalstatistik <a
-                                href="https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf">https://www.gdv.de/resource/blob/67494/c3d8293893a780fe2264a28a6e941361/download-grafik-deutschlandkarte-data.pdf</a>
-                </li>
-        </ul>
+    <summary>Datenquellen</summary>
+    <ul>
+        <li>Fahrraddiebstähle <a
+                href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
+        </li>
+      <li>
+        Aufklärungsquote <a href="https://www.berliner-zeitung.de/mensch-metropole/statistik-gestohlener-fahrraeder-in-berlin-li.253061">https://www.berliner-zeitung.de/mensch-metropole/statistik-gestohlener-fahrraeder-in-berlin-li.253061</a>
+      </li>
+    </ul>
 </details>
 
 <details>
@@ -439,6 +444,7 @@ Balkendiagram darunter sind die gleichen Daten aufsteigend sortiert dargestellt.
 # properties:
 #   run_on_load: true
 #   top_hidden: true
+#   bottom_hidden: true
 # ---%%
 // load all necessary data
 const base_path = "https://raw.githubusercontent.com/JJestel/Data-Visualization/main/Sprint_2/data/"
@@ -475,11 +481,7 @@ try {
 } catch (error) {
   console.log(error)
 }
-# %%--- [javascript]
-# properties:
-#   run_on_load: true
-#   top_hidden: true
-# ---%%
+
 const count_per_plr = D3.rollup(fahrraddiebstahl, v => v.length, d => d.LOR)
 
 // create missing plr with 0 cases
@@ -535,11 +537,7 @@ for (const x of plr_index.values()) {
   }
 }
 
-# %%--- [javascript]
-# properties:
-#   run_on_load: true
-#   top_hidden: true
-# ---%%
+
 // helper function to format numbers with points
 function formatNumber(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
@@ -719,11 +717,7 @@ function render_choropleth(data, {
     .text(d => legend.line3)
 
 }
-# %%--- [javascript]
-# properties:
-#   run_on_load: true
-#   top_hidden: true
-# ---%%
+
 const svg = D3.select("#choropleth")
 
 var current_lng = 0
@@ -846,11 +840,7 @@ function hightlight_location() {
 }
 
 D3.select("#submit-btn").on("click", (event) => hightlight_location());
-# %%--- [javascript]
-# properties:
-#   run_on_load: true
-#   top_hidden: true
-# ---%%
+
 function get_tooltip(d, index, name, id, value_key) {
   let tt = d.properties[name] + '<br>'
   if (index.get(d.properties[id])[value_key] == null) {
@@ -1007,10 +997,20 @@ In dieser Grafik ist zu sehen, wie viele Fahrräder in den Kalenderwochen (KW) d
 <div>
   <canvas id="canvas-saison"></canvas>
 </div>
+
+<details>
+    <summary>Datenquellen</summary>
+    <ul>
+        <li>Fahrraddiebstähle <a
+                href="https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin">https://daten.berlin.de/datensaetze/fahrraddiebstahl-berlin</a>
+        </li>
+    </ul>
+</details>
 # %%--- [javascript]
 # properties:
 #   run_on_load: true
 #   top_hidden: true
+#   bottom_hidden: true
 # ---%%
 // Make an object with dates as keys
 let cases = 0
@@ -1279,6 +1279,7 @@ Um zu zeigen, welche demographischen und sozialen Aspekte eines LORs mit Anzahl 
 # properties:
 #   run_on_load: true
 #   top_hidden: true
+#   bottom_hidden: true
 # ---%%
 let res_unfiltered = index_correlation
 
@@ -1467,6 +1468,7 @@ const myChart = new Chart(canvas.getContext("2d"), {
     }}})
 # %%--- [html]
 # properties:
+#   run_on_load: true
 #   top_hidden: true
 # ---%%
 <center><h2>Bleib sicher und hab eine gute Fahrt!</h2>
