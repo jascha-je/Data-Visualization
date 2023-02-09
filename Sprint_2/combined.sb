@@ -3,8 +3,10 @@
 #   run_on_load: true
 #   top_hidden: true
 # ---%%
+<br><br>
 <center><h1>Fahrraddiebstähle in Berlin</h1>
 <span style="font-size:60px;">🚲</span>
+<br>
 <br>
 <h2>Berlin zählt zu den Fahrraddiebstahl-Hochburgen Deutschlands</center></h2>
 <br>
@@ -1052,7 +1054,6 @@ In dieser Grafik ist zu sehen, wie viele Fahrräder in den Kalenderwochen (KW) d
 # properties:
 #   run_on_load: true
 #   top_hidden: true
-#   bottom_hidden: true
 # ---%%
 // Make an object with dates as keys
 let cases = 0
